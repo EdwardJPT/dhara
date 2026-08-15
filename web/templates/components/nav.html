@@ -1,0 +1,98 @@
+{{define "nav"}}
+<nav id="navbar"
+  class="fixed top-0 left-0 z-10 mb-10 flex h-20 w-full max-w-screen items-center justify-center bg-background font-sans text-white md:relative">
+  <div class="flex h-full w-7xl flex-row items-center justify-around md:justify-between">
+    <div class="flex cursor-pointer flex-row items-center md:ml-6 xl:ml-10">
+      <div onclick="goToHome()" class="flex h-7.5 w-7.5 items-center justify-center bg-white md:h-10 md:w-10">
+        <img src="/static/images/logo.png" alt="logo picture" width="30" height="37.5"
+          class="h-8 w-8 sm:h-10 sm:w-10" />
+      </div>
+
+      <h2 onclick="goToHome()"
+        class="ml-2.5 flex w-fit items-center justify-center text-3xl font-extrabold md:text-4xl">
+        Dhara
+      </h2>
+
+      <div id="nav_links"
+        class="fixed top-20 left-0 hidden w-screen flex-col justify-between  md:relative md:top-0 md:ml-5 md:flex md:w-fit md:flex-row lg:mr-12">
+        <a href="{{if .IsDemo}}/demo{{end}}/home"
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          Home
+        </a>
+        <a href="{{if .IsDemo}}/demo{{end}}/habits"
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          Habits
+        </a>
+        <a href="{{if .IsDemo}}/demo{{end}}/calendar"
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          Calendar
+        </a>
+        <a href="{{if .IsDemo}}/demo{{end}}/reports"
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          Reports
+        </a>
+      </div>
+    </div>
+
+    <div id="search_account"
+      class="fixed top-72 hidden w-screen flex-col-reverse items-center justify-center bg-background pb-1.5 md:relative md:top-0 md:flex md:w-fit md:flex-row md:justify-between md:py-0">
+      <label for="search" class="relative flex w-9/12 items-center justify-center py-3 md:mt-0">
+        <input type="search" id="search" placeholder="Search"
+          class="w-full rounded bg-white p-1.5 pl-3 text-background sm:text-base" />
+      </label>
+      <div id="auth_button"
+        class="flex w-screen cursor-pointer items-center justify-center rounded bg-background hover:bg-hover md:w-20">
+        <img src="/static/images/account.png" alt="Account" class="hidden h-10 w-10 md:flex">
+        <div id="auth_options"
+          class="static flex w-full flex-col bg-background text-center text-xl md:absolute md:top-17 md:right-0 md:hidden md:w-50 md:text-left md:text-lg">
+          <a href="/account" class="block w-full p-3 hover:bg-hover">Account</a>
+          <form id="logout_form" action="/logout" method="POST" class="hover:bg-hover">
+            <button type="submit" class="w-full cursor-pointer p-3 md:text-left">Logout</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="nav_links_controller" onclick="show_links()" class="cursor-pointer md:hidden">
+      <div class="mt-1 h-1 w-7 bg-white"></div>
+      <div class="mt-1 h-1 w-7 bg-white"></div>
+      <div class="mt-1 h-1 w-7 bg-white"></div>
+    </div>
+  </div>
+  <!-- Inline JavaScript -->
+  <script>
+    // controller to show the nav links in small screen
+    const navLinks = document.getElementById("nav_links");
+    const searchAndAccout = document.getElementById("search_account");
+    const navLinksController = document.getElementById("nav_links_controller");
+    const show_links = () => {
+      let display = navLinks.style.display;
+      if (display == "" || display == "none") {
+        navLinks.style.display = "flex";
+        searchAndAccout.style.display = "flex";
+        authOptions.style.display = "flex";
+      } else {
+        navLinks.style.display = "none";
+        searchAndAccout.style.display = "none";
+        authOptions.style.display = "none";
+      }
+    }
+
+    const authOptions = document.getElementById("auth_options");
+    // controller to show the auth options
+    document.getElementById("auth_button").addEventListener("click", function () {
+      // Toggle between "none" and "flex" display
+      if (authOptions.style.display === "none" || authOptions.style.display === "") {
+        authOptions.style.display = "flex";
+      } else {
+        authOptions.style.display = "none";
+      }
+    });
+
+    // when clicking the logo
+    function goToHome() {
+      window.location.href = "{{if .IsDemo}}/demo{{end}}/home";
+    }
+  </script>
+</nav>
+{{end}}

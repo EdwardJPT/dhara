@@ -1,0 +1,59 @@
+{{define "reports"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Reports | Dhara</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A project-centric task management app">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/static/images/logo.ico">
+  <link rel="stylesheet" type="text/css" href="/static/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    // Calculate their exact current offset right now
+    const offsetMinutes = -new Date().getTimezoneOffset();
+    const sign = offsetMinutes >= 0 ? '+' : '-';
+    const pad = (num) => String(Math.abs(num)).padStart(2, '0');
+    const currentSqliteOffset = `${sign}${pad(Math.floor(offsetMinutes / 60))}:${pad(offsetMinutes % 60)}`;
+    // If the cookie doesn't exist OR if it doesn't match user current location
+    // (they traveled!)
+    if (!document.cookie.includes(`tz_offset=${currentSqliteOffset}`)) {
+      // Overwrite the cookie with the new timezone
+      document.cookie = `tz_offset=${currentSqliteOffset}; path=/; max-age=31536000; SameSite=Lax`;
+      // Force a micro-reload to update the SSR data immediately upon landing in a new country
+      window.location.reload();
+    }
+  </script>
+</head>
+
+<body class="flex flex-col bg-linear-to-tl from-[#daddff] to-[#e0f2fe]">
+  {{template "nav" .}}
+
+  <main id="reports" class="mt-15 w-screen min-h-screen px-0 md:px-2 sm:px-4 md:mt-0"></main>
+
+  {{template "footer" .}}
+
+  <script>
+    // Data from Go backend
+    window.username = `{{.Username}}`;
+    window.projectList = JSON.parse(`{{.ProjectsJSON}}`);
+    window.taskList = JSON.parse(`{{.TasksJSON}}`);
+    window.taskStats = JSON.parse(`{{.TaskStatsJSON}}`);
+    window.habitsDoneToday = JSON.parse(`{{.HabitsDoneTodayJSON}}`);
+    window.habitsBestWorstStats = JSON.parse(`{{.HabitsBestWorstStatsJSON}}`);
+    window.habitsGroupStats = JSON.parse(`{{.HabitsGroupStatsJSON}}`);
+    window.habitsProductivityPeaks = JSON.parse(`{{.HabitsProductivityPeaksJSON}}`);
+    window.habitsMonthlyConsistency = JSON.parse(`{{.HabitsMonthlyConsistencyJSON}}`);
+    window.habitsWeeklyConsistency = JSON.parse(`{{.HabitsWeeklyConsistencyJSON}}`);
+    window.isDemo = JSON.parse(`{{.IsDemo}}`);
+  </script>
+
+  <script type="module" src="/static/js/reports/reports.js"></script>
+</body>
+
+</html>
+{{end}}

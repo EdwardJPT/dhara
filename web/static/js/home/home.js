@@ -1,0 +1,4730 @@
+// node_modules/preact/dist/preact.module.js
+var n;
+var l;
+var u;
+var t;
+var i;
+var o;
+var r;
+var e;
+var f;
+var c;
+var s;
+var a;
+var h;
+var p = {};
+var v = [];
+var y = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
+var d = Array.isArray;
+function w(n3, l5) {
+  for (var u5 in l5) n3[u5] = l5[u5];
+  return n3;
+}
+function g(n3) {
+  n3 && n3.parentNode && n3.parentNode.removeChild(n3);
+}
+function _(l5, u5, t4) {
+  var i4, o4, r4, e4 = {};
+  for (r4 in u5) "key" == r4 ? i4 = u5[r4] : "ref" == r4 ? o4 = u5[r4] : e4[r4] = u5[r4];
+  if (arguments.length > 2 && (e4.children = arguments.length > 3 ? n.call(arguments, 2) : t4), "function" == typeof l5 && null != l5.defaultProps) for (r4 in l5.defaultProps) void 0 === e4[r4] && (e4[r4] = l5.defaultProps[r4]);
+  return m(l5, e4, i4, o4, null);
+}
+function m(n3, t4, i4, o4, r4) {
+  var e4 = { type: n3, props: t4, key: i4, ref: o4, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: null == r4 ? ++u : r4, __i: -1, __u: 0 };
+  return null == r4 && null != l.vnode && l.vnode(e4), e4;
+}
+function k(n3) {
+  return n3.children;
+}
+function x(n3, l5) {
+  this.props = n3, this.context = l5;
+}
+function S(n3, l5) {
+  if (null == l5) return n3.__ ? S(n3.__, n3.__i + 1) : null;
+  for (var u5; l5 < n3.__k.length; l5++) if (null != (u5 = n3.__k[l5]) && null != u5.__e) return u5.__e;
+  return "function" == typeof n3.type ? S(n3) : null;
+}
+function C(n3) {
+  var l5, u5;
+  if (null != (n3 = n3.__) && null != n3.__c) {
+    for (n3.__e = n3.__c.base = null, l5 = 0; l5 < n3.__k.length; l5++) if (null != (u5 = n3.__k[l5]) && null != u5.__e) {
+      n3.__e = n3.__c.base = u5.__e;
+      break;
+    }
+    return C(n3);
+  }
+}
+function M(n3) {
+  (!n3.__d && (n3.__d = true) && i.push(n3) && !$.__r++ || o != l.debounceRendering) && ((o = l.debounceRendering) || r)($);
+}
+function $() {
+  for (var n3, u5, t4, o4, r4, f5, c4, s4 = 1; i.length; ) i.length > s4 && i.sort(e), n3 = i.shift(), s4 = i.length, n3.__d && (t4 = void 0, o4 = void 0, r4 = (o4 = (u5 = n3).__v).__e, f5 = [], c4 = [], u5.__P && ((t4 = w({}, o4)).__v = o4.__v + 1, l.vnode && l.vnode(t4), O(u5.__P, t4, o4, u5.__n, u5.__P.namespaceURI, 32 & o4.__u ? [r4] : null, f5, null == r4 ? S(o4) : r4, !!(32 & o4.__u), c4), t4.__v = o4.__v, t4.__.__k[t4.__i] = t4, N(f5, t4, c4), o4.__e = o4.__ = null, t4.__e != r4 && C(t4)));
+  $.__r = 0;
+}
+function I(n3, l5, u5, t4, i4, o4, r4, e4, f5, c4, s4) {
+  var a4, h5, y5, d5, w5, g4, _4, m5 = t4 && t4.__k || v, b3 = l5.length;
+  for (f5 = P(u5, l5, m5, f5, b3), a4 = 0; a4 < b3; a4++) null != (y5 = u5.__k[a4]) && (h5 = -1 == y5.__i ? p : m5[y5.__i] || p, y5.__i = a4, g4 = O(n3, y5, h5, i4, o4, r4, e4, f5, c4, s4), d5 = y5.__e, y5.ref && h5.ref != y5.ref && (h5.ref && B(h5.ref, null, y5), s4.push(y5.ref, y5.__c || d5, y5)), null == w5 && null != d5 && (w5 = d5), (_4 = !!(4 & y5.__u)) || h5.__k === y5.__k ? f5 = A(y5, f5, n3, _4) : "function" == typeof y5.type && void 0 !== g4 ? f5 = g4 : d5 && (f5 = d5.nextSibling), y5.__u &= -7);
+  return u5.__e = w5, f5;
+}
+function P(n3, l5, u5, t4, i4) {
+  var o4, r4, e4, f5, c4, s4 = u5.length, a4 = s4, h5 = 0;
+  for (n3.__k = new Array(i4), o4 = 0; o4 < i4; o4++) null != (r4 = l5[o4]) && "boolean" != typeof r4 && "function" != typeof r4 ? ("string" == typeof r4 || "number" == typeof r4 || "bigint" == typeof r4 || r4.constructor == String ? r4 = n3.__k[o4] = m(null, r4, null, null, null) : d(r4) ? r4 = n3.__k[o4] = m(k, { children: r4 }, null, null, null) : void 0 === r4.constructor && r4.__b > 0 ? r4 = n3.__k[o4] = m(r4.type, r4.props, r4.key, r4.ref ? r4.ref : null, r4.__v) : n3.__k[o4] = r4, f5 = o4 + h5, r4.__ = n3, r4.__b = n3.__b + 1, e4 = null, -1 != (c4 = r4.__i = L(r4, u5, f5, a4)) && (a4--, (e4 = u5[c4]) && (e4.__u |= 2)), null == e4 || null == e4.__v ? (-1 == c4 && (i4 > s4 ? h5-- : i4 < s4 && h5++), "function" != typeof r4.type && (r4.__u |= 4)) : c4 != f5 && (c4 == f5 - 1 ? h5-- : c4 == f5 + 1 ? h5++ : (c4 > f5 ? h5-- : h5++, r4.__u |= 4))) : n3.__k[o4] = null;
+  if (a4) for (o4 = 0; o4 < s4; o4++) null != (e4 = u5[o4]) && 0 == (2 & e4.__u) && (e4.__e == t4 && (t4 = S(e4)), D(e4, e4));
+  return t4;
+}
+function A(n3, l5, u5, t4) {
+  var i4, o4;
+  if ("function" == typeof n3.type) {
+    for (i4 = n3.__k, o4 = 0; i4 && o4 < i4.length; o4++) i4[o4] && (i4[o4].__ = n3, l5 = A(i4[o4], l5, u5, t4));
+    return l5;
+  }
+  n3.__e != l5 && (t4 && (l5 && n3.type && !l5.parentNode && (l5 = S(n3)), u5.insertBefore(n3.__e, l5 || null)), l5 = n3.__e);
+  do {
+    l5 = l5 && l5.nextSibling;
+  } while (null != l5 && 8 == l5.nodeType);
+  return l5;
+}
+function L(n3, l5, u5, t4) {
+  var i4, o4, r4, e4 = n3.key, f5 = n3.type, c4 = l5[u5], s4 = null != c4 && 0 == (2 & c4.__u);
+  if (null === c4 && null == e4 || s4 && e4 == c4.key && f5 == c4.type) return u5;
+  if (t4 > (s4 ? 1 : 0)) {
+    for (i4 = u5 - 1, o4 = u5 + 1; i4 >= 0 || o4 < l5.length; ) if (null != (c4 = l5[r4 = i4 >= 0 ? i4-- : o4++]) && 0 == (2 & c4.__u) && e4 == c4.key && f5 == c4.type) return r4;
+  }
+  return -1;
+}
+function T(n3, l5, u5) {
+  "-" == l5[0] ? n3.setProperty(l5, null == u5 ? "" : u5) : n3[l5] = null == u5 ? "" : "number" != typeof u5 || y.test(l5) ? u5 : u5 + "px";
+}
+function j(n3, l5, u5, t4, i4) {
+  var o4, r4;
+  n: if ("style" == l5) if ("string" == typeof u5) n3.style.cssText = u5;
+  else {
+    if ("string" == typeof t4 && (n3.style.cssText = t4 = ""), t4) for (l5 in t4) u5 && l5 in u5 || T(n3.style, l5, "");
+    if (u5) for (l5 in u5) t4 && u5[l5] == t4[l5] || T(n3.style, l5, u5[l5]);
+  }
+  else if ("o" == l5[0] && "n" == l5[1]) o4 = l5 != (l5 = l5.replace(f, "$1")), r4 = l5.toLowerCase(), l5 = r4 in n3 || "onFocusOut" == l5 || "onFocusIn" == l5 ? r4.slice(2) : l5.slice(2), n3.l || (n3.l = {}), n3.l[l5 + o4] = u5, u5 ? t4 ? u5.u = t4.u : (u5.u = c, n3.addEventListener(l5, o4 ? a : s, o4)) : n3.removeEventListener(l5, o4 ? a : s, o4);
+  else {
+    if ("http://www.w3.org/2000/svg" == i4) l5 = l5.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
+    else if ("width" != l5 && "height" != l5 && "href" != l5 && "list" != l5 && "form" != l5 && "tabIndex" != l5 && "download" != l5 && "rowSpan" != l5 && "colSpan" != l5 && "role" != l5 && "popover" != l5 && l5 in n3) try {
+      n3[l5] = null == u5 ? "" : u5;
+      break n;
+    } catch (n4) {
+    }
+    "function" == typeof u5 || (null == u5 || false === u5 && "-" != l5[4] ? n3.removeAttribute(l5) : n3.setAttribute(l5, "popover" == l5 && 1 == u5 ? "" : u5));
+  }
+}
+function F(n3) {
+  return function(u5) {
+    if (this.l) {
+      var t4 = this.l[u5.type + n3];
+      if (null == u5.t) u5.t = c++;
+      else if (u5.t < t4.u) return;
+      return t4(l.event ? l.event(u5) : u5);
+    }
+  };
+}
+function O(n3, u5, t4, i4, o4, r4, e4, f5, c4, s4) {
+  var a4, h5, p5, v4, y5, _4, m5, b3, S3, C3, M2, $2, P2, A4, H, L2, T4, j3 = u5.type;
+  if (void 0 !== u5.constructor) return null;
+  128 & t4.__u && (c4 = !!(32 & t4.__u), r4 = [f5 = u5.__e = t4.__e]), (a4 = l.__b) && a4(u5);
+  n: if ("function" == typeof j3) try {
+    if (b3 = u5.props, S3 = "prototype" in j3 && j3.prototype.render, C3 = (a4 = j3.contextType) && i4[a4.__c], M2 = a4 ? C3 ? C3.props.value : a4.__ : i4, t4.__c ? m5 = (h5 = u5.__c = t4.__c).__ = h5.__E : (S3 ? u5.__c = h5 = new j3(b3, M2) : (u5.__c = h5 = new x(b3, M2), h5.constructor = j3, h5.render = E), C3 && C3.sub(h5), h5.state || (h5.state = {}), h5.__n = i4, p5 = h5.__d = true, h5.__h = [], h5._sb = []), S3 && null == h5.__s && (h5.__s = h5.state), S3 && null != j3.getDerivedStateFromProps && (h5.__s == h5.state && (h5.__s = w({}, h5.__s)), w(h5.__s, j3.getDerivedStateFromProps(b3, h5.__s))), v4 = h5.props, y5 = h5.state, h5.__v = u5, p5) S3 && null == j3.getDerivedStateFromProps && null != h5.componentWillMount && h5.componentWillMount(), S3 && null != h5.componentDidMount && h5.__h.push(h5.componentDidMount);
+    else {
+      if (S3 && null == j3.getDerivedStateFromProps && b3 !== v4 && null != h5.componentWillReceiveProps && h5.componentWillReceiveProps(b3, M2), u5.__v == t4.__v || !h5.__e && null != h5.shouldComponentUpdate && false === h5.shouldComponentUpdate(b3, h5.__s, M2)) {
+        for (u5.__v != t4.__v && (h5.props = b3, h5.state = h5.__s, h5.__d = false), u5.__e = t4.__e, u5.__k = t4.__k, u5.__k.some(function(n4) {
+          n4 && (n4.__ = u5);
+        }), $2 = 0; $2 < h5._sb.length; $2++) h5.__h.push(h5._sb[$2]);
+        h5._sb = [], h5.__h.length && e4.push(h5);
+        break n;
+      }
+      null != h5.componentWillUpdate && h5.componentWillUpdate(b3, h5.__s, M2), S3 && null != h5.componentDidUpdate && h5.__h.push(function() {
+        h5.componentDidUpdate(v4, y5, _4);
+      });
+    }
+    if (h5.context = M2, h5.props = b3, h5.__P = n3, h5.__e = false, P2 = l.__r, A4 = 0, S3) {
+      for (h5.state = h5.__s, h5.__d = false, P2 && P2(u5), a4 = h5.render(h5.props, h5.state, h5.context), H = 0; H < h5._sb.length; H++) h5.__h.push(h5._sb[H]);
+      h5._sb = [];
+    } else do {
+      h5.__d = false, P2 && P2(u5), a4 = h5.render(h5.props, h5.state, h5.context), h5.state = h5.__s;
+    } while (h5.__d && ++A4 < 25);
+    h5.state = h5.__s, null != h5.getChildContext && (i4 = w(w({}, i4), h5.getChildContext())), S3 && !p5 && null != h5.getSnapshotBeforeUpdate && (_4 = h5.getSnapshotBeforeUpdate(v4, y5)), L2 = a4, null != a4 && a4.type === k && null == a4.key && (L2 = V(a4.props.children)), f5 = I(n3, d(L2) ? L2 : [L2], u5, t4, i4, o4, r4, e4, f5, c4, s4), h5.base = u5.__e, u5.__u &= -161, h5.__h.length && e4.push(h5), m5 && (h5.__E = h5.__ = null);
+  } catch (n4) {
+    if (u5.__v = null, c4 || null != r4) if (n4.then) {
+      for (u5.__u |= c4 ? 160 : 128; f5 && 8 == f5.nodeType && f5.nextSibling; ) f5 = f5.nextSibling;
+      r4[r4.indexOf(f5)] = null, u5.__e = f5;
+    } else {
+      for (T4 = r4.length; T4--; ) g(r4[T4]);
+      z(u5);
+    }
+    else u5.__e = t4.__e, u5.__k = t4.__k, n4.then || z(u5);
+    l.__e(n4, u5, t4);
+  }
+  else null == r4 && u5.__v == t4.__v ? (u5.__k = t4.__k, u5.__e = t4.__e) : f5 = u5.__e = q(t4.__e, u5, t4, i4, o4, r4, e4, c4, s4);
+  return (a4 = l.diffed) && a4(u5), 128 & u5.__u ? void 0 : f5;
+}
+function z(n3) {
+  n3 && n3.__c && (n3.__c.__e = true), n3 && n3.__k && n3.__k.forEach(z);
+}
+function N(n3, u5, t4) {
+  for (var i4 = 0; i4 < t4.length; i4++) B(t4[i4], t4[++i4], t4[++i4]);
+  l.__c && l.__c(u5, n3), n3.some(function(u6) {
+    try {
+      n3 = u6.__h, u6.__h = [], n3.some(function(n4) {
+        n4.call(u6);
+      });
+    } catch (n4) {
+      l.__e(n4, u6.__v);
+    }
+  });
+}
+function V(n3) {
+  return "object" != typeof n3 || null == n3 || n3.__b && n3.__b > 0 ? n3 : d(n3) ? n3.map(V) : w({}, n3);
+}
+function q(u5, t4, i4, o4, r4, e4, f5, c4, s4) {
+  var a4, h5, v4, y5, w5, _4, m5, b3 = i4.props || p, k4 = t4.props, x3 = t4.type;
+  if ("svg" == x3 ? r4 = "http://www.w3.org/2000/svg" : "math" == x3 ? r4 = "http://www.w3.org/1998/Math/MathML" : r4 || (r4 = "http://www.w3.org/1999/xhtml"), null != e4) {
+    for (a4 = 0; a4 < e4.length; a4++) if ((w5 = e4[a4]) && "setAttribute" in w5 == !!x3 && (x3 ? w5.localName == x3 : 3 == w5.nodeType)) {
+      u5 = w5, e4[a4] = null;
+      break;
+    }
+  }
+  if (null == u5) {
+    if (null == x3) return document.createTextNode(k4);
+    u5 = document.createElementNS(r4, x3, k4.is && k4), c4 && (l.__m && l.__m(t4, e4), c4 = false), e4 = null;
+  }
+  if (null == x3) b3 === k4 || c4 && u5.data == k4 || (u5.data = k4);
+  else {
+    if (e4 = e4 && n.call(u5.childNodes), !c4 && null != e4) for (b3 = {}, a4 = 0; a4 < u5.attributes.length; a4++) b3[(w5 = u5.attributes[a4]).name] = w5.value;
+    for (a4 in b3) if (w5 = b3[a4], "children" == a4) ;
+    else if ("dangerouslySetInnerHTML" == a4) v4 = w5;
+    else if (!(a4 in k4)) {
+      if ("value" == a4 && "defaultValue" in k4 || "checked" == a4 && "defaultChecked" in k4) continue;
+      j(u5, a4, null, w5, r4);
+    }
+    for (a4 in k4) w5 = k4[a4], "children" == a4 ? y5 = w5 : "dangerouslySetInnerHTML" == a4 ? h5 = w5 : "value" == a4 ? _4 = w5 : "checked" == a4 ? m5 = w5 : c4 && "function" != typeof w5 || b3[a4] === w5 || j(u5, a4, w5, b3[a4], r4);
+    if (h5) c4 || v4 && (h5.__html == v4.__html || h5.__html == u5.innerHTML) || (u5.innerHTML = h5.__html), t4.__k = [];
+    else if (v4 && (u5.innerHTML = ""), I("template" == t4.type ? u5.content : u5, d(y5) ? y5 : [y5], t4, i4, o4, "foreignObject" == x3 ? "http://www.w3.org/1999/xhtml" : r4, e4, f5, e4 ? e4[0] : i4.__k && S(i4, 0), c4, s4), null != e4) for (a4 = e4.length; a4--; ) g(e4[a4]);
+    c4 || (a4 = "value", "progress" == x3 && null == _4 ? u5.removeAttribute("value") : null != _4 && (_4 !== u5[a4] || "progress" == x3 && !_4 || "option" == x3 && _4 != b3[a4]) && j(u5, a4, _4, b3[a4], r4), a4 = "checked", null != m5 && m5 != u5[a4] && j(u5, a4, m5, b3[a4], r4));
+  }
+  return u5;
+}
+function B(n3, u5, t4) {
+  try {
+    if ("function" == typeof n3) {
+      var i4 = "function" == typeof n3.__u;
+      i4 && n3.__u(), i4 && null == u5 || (n3.__u = n3(u5));
+    } else n3.current = u5;
+  } catch (n4) {
+    l.__e(n4, t4);
+  }
+}
+function D(n3, u5, t4) {
+  var i4, o4;
+  if (l.unmount && l.unmount(n3), (i4 = n3.ref) && (i4.current && i4.current != n3.__e || B(i4, null, u5)), null != (i4 = n3.__c)) {
+    if (i4.componentWillUnmount) try {
+      i4.componentWillUnmount();
+    } catch (n4) {
+      l.__e(n4, u5);
+    }
+    i4.base = i4.__P = null;
+  }
+  if (i4 = n3.__k) for (o4 = 0; o4 < i4.length; o4++) i4[o4] && D(i4[o4], u5, t4 || "function" != typeof n3.type);
+  t4 || g(n3.__e), n3.__c = n3.__ = n3.__e = void 0;
+}
+function E(n3, l5, u5) {
+  return this.constructor(n3, u5);
+}
+function G(u5, t4, i4) {
+  var o4, r4, e4, f5;
+  t4 == document && (t4 = document.documentElement), l.__ && l.__(u5, t4), r4 = (o4 = "function" == typeof i4) ? null : i4 && i4.__k || t4.__k, e4 = [], f5 = [], O(t4, u5 = (!o4 && i4 || t4).__k = _(k, null, [u5]), r4 || p, p, t4.namespaceURI, !o4 && i4 ? [i4] : r4 ? null : t4.firstChild ? n.call(t4.childNodes) : null, e4, !o4 && i4 ? i4 : r4 ? r4.__e : t4.firstChild, o4, f5), N(e4, u5, f5);
+}
+n = v.slice, l = { __e: function(n3, l5, u5, t4) {
+  for (var i4, o4, r4; l5 = l5.__; ) if ((i4 = l5.__c) && !i4.__) try {
+    if ((o4 = i4.constructor) && null != o4.getDerivedStateFromError && (i4.setState(o4.getDerivedStateFromError(n3)), r4 = i4.__d), null != i4.componentDidCatch && (i4.componentDidCatch(n3, t4 || {}), r4 = i4.__d), r4) return i4.__E = i4;
+  } catch (l6) {
+    n3 = l6;
+  }
+  throw n3;
+} }, u = 0, t = function(n3) {
+  return null != n3 && void 0 === n3.constructor;
+}, x.prototype.setState = function(n3, l5) {
+  var u5;
+  u5 = null != this.__s && this.__s != this.state ? this.__s : this.__s = w({}, this.state), "function" == typeof n3 && (n3 = n3(w({}, u5), this.props)), n3 && w(u5, n3), null != n3 && this.__v && (l5 && this._sb.push(l5), M(this));
+}, x.prototype.forceUpdate = function(n3) {
+  this.__v && (this.__e = true, n3 && this.__h.push(n3), M(this));
+}, x.prototype.render = k, i = [], r = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, e = function(n3, l5) {
+  return n3.__v.__b - l5.__v.__b;
+}, $.__r = 0, f = /(PointerCapture)$|Capture$/i, c = 0, s = F(false), a = F(true), h = 0;
+
+// node_modules/preact/hooks/dist/hooks.module.js
+var t2;
+var r2;
+var u2;
+var i2;
+var o2 = 0;
+var f2 = [];
+var c2 = l;
+var e2 = c2.__b;
+var a2 = c2.__r;
+var v2 = c2.diffed;
+var l2 = c2.__c;
+var m2 = c2.unmount;
+var s2 = c2.__;
+function p2(n3, t4) {
+  c2.__h && c2.__h(r2, n3, o2 || t4), o2 = 0;
+  var u5 = r2.__H || (r2.__H = { __: [], __h: [] });
+  return n3 >= u5.__.length && u5.__.push({}), u5.__[n3];
+}
+function d2(n3) {
+  return o2 = 1, h2(D2, n3);
+}
+function h2(n3, u5, i4) {
+  var o4 = p2(t2++, 2);
+  if (o4.t = n3, !o4.__c && (o4.__ = [i4 ? i4(u5) : D2(void 0, u5), function(n4) {
+    var t4 = o4.__N ? o4.__N[0] : o4.__[0], r4 = o4.t(t4, n4);
+    t4 !== r4 && (o4.__N = [r4, o4.__[1]], o4.__c.setState({}));
+  }], o4.__c = r2, !r2.__f)) {
+    var f5 = function(n4, t4, r4) {
+      if (!o4.__c.__H) return true;
+      var u6 = o4.__c.__H.__.filter(function(n5) {
+        return !!n5.__c;
+      });
+      if (u6.every(function(n5) {
+        return !n5.__N;
+      })) return !c4 || c4.call(this, n4, t4, r4);
+      var i5 = o4.__c.props !== n4;
+      return u6.forEach(function(n5) {
+        if (n5.__N) {
+          var t5 = n5.__[0];
+          n5.__ = n5.__N, n5.__N = void 0, t5 !== n5.__[0] && (i5 = true);
+        }
+      }), c4 && c4.call(this, n4, t4, r4) || i5;
+    };
+    r2.__f = true;
+    var c4 = r2.shouldComponentUpdate, e4 = r2.componentWillUpdate;
+    r2.componentWillUpdate = function(n4, t4, r4) {
+      if (this.__e) {
+        var u6 = c4;
+        c4 = void 0, f5(n4, t4, r4), c4 = u6;
+      }
+      e4 && e4.call(this, n4, t4, r4);
+    }, r2.shouldComponentUpdate = f5;
+  }
+  return o4.__N || o4.__;
+}
+function y2(n3, u5) {
+  var i4 = p2(t2++, 3);
+  !c2.__s && C2(i4.__H, u5) && (i4.__ = n3, i4.u = u5, r2.__H.__h.push(i4));
+}
+function A2(n3) {
+  return o2 = 5, T2(function() {
+    return { current: n3 };
+  }, []);
+}
+function T2(n3, r4) {
+  var u5 = p2(t2++, 7);
+  return C2(u5.__H, r4) && (u5.__ = n3(), u5.__H = r4, u5.__h = n3), u5.__;
+}
+function j2() {
+  for (var n3; n3 = f2.shift(); ) if (n3.__P && n3.__H) try {
+    n3.__H.__h.forEach(z2), n3.__H.__h.forEach(B2), n3.__H.__h = [];
+  } catch (t4) {
+    n3.__H.__h = [], c2.__e(t4, n3.__v);
+  }
+}
+c2.__b = function(n3) {
+  r2 = null, e2 && e2(n3);
+}, c2.__ = function(n3, t4) {
+  n3 && t4.__k && t4.__k.__m && (n3.__m = t4.__k.__m), s2 && s2(n3, t4);
+}, c2.__r = function(n3) {
+  a2 && a2(n3), t2 = 0;
+  var i4 = (r2 = n3.__c).__H;
+  i4 && (u2 === r2 ? (i4.__h = [], r2.__h = [], i4.__.forEach(function(n4) {
+    n4.__N && (n4.__ = n4.__N), n4.u = n4.__N = void 0;
+  })) : (i4.__h.forEach(z2), i4.__h.forEach(B2), i4.__h = [], t2 = 0)), u2 = r2;
+}, c2.diffed = function(n3) {
+  v2 && v2(n3);
+  var t4 = n3.__c;
+  t4 && t4.__H && (t4.__H.__h.length && (1 !== f2.push(t4) && i2 === c2.requestAnimationFrame || ((i2 = c2.requestAnimationFrame) || w2)(j2)), t4.__H.__.forEach(function(n4) {
+    n4.u && (n4.__H = n4.u), n4.u = void 0;
+  })), u2 = r2 = null;
+}, c2.__c = function(n3, t4) {
+  t4.some(function(n4) {
+    try {
+      n4.__h.forEach(z2), n4.__h = n4.__h.filter(function(n5) {
+        return !n5.__ || B2(n5);
+      });
+    } catch (r4) {
+      t4.some(function(n5) {
+        n5.__h && (n5.__h = []);
+      }), t4 = [], c2.__e(r4, n4.__v);
+    }
+  }), l2 && l2(n3, t4);
+}, c2.unmount = function(n3) {
+  m2 && m2(n3);
+  var t4, r4 = n3.__c;
+  r4 && r4.__H && (r4.__H.__.forEach(function(n4) {
+    try {
+      z2(n4);
+    } catch (n5) {
+      t4 = n5;
+    }
+  }), r4.__H = void 0, t4 && c2.__e(t4, r4.__v));
+};
+var k2 = "function" == typeof requestAnimationFrame;
+function w2(n3) {
+  var t4, r4 = function() {
+    clearTimeout(u5), k2 && cancelAnimationFrame(t4), setTimeout(n3);
+  }, u5 = setTimeout(r4, 35);
+  k2 && (t4 = requestAnimationFrame(r4));
+}
+function z2(n3) {
+  var t4 = r2, u5 = n3.__c;
+  "function" == typeof u5 && (n3.__c = void 0, u5()), r2 = t4;
+}
+function B2(n3) {
+  var t4 = r2;
+  n3.__c = n3.__(), r2 = t4;
+}
+function C2(n3, t4) {
+  return !n3 || n3.length !== t4.length || t4.some(function(t5, r4) {
+    return t5 !== n3[r4];
+  });
+}
+function D2(n3, t4) {
+  return "function" == typeof t4 ? t4(n3) : t4;
+}
+
+// node_modules/@preact/signals-core/dist/signals-core.module.js
+var i3 = Symbol.for("preact-signals");
+function t3() {
+  if (!(s3 > 1)) {
+    var i4, t4 = false;
+    while (void 0 !== h3) {
+      var n3 = h3;
+      h3 = void 0;
+      v3++;
+      while (void 0 !== n3) {
+        var r4 = n3.o;
+        n3.o = void 0;
+        n3.f &= -3;
+        if (!(8 & n3.f) && a3(n3)) try {
+          n3.c();
+        } catch (n4) {
+          if (!t4) {
+            i4 = n4;
+            t4 = true;
+          }
+        }
+        n3 = r4;
+      }
+    }
+    v3 = 0;
+    s3--;
+    if (t4) throw i4;
+  } else s3--;
+}
+function n2(i4) {
+  if (s3 > 0) return i4();
+  s3++;
+  try {
+    return i4();
+  } finally {
+    t3();
+  }
+}
+var r3 = void 0;
+function o3(i4) {
+  var t4 = r3;
+  r3 = void 0;
+  try {
+    return i4();
+  } finally {
+    r3 = t4;
+  }
+}
+var f3;
+var h3 = void 0;
+var s3 = 0;
+var v3 = 0;
+var u3 = 0;
+function e3(i4) {
+  if (void 0 !== r3) {
+    var t4 = i4.n;
+    if (void 0 === t4 || t4.t !== r3) {
+      t4 = { i: 0, S: i4, p: r3.s, n: void 0, t: r3, e: void 0, x: void 0, r: t4 };
+      if (void 0 !== r3.s) r3.s.n = t4;
+      r3.s = t4;
+      i4.n = t4;
+      if (32 & r3.f) i4.S(t4);
+      return t4;
+    } else if (-1 === t4.i) {
+      t4.i = 0;
+      if (void 0 !== t4.n) {
+        t4.n.p = t4.p;
+        if (void 0 !== t4.p) t4.p.n = t4.n;
+        t4.p = r3.s;
+        t4.n = void 0;
+        r3.s.n = t4;
+        r3.s = t4;
+      }
+      return t4;
+    }
+  }
+}
+function d3(i4, t4) {
+  this.v = i4;
+  this.i = 0;
+  this.n = void 0;
+  this.t = void 0;
+  this.W = null == t4 ? void 0 : t4.watched;
+  this.Z = null == t4 ? void 0 : t4.unwatched;
+  this.name = null == t4 ? void 0 : t4.name;
+}
+d3.prototype.brand = i3;
+d3.prototype.h = function() {
+  return true;
+};
+d3.prototype.S = function(i4) {
+  var t4 = this, n3 = this.t;
+  if (n3 !== i4 && void 0 === i4.e) {
+    i4.x = n3;
+    this.t = i4;
+    if (void 0 !== n3) n3.e = i4;
+    else o3(function() {
+      var i5;
+      null == (i5 = t4.W) || i5.call(t4);
+    });
+  }
+};
+d3.prototype.U = function(i4) {
+  var t4 = this;
+  if (void 0 !== this.t) {
+    var n3 = i4.e, r4 = i4.x;
+    if (void 0 !== n3) {
+      n3.x = r4;
+      i4.e = void 0;
+    }
+    if (void 0 !== r4) {
+      r4.e = n3;
+      i4.x = void 0;
+    }
+    if (i4 === this.t) {
+      this.t = r4;
+      if (void 0 === r4) o3(function() {
+        var i5;
+        null == (i5 = t4.Z) || i5.call(t4);
+      });
+    }
+  }
+};
+d3.prototype.subscribe = function(i4) {
+  var t4 = this;
+  return m3(function() {
+    var n3 = t4.value, o4 = r3;
+    r3 = void 0;
+    try {
+      i4(n3);
+    } finally {
+      r3 = o4;
+    }
+  }, { name: "sub" });
+};
+d3.prototype.valueOf = function() {
+  return this.value;
+};
+d3.prototype.toString = function() {
+  return this.value + "";
+};
+d3.prototype.toJSON = function() {
+  return this.value;
+};
+d3.prototype.peek = function() {
+  var i4 = r3;
+  r3 = void 0;
+  try {
+    return this.value;
+  } finally {
+    r3 = i4;
+  }
+};
+Object.defineProperty(d3.prototype, "value", { get: function() {
+  var i4 = e3(this);
+  if (void 0 !== i4) i4.i = this.i;
+  return this.v;
+}, set: function(i4) {
+  if (i4 !== this.v) {
+    if (v3 > 100) throw new Error("Cycle detected");
+    this.v = i4;
+    this.i++;
+    u3++;
+    s3++;
+    try {
+      for (var n3 = this.t; void 0 !== n3; n3 = n3.x) n3.t.N();
+    } finally {
+      t3();
+    }
+  }
+} });
+function c3(i4, t4) {
+  return new d3(i4, t4);
+}
+function a3(i4) {
+  for (var t4 = i4.s; void 0 !== t4; t4 = t4.n) if (t4.S.i !== t4.i || !t4.S.h() || t4.S.i !== t4.i) return true;
+  return false;
+}
+function l3(i4) {
+  for (var t4 = i4.s; void 0 !== t4; t4 = t4.n) {
+    var n3 = t4.S.n;
+    if (void 0 !== n3) t4.r = n3;
+    t4.S.n = t4;
+    t4.i = -1;
+    if (void 0 === t4.n) {
+      i4.s = t4;
+      break;
+    }
+  }
+}
+function y3(i4) {
+  var t4 = i4.s, n3 = void 0;
+  while (void 0 !== t4) {
+    var r4 = t4.p;
+    if (-1 === t4.i) {
+      t4.S.U(t4);
+      if (void 0 !== r4) r4.n = t4.n;
+      if (void 0 !== t4.n) t4.n.p = r4;
+    } else n3 = t4;
+    t4.S.n = t4.r;
+    if (void 0 !== t4.r) t4.r = void 0;
+    t4 = r4;
+  }
+  i4.s = n3;
+}
+function w3(i4, t4) {
+  d3.call(this, void 0);
+  this.x = i4;
+  this.s = void 0;
+  this.g = u3 - 1;
+  this.f = 4;
+  this.W = null == t4 ? void 0 : t4.watched;
+  this.Z = null == t4 ? void 0 : t4.unwatched;
+  this.name = null == t4 ? void 0 : t4.name;
+}
+w3.prototype = new d3();
+w3.prototype.h = function() {
+  this.f &= -3;
+  if (1 & this.f) return false;
+  if (32 == (36 & this.f)) return true;
+  this.f &= -5;
+  if (this.g === u3) return true;
+  this.g = u3;
+  this.f |= 1;
+  if (this.i > 0 && !a3(this)) {
+    this.f &= -2;
+    return true;
+  }
+  var i4 = r3;
+  try {
+    l3(this);
+    r3 = this;
+    var t4 = this.x();
+    if (16 & this.f || this.v !== t4 || 0 === this.i) {
+      this.v = t4;
+      this.f &= -17;
+      this.i++;
+    }
+  } catch (i5) {
+    this.v = i5;
+    this.f |= 16;
+    this.i++;
+  }
+  r3 = i4;
+  y3(this);
+  this.f &= -2;
+  return true;
+};
+w3.prototype.S = function(i4) {
+  if (void 0 === this.t) {
+    this.f |= 36;
+    for (var t4 = this.s; void 0 !== t4; t4 = t4.n) t4.S.S(t4);
+  }
+  d3.prototype.S.call(this, i4);
+};
+w3.prototype.U = function(i4) {
+  if (void 0 !== this.t) {
+    d3.prototype.U.call(this, i4);
+    if (void 0 === this.t) {
+      this.f &= -33;
+      for (var t4 = this.s; void 0 !== t4; t4 = t4.n) t4.S.U(t4);
+    }
+  }
+};
+w3.prototype.N = function() {
+  if (!(2 & this.f)) {
+    this.f |= 6;
+    for (var i4 = this.t; void 0 !== i4; i4 = i4.x) i4.t.N();
+  }
+};
+Object.defineProperty(w3.prototype, "value", { get: function() {
+  if (1 & this.f) throw new Error("Cycle detected");
+  var i4 = e3(this);
+  this.h();
+  if (void 0 !== i4) i4.i = this.i;
+  if (16 & this.f) throw this.v;
+  return this.v;
+} });
+function b(i4, t4) {
+  return new w3(i4, t4);
+}
+function _2(i4) {
+  var n3 = i4.u;
+  i4.u = void 0;
+  if ("function" == typeof n3) {
+    s3++;
+    var o4 = r3;
+    r3 = void 0;
+    try {
+      n3();
+    } catch (t4) {
+      i4.f &= -2;
+      i4.f |= 8;
+      p3(i4);
+      throw t4;
+    } finally {
+      r3 = o4;
+      t3();
+    }
+  }
+}
+function p3(i4) {
+  for (var t4 = i4.s; void 0 !== t4; t4 = t4.n) t4.S.U(t4);
+  i4.x = void 0;
+  i4.s = void 0;
+  _2(i4);
+}
+function g2(i4) {
+  if (r3 !== this) throw new Error("Out-of-order effect");
+  y3(this);
+  r3 = i4;
+  this.f &= -2;
+  if (8 & this.f) p3(this);
+  t3();
+}
+function S2(i4, t4) {
+  this.x = i4;
+  this.u = void 0;
+  this.s = void 0;
+  this.o = void 0;
+  this.f = 32;
+  this.name = null == t4 ? void 0 : t4.name;
+  if (f3) f3.push(this);
+}
+S2.prototype.c = function() {
+  var i4 = this.S();
+  try {
+    if (8 & this.f) return;
+    if (void 0 === this.x) return;
+    var t4 = this.x();
+    if ("function" == typeof t4) this.u = t4;
+  } finally {
+    i4();
+  }
+};
+S2.prototype.S = function() {
+  if (1 & this.f) throw new Error("Cycle detected");
+  this.f |= 1;
+  this.f &= -9;
+  _2(this);
+  l3(this);
+  s3++;
+  var i4 = r3;
+  r3 = this;
+  return g2.bind(this, i4);
+};
+S2.prototype.N = function() {
+  if (!(2 & this.f)) {
+    this.f |= 2;
+    this.o = h3;
+    h3 = this;
+  }
+};
+S2.prototype.d = function() {
+  this.f |= 8;
+  if (!(1 & this.f)) p3(this);
+};
+S2.prototype.dispose = function() {
+  this.d();
+};
+function m3(i4, t4) {
+  var n3 = new S2(i4, t4);
+  try {
+    n3.c();
+  } catch (i5) {
+    n3.d();
+    throw i5;
+  }
+  var r4 = n3.d.bind(n3);
+  r4[Symbol.dispose] = r4;
+  return r4;
+}
+
+// node_modules/@preact/signals/dist/signals.module.js
+var l4;
+var h4;
+var d4;
+var p4 = "undefined" != typeof window && !!window.__PREACT_SIGNALS_DEVTOOLS__;
+var m4 = [];
+var _3 = [];
+m3(function() {
+  l4 = this.N;
+})();
+function g3(i4, t4) {
+  l[i4] = t4.bind(null, l[i4] || function() {
+  });
+}
+function b2(i4) {
+  if (d4) {
+    var n3 = d4;
+    d4 = void 0;
+    n3();
+  }
+  d4 = i4 && i4.S();
+}
+function y4(i4) {
+  var n3 = this, r4 = i4.data, f5 = useSignal(r4);
+  f5.value = r4;
+  var e4 = T2(function() {
+    var i5 = n3, r5 = n3.__v;
+    while (r5 = r5.__) if (r5.__c) {
+      r5.__c.__$f |= 4;
+      break;
+    }
+    var o4 = b(function() {
+      var i6 = f5.value.value;
+      return 0 === i6 ? 0 : true === i6 ? "" : i6 || "";
+    }), e5 = b(function() {
+      return !Array.isArray(o4.value) && !t(o4.value);
+    }), a5 = m3(function() {
+      this.N = F2;
+      if (e5.value) {
+        var n4 = o4.value;
+        if (i5.__v && i5.__v.__e && 3 === i5.__v.__e.nodeType) i5.__v.__e.data = n4;
+      }
+    }), v5 = n3.__$u.d;
+    n3.__$u.d = function() {
+      a5();
+      v5.call(this);
+    };
+    return [e5, o4];
+  }, []), a4 = e4[0], v4 = e4[1];
+  return a4.value ? v4.peek() : v4.value;
+}
+y4.displayName = "ReactiveTextNode";
+Object.defineProperties(d3.prototype, { constructor: { configurable: true, value: void 0 }, type: { configurable: true, value: y4 }, props: { configurable: true, get: function() {
+  return { data: this };
+} }, __b: { configurable: true, value: 1 } });
+g3("__b", function(i4, n3) {
+  if ("string" == typeof n3.type) {
+    var t4, r4 = n3.props;
+    for (var o4 in r4) if ("children" !== o4) {
+      var f5 = r4[o4];
+      if (f5 instanceof d3) {
+        if (!t4) n3.__np = t4 = {};
+        t4[o4] = f5;
+        r4[o4] = f5.peek();
+      }
+    }
+  }
+  i4(n3);
+});
+g3("__r", function(i4, n3) {
+  i4(n3);
+  if (n3.type !== k) {
+    b2();
+    var t4, o4 = n3.__c;
+    if (o4) {
+      o4.__$f &= -2;
+      if (void 0 === (t4 = o4.__$u)) o4.__$u = t4 = (function(i5, n4) {
+        var t5;
+        m3(function() {
+          t5 = this;
+        }, { name: n4 });
+        t5.c = i5;
+        return t5;
+      })(function() {
+        var i5;
+        if (p4) null == (i5 = t4.y) || i5.call(t4);
+        o4.__$f |= 1;
+        o4.setState({});
+      }, "function" == typeof n3.type ? n3.type.displayName || n3.type.name : "");
+    }
+    h4 = o4;
+    b2(t4);
+  }
+});
+g3("__e", function(i4, n3, t4, r4) {
+  b2();
+  h4 = void 0;
+  i4(n3, t4, r4);
+});
+g3("diffed", function(i4, n3) {
+  b2();
+  h4 = void 0;
+  var t4;
+  if ("string" == typeof n3.type && (t4 = n3.__e)) {
+    var r4 = n3.__np, o4 = n3.props;
+    if (r4) {
+      var f5 = t4.U;
+      if (f5) for (var e4 in f5) {
+        var u5 = f5[e4];
+        if (void 0 !== u5 && !(e4 in r4)) {
+          u5.d();
+          f5[e4] = void 0;
+        }
+      }
+      else {
+        f5 = {};
+        t4.U = f5;
+      }
+      for (var a4 in r4) {
+        var c4 = f5[a4], v4 = r4[a4];
+        if (void 0 === c4) {
+          c4 = w4(t4, a4, v4, o4);
+          f5[a4] = c4;
+        } else c4.o(v4, o4);
+      }
+    }
+  }
+  i4(n3);
+});
+function w4(i4, n3, t4, r4) {
+  var o4 = n3 in i4 && void 0 === i4.ownerSVGElement, f5 = c3(t4);
+  return { o: function(i5, n4) {
+    f5.value = i5;
+    r4 = n4;
+  }, d: m3(function() {
+    this.N = F2;
+    var t5 = f5.value.value;
+    if (r4[n3] !== t5) {
+      r4[n3] = t5;
+      if (o4) i4[n3] = t5;
+      else if (null != t5 && (false !== t5 || "-" === n3[4])) i4.setAttribute(n3, t5);
+      else i4.removeAttribute(n3);
+    }
+  }) };
+}
+g3("unmount", function(i4, n3) {
+  if ("string" == typeof n3.type) {
+    var t4 = n3.__e;
+    if (t4) {
+      var r4 = t4.U;
+      if (r4) {
+        t4.U = void 0;
+        for (var o4 in r4) {
+          var f5 = r4[o4];
+          if (f5) f5.d();
+        }
+      }
+    }
+  } else {
+    var e4 = n3.__c;
+    if (e4) {
+      var u5 = e4.__$u;
+      if (u5) {
+        e4.__$u = void 0;
+        u5.d();
+      }
+    }
+  }
+  i4(n3);
+});
+g3("__h", function(i4, n3, t4, r4) {
+  if (r4 < 3 || 9 === r4) n3.__$f |= 2;
+  i4(n3, t4, r4);
+});
+x.prototype.shouldComponentUpdate = function(i4, n3) {
+  if (this.__R) return true;
+  var t4 = this.__$u, r4 = t4 && void 0 !== t4.s;
+  for (var o4 in n3) return true;
+  if (this.__f || "boolean" == typeof this.u && true === this.u) {
+    var f5 = 2 & this.__$f;
+    if (!(r4 || f5 || 4 & this.__$f)) return true;
+    if (1 & this.__$f) return true;
+  } else {
+    if (!(r4 || 4 & this.__$f)) return true;
+    if (3 & this.__$f) return true;
+  }
+  for (var e4 in i4) if ("__source" !== e4 && i4[e4] !== this.props[e4]) return true;
+  for (var u5 in this.props) if (!(u5 in i4)) return true;
+  return false;
+};
+function useSignal(i4, n3) {
+  return T2(function() {
+    return c3(i4, n3);
+  }, []);
+}
+function useComputed(i4, n3) {
+  var t4 = A2(i4);
+  t4.current = i4;
+  h4.__$f |= 4;
+  return T2(function() {
+    return b(function() {
+      return t4.current();
+    }, n3);
+  }, []);
+}
+var k3 = "undefined" == typeof requestAnimationFrame ? setTimeout : function(i4) {
+  var n3 = function() {
+    clearTimeout(t4);
+    cancelAnimationFrame(r4);
+    i4();
+  }, t4 = setTimeout(n3, 35), r4 = requestAnimationFrame(n3);
+};
+var q2 = function(i4) {
+  queueMicrotask(function() {
+    queueMicrotask(i4);
+  });
+};
+function A3() {
+  n2(function() {
+    var i4;
+    while (i4 = m4.shift()) l4.call(i4);
+  });
+}
+function T3() {
+  if (1 === m4.push(this)) (l.requestAnimationFrame || k3)(A3);
+}
+function x2() {
+  n2(function() {
+    var i4;
+    while (i4 = _3.shift()) l4.call(i4);
+  });
+}
+function F2() {
+  if (1 === _3.push(this)) (l.requestAnimationFrame || q2)(x2);
+}
+function useSignalEffect(i4, n3) {
+  var t4 = A2(i4);
+  t4.current = i4;
+  y2(function() {
+    return m3(function() {
+      this.N = T3;
+      return t4.current();
+    }, n3);
+  }, []);
+}
+
+// web/src/components/constants.js
+var ALL = "all";
+var Priority = "priority";
+var ProjectFilters = Object.freeze({
+  ALL,
+  Unfinished: "unfinished",
+  Finished: "finished",
+  Overdue: "overdue"
+});
+var ProjectSorter = Object.freeze({
+  Skip: "",
+  DueDateAsc: "dueDateAsc",
+  DueDateDesc: "dueDateDesc",
+  DoneDateAsc: "doneDateAsc",
+  DoneDateDesc: "doneDateDesc",
+  Priority
+});
+var TaskFiltersPriority = Object.freeze({ ALL, Priority });
+var TaskFiltersStatus = Object.freeze({
+  ALL,
+  Unfinished: "unfinished",
+  Finished: "finished",
+  Overdue: "overdue"
+});
+var TaskFiltersTime = Object.freeze({
+  ALL,
+  Today: "today",
+  ThisWeek: "week",
+  SevenDays: "7days",
+  ThisMonth: "month",
+  ThirtyDays: "30days",
+  ThisQuarter: "quarter"
+});
+var TaskSorter = Object.freeze({
+  Skip: "",
+  DueDateAsc: "dueDateAsc",
+  DueDateDesc: "dueDateDesc",
+  DoneDateAsc: "doneDateAsc",
+  DoneDateDesc: "doneDateDesc",
+  Priority: "priority"
+});
+var defaultTaskFilters = Object.freeze({
+  selectedProject: ALL,
+  priority: ALL,
+  status: ALL,
+  time: TaskFiltersTime.Today
+});
+var monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+function formattingDateProject(date) {
+  if (!date) return "";
+  let dateArray = date.split("-");
+  let formattedDate = dateArray[2] + " " + monthNames[dateArray[1] - 1].slice(0, 3) + " " + dateArray[0];
+  return formattedDate ? formattedDate : "";
+}
+function formattingDateTask(date) {
+  let dateArray = date.split("-");
+  let formattedDate = dateArray[2] + " " + monthNames[dateArray[1] - 1] + " " + dateArray[0];
+  return formattedDate;
+}
+function todayUserTimeZone() {
+  const now = /* @__PURE__ */ new Date();
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    // Dynamically get the user"s browser timezone
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  };
+  return now.toLocaleDateString("en-CA", options);
+}
+function nDaysAgo(dateString) {
+  if (!dateString) return "Has no start date";
+  const startDate = new Date(dateString);
+  const today3 = new Date(todayUserTimeZone());
+  const daysAgo = (today3 - startDate) / (1e3 * 60 * 60 * 24);
+  if (daysAgo > 1) return `${daysAgo} days ago`;
+  if (daysAgo == 1) return "Yesterday";
+  if (daysAgo == 0) return "Today";
+  if (daysAgo == -1) return "Tomorrow";
+  return `${-daysAgo} days from now`;
+}
+function nDaysLeft(dateString) {
+  if (!dateString) return "Has no deadline";
+  const deadline = new Date(dateString);
+  const today3 = new Date(todayUserTimeZone());
+  const daysLeft = (deadline - today3) / (1e3 * 60 * 60 * 24);
+  if (daysLeft > 1) return `${daysLeft} days left`;
+  if (daysLeft == 1) return "Tomorrow";
+  if (daysLeft == 0) return "Today";
+  if (daysLeft == -1) return "Overdue yesterday";
+  return `${-daysLeft} days overdue`;
+}
+function getWeekRange(date) {
+  const day = date.getDay();
+  const startOfWeek2 = new Date(date);
+  startOfWeek2.setDate(date.getDate() - day);
+  startOfWeek2.setHours(0, 0, 0, 0);
+  const endOfWeek = new Date(startOfWeek2);
+  endOfWeek.setDate(startOfWeek2.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
+  return { startOfWeek: startOfWeek2, endOfWeek };
+}
+function getMonthRange(date) {
+  const startOfMonth2 = new Date(date.getFullYear(), date.getMonth(), 1);
+  const endOfMonth2 = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  endOfMonth2.setHours(23, 59, 59, 999);
+  return { startOfMonth: startOfMonth2, endOfMonth: endOfMonth2 };
+}
+function getQuarterRange(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const quarterStartMonth = Math.floor(month / 3) * 3;
+  const startOfQuarter = new Date(year, quarterStartMonth, 1);
+  const quarterEndMonth = quarterStartMonth + 2;
+  const endOfQuarter = new Date(year, quarterEndMonth + 1, 0);
+  endOfQuarter.setHours(23, 59, 59, 999);
+  return { startOfQuarter, endOfQuarter };
+}
+function formattingDateObj(dateObj) {
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const date = String(dateObj.getDate()).padStart(2, "0");
+  return year + "-" + month + "-" + date;
+}
+var ReportsTimeRange = Object.freeze({
+  ThisWeek: "Week",
+  ThisMonth: "Month",
+  ThreeMonths: "3 Months",
+  SixMonths: "6 Months",
+  SevenDays: "Last 7 days",
+  ThirtyDays: "Last 30 days",
+  NinetyDays: "Last 90 days",
+  HundredEightyDays: "Last 180 days",
+  ThisYear: "This Year",
+  ALL: "All"
+});
+var TaskStatsKeyMap = Object.freeze({
+  [ReportsTimeRange.ThisWeek]: { total: "thisWeekTotal", done: "thisWeekDone" },
+  [ReportsTimeRange.ThisMonth]: { total: "thisMonthTotal", done: "thisMonthDone" },
+  [ReportsTimeRange.ThreeMonths]: { total: "currentQuarterTotal", done: "currentQuarterDone" },
+  [ReportsTimeRange.SixMonths]: { total: "currentSemesterTotal", done: "currentSemesterDone" },
+  [ReportsTimeRange.SevenDays]: { total: "last7DaysTotal", done: "last7DaysDone" },
+  [ReportsTimeRange.ThirtyDays]: { total: "last30DaysTotal", done: "last30DaysDone" },
+  [ReportsTimeRange.NinetyDays]: { total: "last90DaysTotal", done: "last90DaysDone" },
+  [ReportsTimeRange.HundredEightyDays]: { total: "last180DaysTotal", done: "last180DaysDone" },
+  [ReportsTimeRange.ThisYear]: { total: "thisYearTotal", done: "thisYearDone" },
+  [ReportsTimeRange.ALL]: { total: "allTimeTotal", done: "allTimeDone" }
+});
+
+// node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
+var f4 = 0;
+function u4(e4, t4, n3, o4, i4, u5) {
+  t4 || (t4 = {});
+  var a4, c4, p5 = t4;
+  if ("ref" in p5) for (c4 in p5 = {}, t4) "ref" == c4 ? a4 = t4[c4] : p5[c4] = t4[c4];
+  var l5 = { type: e4, props: p5, key: n3, ref: a4, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --f4, __i: -1, __u: 0, __source: i4, __self: u5 };
+  if ("function" == typeof e4 && (a4 = e4.defaultProps)) for (c4 in a4) void 0 === p5[c4] && (p5[c4] = a4[c4]);
+  return l.vnode && l.vnode(l5), l5;
+}
+
+// web/src/home/home.projects.tsx
+var ProjectCard = ({ project, setSelectedProject, isDemo }) => {
+  return /* @__PURE__ */ u4(
+    "div",
+    {
+      onClick: () => setSelectedProject(project.project_id),
+      class: `${project.is_done ? "bg-pink-300 opacity-50" : "bg-white"} group flex h-64 cursor-pointer snap-start flex-col rounded-lg border-l-4 border-background p-6 shadow hover:bg-pink-50`,
+      children: [
+        /* @__PURE__ */ u4("div", { class: "flex flex-col justify-start", children: [
+          /* @__PURE__ */ u4("div", { class: "mb-2 flex justify-between", children: [
+            /* @__PURE__ */ u4(
+              "a",
+              {
+                href: isDemo ? `/demo/project/${project.public_id}` : `/project/${project.public_id}`,
+                target: "_blank",
+                class: "block h-fit max-h-10 items-center overflow-y-auto text-lg font-semibold text-slate-600 hover:underline",
+                onClick: (e4) => e4.stopPropagation(),
+                children: project.project_title
+              }
+            ),
+            project.priority && /* @__PURE__ */ u4("span", { class: "p-2 my-auto inline-flex max-h-6 w-fit items-center rounded-full bg-red-100 text-xs font-medium text-red-800", children: "Priority" })
+          ] }),
+          /* @__PURE__ */ u4("div", { class: "overflow-y-auto", children: /* @__PURE__ */ u4("p", { class: "h-25 min-h-20 text-base text-ellipsis text-gray-700", children: project.project_desc }) })
+        ] }),
+        /* @__PURE__ */ u4("div", { class: "hidden flex-row items-center justify-between pt-1 group-hover:flex", children: [
+          /* @__PURE__ */ u4("p", { class: "text-sm text-gray-500 font-medium", children: [
+            "Start: ",
+            formattingDateProject(project.start_date)
+          ] }),
+          /* @__PURE__ */ u4("p", { class: "flex flex-row items-center text-sm text-hover", children: [
+            /* @__PURE__ */ u4("img", { src: "/static/images/clock.svg", alt: "clock icon", class: "h-3 w-3" }),
+            "\xA0",
+            nDaysAgo(project.start_date)
+          ] })
+        ] }),
+        project.done_date ? /* @__PURE__ */ u4("div", { class: "flex items-center justify-between py-2 group-hover:py-0", children: /* @__PURE__ */ u4("p", { class: "bg-white text-sm font-extrabold text-gray-800 no-underline opacity-100", children: [
+          "DONE : ",
+          formattingDateProject(new Date(project.done_date * 1e3).toLocaleDateString("en-CA"))
+        ] }) }) : /* @__PURE__ */ u4("div", { class: "flex items-center justify-between py-2 group-hover:py-0", children: [
+          /* @__PURE__ */ u4("p", { class: "text-sm text-gray-500 font-medium", children: [
+            "Due : ",
+            formattingDateProject(project.due_date)
+          ] }),
+          /* @__PURE__ */ u4("p", { class: "flex flex-row items-center text-sm text-hover", children: [
+            /* @__PURE__ */ u4("img", { src: "/static/images/clock.svg", alt: "clock icon", class: "h-3 w-3" }),
+            "\xA0",
+            nDaysLeft(project.due_date)
+          ] })
+        ] }),
+        /* @__PURE__ */ u4("div", { class: "flex items-center", children: [
+          /* @__PURE__ */ u4("div", { class: "mr-2 h-2 w-full bg-slate-200", children: /* @__PURE__ */ u4("div", { class: "h-full bg-linear-to-r from-blue-400 to-blue-700", style: { width: `calc(100% * ${project.to_dos_done} / ${project.to_dos_all})` } }) }),
+          /* @__PURE__ */ u4("span", { class: "text-sm font-medium text-gray-500", children: [
+            project.to_dos_done,
+            "/",
+            project.to_dos_all
+          ] })
+        ] })
+      ]
+    }
+  );
+};
+function ProjectsDisplay({
+  projects,
+  setSelectedProject,
+  showUnsorted,
+  unfinishedUnsorted,
+  isDemo
+}) {
+  const showFilter = useSignal(false);
+  const isViewMore = useSignal(false);
+  const getInitialProjectFilter = () => {
+    const storedFilter = localStorage.getItem("projectFilter");
+    if (storedFilter) {
+      try {
+        return JSON.parse(storedFilter);
+      } catch (e4) {
+        console.error("No stored projectFilter from LocalStorage", e4);
+      }
+    }
+    return ProjectFilters.ALL;
+  };
+  const projectFilter = useSignal(getInitialProjectFilter());
+  useSignalEffect(() => {
+    localStorage.setItem("projectFilter", JSON.stringify(projectFilter.value));
+  });
+  const getInitialProjectSorter = () => {
+    const storedSorter = localStorage.getItem("projectSorter");
+    if (storedSorter) {
+      try {
+        return JSON.parse(storedSorter);
+      } catch (e4) {
+        console.error("No stored projectSorter from LocalStorage", e4);
+      }
+    }
+    return ProjectSorter.Skip;
+  };
+  const projectSorter = useSignal(getInitialProjectSorter());
+  useSignalEffect(() => {
+    localStorage.setItem("projectSorter", JSON.stringify(projectSorter.value));
+  });
+  const sortFunctions = T2(() => ({
+    [ProjectSorter.DueDateAsc]: (a4, b3) => {
+      return new Date(a4.due_date).getTime() - new Date(b3.due_date).getTime();
+    },
+    [ProjectSorter.DueDateDesc]: (a4, b3) => {
+      return new Date(b3.due_date).getTime() - new Date(a4.due_date).getTime();
+    },
+    [ProjectSorter.DoneDateAsc]: (a4, b3) => {
+      return new Date(a4.done_date).getTime() - new Date(b3.done_date).getTime();
+    },
+    [ProjectSorter.DoneDateDesc]: (a4, b3) => {
+      return new Date(b3.done_date).getTime() - new Date(a4.done_date).getTime();
+    },
+    [ProjectSorter.Priority]: (a4, b3) => {
+      return Number(b3.priority) - Number(a4.priority);
+    }
+  }), []);
+  const shownProjects = useComputed(() => {
+    let result = projects.value;
+    const today3 = todayUserTimeZone();
+    if (projectFilter.value !== ProjectFilters.ALL) {
+      if (projectFilter.value === ProjectFilters.Unfinished) {
+        result = result.filter((p5) => !p5.is_done);
+      }
+      if (projectFilter.value === ProjectFilters.Finished) {
+        result = result.filter((p5) => p5.is_done);
+      }
+      if (projectFilter.value === ProjectFilters.Overdue) {
+        result = result.filter((p5) => !p5.is_done && new Date(today3) > new Date(p5.due_date));
+      }
+    }
+    if (!projectSorter.value) return result;
+    return [...result].sort(sortFunctions[projectSorter.value]);
+  });
+  return /* @__PURE__ */ u4(k, { children: [
+    /* @__PURE__ */ u4("div", { class: "mb-0 flex flex-col items-center justify-around md:mb-6 md:flex-row md:justify-between", children: [
+      shownProjects.value.length > 0 && /* @__PURE__ */ u4(
+        "div",
+        {
+          onClick: () => showFilter.value = !showFilter.value,
+          class: `${showFilter.value ? "" : "mb-6"} mt-2.5 mb-4 flex cursor-pointer flex-row items-center sm:hidden`,
+          children: showFilter.value ? "Collapse \u2303" : "Expand \u2304"
+        }
+      ),
+      /* @__PURE__ */ u4(
+        "div",
+        {
+          class: `${showFilter.value || !shownProjects.value.length ? "" : "hidden"} mb-5 flex w-full flex-row justify-evenly sm:flex md:mb-0 md:justify-start`,
+          children: [
+            /* @__PURE__ */ u4(
+              "button",
+              {
+                "hx-get": `${isDemo ? "/demo" : ""}/home/create-project-form`,
+                "hx-target": "#form-container",
+                "hx-swap": "innerHTML",
+                class: "flex min-w-35 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover md:mr-5 md:px-2.5 md:py-1 md:text-lg",
+                children: "+ New Project"
+              }
+            ),
+            /* @__PURE__ */ u4(
+              "button",
+              {
+                onClick: () => showUnsorted.value = true,
+                class: "flex cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover md:px-2.5 md:py-1 md:text-lg",
+                children: [
+                  /* @__PURE__ */ u4("img", { src: "/static/images/list.svg", alt: "list of unsorted tasks", class: "h-3.5 w-3.5" }),
+                  "\xA0Unsorted (",
+                  unfinishedUnsorted.value,
+                  ")"
+                ]
+              }
+            )
+          ]
+        }
+      ),
+      /* @__PURE__ */ u4(
+        "div",
+        {
+          class: `${showFilter.value ? "" : "hidden"} mb-5 flex w-full flex-row justify-evenly sm:flex md:mb-0 md:justify-end`,
+          children: [
+            /* @__PURE__ */ u4("div", { class: "flex w-35 cursor-pointer flex-row items-center justify-center text-center text-base md:mr-5 hover:text-background md:w-30", children: [
+              /* @__PURE__ */ u4("img", { src: "/static/images/filter2.png", alt: "", class: "h-4 w-4" }),
+              "\xA0",
+              /* @__PURE__ */ u4(
+                "select",
+                {
+                  onChange: (e4) => projectFilter.value = e4.currentTarget.value,
+                  id: "tasksFilterStatus",
+                  name: "tasksFilterStatus",
+                  class: "w-full px-2 py-3 text-center text-nowrap text-ellipsis",
+                  children: [
+                    /* @__PURE__ */ u4("option", { selected: true, disabled: true, children: "Filter" }),
+                    /* @__PURE__ */ u4("option", { value: ProjectFilters.ALL, children: "All" }),
+                    /* @__PURE__ */ u4("option", { value: ProjectFilters.Unfinished, children: "Unfinished" }),
+                    /* @__PURE__ */ u4("option", { value: ProjectFilters.Finished, children: "Finished" }),
+                    /* @__PURE__ */ u4("option", { value: ProjectFilters.Overdue, children: "Overdue" })
+                  ]
+                }
+              )
+            ] }),
+            /* @__PURE__ */ u4("div", { class: "flex w-35 cursor-pointer flex-row items-center justify-center text-center text-base hover:text-background md:w-fit", children: [
+              /* @__PURE__ */ u4("img", { src: "/static/images/sort.png", alt: "", class: "h-5 w-3" }),
+              /* @__PURE__ */ u4(
+                "select",
+                {
+                  onChange: (e4) => projectSorter.value = e4.currentTarget.value,
+                  id: "projectsFilterPriority",
+                  name: "projectsFilterPriority",
+                  class: "w-full px-2 py-3 text-center text-nowrap text-ellipsis md:w-35",
+                  children: [
+                    /* @__PURE__ */ u4("option", { value: ProjectSorter.Skip, disabled: true, selected: true, children: "Sort by" }),
+                    /* @__PURE__ */ u4("option", { value: ProjectSorter.DueDateAsc, children: [
+                      "Due Date",
+                      /* @__PURE__ */ u4("span", { class: "flex items-start text-3xl", children: "\u2197" })
+                    ] }),
+                    /* @__PURE__ */ u4("option", { value: ProjectSorter.DueDateDesc, children: [
+                      "Due Date",
+                      /* @__PURE__ */ u4("span", { class: "flex items-start text-3xl", children: "\u2198" })
+                    ] }),
+                    /* @__PURE__ */ u4("option", { value: ProjectSorter.DoneDateAsc, children: [
+                      "Done Date",
+                      /* @__PURE__ */ u4("span", { class: "flex items-start text-3xl", children: "\u2197" })
+                    ] }),
+                    /* @__PURE__ */ u4("option", { value: ProjectSorter.DoneDateDesc, children: [
+                      "Done Date",
+                      /* @__PURE__ */ u4("span", { class: "flex items-start text-3xl", children: "\u2198" })
+                    ] }),
+                    /* @__PURE__ */ u4("option", { value: ProjectSorter.Priority, children: "Priority" })
+                  ]
+                }
+              )
+            ] })
+          ]
+        }
+      )
+    ] }),
+    shownProjects.value.length > 0 ? /* @__PURE__ */ u4(k, { children: [
+      /* @__PURE__ */ u4(
+        "div",
+        {
+          id: "projectsContainer",
+          class: `${isViewMore.value ? "h-132.5" : "h-64"} grid snap-y snap-mandatory grid-cols-1 gap-3 overflow-hidden overflow-y-auto transition-all duration-300 ease-in-out md:grid-cols-2 lg:grid-cols-3`,
+          children: shownProjects.value.map((project) => /* @__PURE__ */ u4(
+            ProjectCard,
+            {
+              project,
+              setSelectedProject,
+              isDemo
+            },
+            project.project_id
+          ))
+        }
+      ),
+      shownProjects.value.length > 3 && /* @__PURE__ */ u4("div", { class: "flex flex-row items-center justify-end", children: isViewMore.value ? /* @__PURE__ */ u4(
+        "button",
+        {
+          onClick: () => isViewMore.value = false,
+          class: "mt-5 mr-5 w-full cursor-pointer text-base font-medium hover:underline",
+          children: "Hide"
+        }
+      ) : /* @__PURE__ */ u4(
+        "button",
+        {
+          onClick: () => isViewMore.value = true,
+          class: "mt-5 w-full cursor-pointer text-base font-medium text-nowrap hover:underline",
+          children: "View more"
+        }
+      ) })
+    ] }) : /* @__PURE__ */ u4(k, { children: /* @__PURE__ */ u4("h3", { class: "mb-5 bg-background p-3 text-lg font-extrabold text-white md:my-10 md:text-2xl", children: "You don't have any project yet." }) })
+  ] });
+}
+
+// node_modules/date-fns/constants.js
+var daysInYear = 365.2425;
+var maxTime = Math.pow(10, 8) * 24 * 60 * 60 * 1e3;
+var minTime = -maxTime;
+var millisecondsInWeek = 6048e5;
+var millisecondsInDay = 864e5;
+var secondsInHour = 3600;
+var secondsInDay = secondsInHour * 24;
+var secondsInWeek = secondsInDay * 7;
+var secondsInYear = secondsInDay * daysInYear;
+var secondsInMonth = secondsInYear / 12;
+var secondsInQuarter = secondsInMonth * 3;
+var constructFromSymbol = Symbol.for("constructDateFrom");
+
+// node_modules/date-fns/constructFrom.js
+function constructFrom(date, value) {
+  if (typeof date === "function") return date(value);
+  if (date && typeof date === "object" && constructFromSymbol in date)
+    return date[constructFromSymbol](value);
+  if (date instanceof Date) return new date.constructor(value);
+  return new Date(value);
+}
+
+// node_modules/date-fns/toDate.js
+function toDate(argument, context) {
+  return constructFrom(context || argument, argument);
+}
+
+// node_modules/date-fns/addMonths.js
+function addMonths(date, amount, options) {
+  const _date = toDate(date, options?.in);
+  if (isNaN(amount)) return constructFrom(options?.in || date, NaN);
+  if (!amount) {
+    return _date;
+  }
+  const dayOfMonth = _date.getDate();
+  const endOfDesiredMonth = constructFrom(options?.in || date, _date.getTime());
+  endOfDesiredMonth.setMonth(_date.getMonth() + amount + 1, 0);
+  const daysInMonth = endOfDesiredMonth.getDate();
+  if (dayOfMonth >= daysInMonth) {
+    return endOfDesiredMonth;
+  } else {
+    _date.setFullYear(
+      endOfDesiredMonth.getFullYear(),
+      endOfDesiredMonth.getMonth(),
+      dayOfMonth
+    );
+    return _date;
+  }
+}
+
+// node_modules/date-fns/_lib/defaultOptions.js
+var defaultOptions = {};
+function getDefaultOptions() {
+  return defaultOptions;
+}
+
+// node_modules/date-fns/startOfWeek.js
+function startOfWeek(date, options) {
+  const defaultOptions2 = getDefaultOptions();
+  const weekStartsOn = options?.weekStartsOn ?? options?.locale?.options?.weekStartsOn ?? defaultOptions2.weekStartsOn ?? defaultOptions2.locale?.options?.weekStartsOn ?? 0;
+  const _date = toDate(date, options?.in);
+  const day = _date.getDay();
+  const diff = (day < weekStartsOn ? 7 : 0) + day - weekStartsOn;
+  _date.setDate(_date.getDate() - diff);
+  _date.setHours(0, 0, 0, 0);
+  return _date;
+}
+
+// node_modules/date-fns/startOfISOWeek.js
+function startOfISOWeek(date, options) {
+  return startOfWeek(date, { ...options, weekStartsOn: 1 });
+}
+
+// node_modules/date-fns/getISOWeekYear.js
+function getISOWeekYear(date, options) {
+  const _date = toDate(date, options?.in);
+  const year = _date.getFullYear();
+  const fourthOfJanuaryOfNextYear = constructFrom(_date, 0);
+  fourthOfJanuaryOfNextYear.setFullYear(year + 1, 0, 4);
+  fourthOfJanuaryOfNextYear.setHours(0, 0, 0, 0);
+  const startOfNextYear = startOfISOWeek(fourthOfJanuaryOfNextYear);
+  const fourthOfJanuaryOfThisYear = constructFrom(_date, 0);
+  fourthOfJanuaryOfThisYear.setFullYear(year, 0, 4);
+  fourthOfJanuaryOfThisYear.setHours(0, 0, 0, 0);
+  const startOfThisYear = startOfISOWeek(fourthOfJanuaryOfThisYear);
+  if (_date.getTime() >= startOfNextYear.getTime()) {
+    return year + 1;
+  } else if (_date.getTime() >= startOfThisYear.getTime()) {
+    return year;
+  } else {
+    return year - 1;
+  }
+}
+
+// node_modules/date-fns/_lib/getTimezoneOffsetInMilliseconds.js
+function getTimezoneOffsetInMilliseconds(date) {
+  const _date = toDate(date);
+  const utcDate = new Date(
+    Date.UTC(
+      _date.getFullYear(),
+      _date.getMonth(),
+      _date.getDate(),
+      _date.getHours(),
+      _date.getMinutes(),
+      _date.getSeconds(),
+      _date.getMilliseconds()
+    )
+  );
+  utcDate.setUTCFullYear(_date.getFullYear());
+  return +date - +utcDate;
+}
+
+// node_modules/date-fns/_lib/normalizeDates.js
+function normalizeDates(context, ...dates) {
+  const normalize = constructFrom.bind(
+    null,
+    context || dates.find((date) => typeof date === "object")
+  );
+  return dates.map(normalize);
+}
+
+// node_modules/date-fns/startOfDay.js
+function startOfDay(date, options) {
+  const _date = toDate(date, options?.in);
+  _date.setHours(0, 0, 0, 0);
+  return _date;
+}
+
+// node_modules/date-fns/differenceInCalendarDays.js
+function differenceInCalendarDays(laterDate, earlierDate, options) {
+  const [laterDate_, earlierDate_] = normalizeDates(
+    options?.in,
+    laterDate,
+    earlierDate
+  );
+  const laterStartOfDay = startOfDay(laterDate_);
+  const earlierStartOfDay = startOfDay(earlierDate_);
+  const laterTimestamp = +laterStartOfDay - getTimezoneOffsetInMilliseconds(laterStartOfDay);
+  const earlierTimestamp = +earlierStartOfDay - getTimezoneOffsetInMilliseconds(earlierStartOfDay);
+  return Math.round((laterTimestamp - earlierTimestamp) / millisecondsInDay);
+}
+
+// node_modules/date-fns/startOfISOWeekYear.js
+function startOfISOWeekYear(date, options) {
+  const year = getISOWeekYear(date, options);
+  const fourthOfJanuary = constructFrom(options?.in || date, 0);
+  fourthOfJanuary.setFullYear(year, 0, 4);
+  fourthOfJanuary.setHours(0, 0, 0, 0);
+  return startOfISOWeek(fourthOfJanuary);
+}
+
+// node_modules/date-fns/constructNow.js
+function constructNow(date) {
+  return constructFrom(date, Date.now());
+}
+
+// node_modules/date-fns/isSameDay.js
+function isSameDay(laterDate, earlierDate, options) {
+  const [dateLeft_, dateRight_] = normalizeDates(
+    options?.in,
+    laterDate,
+    earlierDate
+  );
+  return +startOfDay(dateLeft_) === +startOfDay(dateRight_);
+}
+
+// node_modules/date-fns/isDate.js
+function isDate(value) {
+  return value instanceof Date || typeof value === "object" && Object.prototype.toString.call(value) === "[object Date]";
+}
+
+// node_modules/date-fns/isValid.js
+function isValid(date) {
+  return !(!isDate(date) && typeof date !== "number" || isNaN(+toDate(date)));
+}
+
+// node_modules/date-fns/endOfMonth.js
+function endOfMonth(date, options) {
+  const _date = toDate(date, options?.in);
+  const month = _date.getMonth();
+  _date.setFullYear(_date.getFullYear(), month + 1, 0);
+  _date.setHours(23, 59, 59, 999);
+  return _date;
+}
+
+// node_modules/date-fns/_lib/normalizeInterval.js
+function normalizeInterval(context, interval) {
+  const [start, end] = normalizeDates(context, interval.start, interval.end);
+  return { start, end };
+}
+
+// node_modules/date-fns/eachDayOfInterval.js
+function eachDayOfInterval(interval, options) {
+  const { start, end } = normalizeInterval(options?.in, interval);
+  let reversed = +start > +end;
+  const endTime = reversed ? +start : +end;
+  const date = reversed ? end : start;
+  date.setHours(0, 0, 0, 0);
+  let step = options?.step ?? 1;
+  if (!step) return [];
+  if (step < 0) {
+    step = -step;
+    reversed = !reversed;
+  }
+  const dates = [];
+  while (+date <= endTime) {
+    dates.push(constructFrom(start, date));
+    date.setDate(date.getDate() + step);
+    date.setHours(0, 0, 0, 0);
+  }
+  return reversed ? dates.reverse() : dates;
+}
+
+// node_modules/date-fns/startOfMonth.js
+function startOfMonth(date, options) {
+  const _date = toDate(date, options?.in);
+  _date.setDate(1);
+  _date.setHours(0, 0, 0, 0);
+  return _date;
+}
+
+// node_modules/date-fns/startOfYear.js
+function startOfYear(date, options) {
+  const date_ = toDate(date, options?.in);
+  date_.setFullYear(date_.getFullYear(), 0, 1);
+  date_.setHours(0, 0, 0, 0);
+  return date_;
+}
+
+// node_modules/date-fns/locale/en-US/_lib/formatDistance.js
+var formatDistanceLocale = {
+  lessThanXSeconds: {
+    one: "less than a second",
+    other: "less than {{count}} seconds"
+  },
+  xSeconds: {
+    one: "1 second",
+    other: "{{count}} seconds"
+  },
+  halfAMinute: "half a minute",
+  lessThanXMinutes: {
+    one: "less than a minute",
+    other: "less than {{count}} minutes"
+  },
+  xMinutes: {
+    one: "1 minute",
+    other: "{{count}} minutes"
+  },
+  aboutXHours: {
+    one: "about 1 hour",
+    other: "about {{count}} hours"
+  },
+  xHours: {
+    one: "1 hour",
+    other: "{{count}} hours"
+  },
+  xDays: {
+    one: "1 day",
+    other: "{{count}} days"
+  },
+  aboutXWeeks: {
+    one: "about 1 week",
+    other: "about {{count}} weeks"
+  },
+  xWeeks: {
+    one: "1 week",
+    other: "{{count}} weeks"
+  },
+  aboutXMonths: {
+    one: "about 1 month",
+    other: "about {{count}} months"
+  },
+  xMonths: {
+    one: "1 month",
+    other: "{{count}} months"
+  },
+  aboutXYears: {
+    one: "about 1 year",
+    other: "about {{count}} years"
+  },
+  xYears: {
+    one: "1 year",
+    other: "{{count}} years"
+  },
+  overXYears: {
+    one: "over 1 year",
+    other: "over {{count}} years"
+  },
+  almostXYears: {
+    one: "almost 1 year",
+    other: "almost {{count}} years"
+  }
+};
+var formatDistance = (token, count, options) => {
+  let result;
+  const tokenValue = formatDistanceLocale[token];
+  if (typeof tokenValue === "string") {
+    result = tokenValue;
+  } else if (count === 1) {
+    result = tokenValue.one;
+  } else {
+    result = tokenValue.other.replace("{{count}}", count.toString());
+  }
+  if (options?.addSuffix) {
+    if (options.comparison && options.comparison > 0) {
+      return "in " + result;
+    } else {
+      return result + " ago";
+    }
+  }
+  return result;
+};
+
+// node_modules/date-fns/locale/_lib/buildFormatLongFn.js
+function buildFormatLongFn(args) {
+  return (options = {}) => {
+    const width = options.width ? String(options.width) : args.defaultWidth;
+    const format2 = args.formats[width] || args.formats[args.defaultWidth];
+    return format2;
+  };
+}
+
+// node_modules/date-fns/locale/en-US/_lib/formatLong.js
+var dateFormats = {
+  full: "EEEE, MMMM do, y",
+  long: "MMMM do, y",
+  medium: "MMM d, y",
+  short: "MM/dd/yyyy"
+};
+var timeFormats = {
+  full: "h:mm:ss a zzzz",
+  long: "h:mm:ss a z",
+  medium: "h:mm:ss a",
+  short: "h:mm a"
+};
+var dateTimeFormats = {
+  full: "{{date}} 'at' {{time}}",
+  long: "{{date}} 'at' {{time}}",
+  medium: "{{date}}, {{time}}",
+  short: "{{date}}, {{time}}"
+};
+var formatLong = {
+  date: buildFormatLongFn({
+    formats: dateFormats,
+    defaultWidth: "full"
+  }),
+  time: buildFormatLongFn({
+    formats: timeFormats,
+    defaultWidth: "full"
+  }),
+  dateTime: buildFormatLongFn({
+    formats: dateTimeFormats,
+    defaultWidth: "full"
+  })
+};
+
+// node_modules/date-fns/locale/en-US/_lib/formatRelative.js
+var formatRelativeLocale = {
+  lastWeek: "'last' eeee 'at' p",
+  yesterday: "'yesterday at' p",
+  today: "'today at' p",
+  tomorrow: "'tomorrow at' p",
+  nextWeek: "eeee 'at' p",
+  other: "P"
+};
+var formatRelative = (token, _date, _baseDate, _options) => formatRelativeLocale[token];
+
+// node_modules/date-fns/locale/_lib/buildLocalizeFn.js
+function buildLocalizeFn(args) {
+  return (value, options) => {
+    const context = options?.context ? String(options.context) : "standalone";
+    let valuesArray;
+    if (context === "formatting" && args.formattingValues) {
+      const defaultWidth = args.defaultFormattingWidth || args.defaultWidth;
+      const width = options?.width ? String(options.width) : defaultWidth;
+      valuesArray = args.formattingValues[width] || args.formattingValues[defaultWidth];
+    } else {
+      const defaultWidth = args.defaultWidth;
+      const width = options?.width ? String(options.width) : args.defaultWidth;
+      valuesArray = args.values[width] || args.values[defaultWidth];
+    }
+    const index = args.argumentCallback ? args.argumentCallback(value) : value;
+    return valuesArray[index];
+  };
+}
+
+// node_modules/date-fns/locale/en-US/_lib/localize.js
+var eraValues = {
+  narrow: ["B", "A"],
+  abbreviated: ["BC", "AD"],
+  wide: ["Before Christ", "Anno Domini"]
+};
+var quarterValues = {
+  narrow: ["1", "2", "3", "4"],
+  abbreviated: ["Q1", "Q2", "Q3", "Q4"],
+  wide: ["1st quarter", "2nd quarter", "3rd quarter", "4th quarter"]
+};
+var monthValues = {
+  narrow: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+  abbreviated: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  wide: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+};
+var dayValues = {
+  narrow: ["S", "M", "T", "W", "T", "F", "S"],
+  short: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+  abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  wide: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ]
+};
+var dayPeriodValues = {
+  narrow: {
+    am: "a",
+    pm: "p",
+    midnight: "mi",
+    noon: "n",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night"
+  },
+  abbreviated: {
+    am: "AM",
+    pm: "PM",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night"
+  },
+  wide: {
+    am: "a.m.",
+    pm: "p.m.",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night"
+  }
+};
+var formattingDayPeriodValues = {
+  narrow: {
+    am: "a",
+    pm: "p",
+    midnight: "mi",
+    noon: "n",
+    morning: "in the morning",
+    afternoon: "in the afternoon",
+    evening: "in the evening",
+    night: "at night"
+  },
+  abbreviated: {
+    am: "AM",
+    pm: "PM",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "in the morning",
+    afternoon: "in the afternoon",
+    evening: "in the evening",
+    night: "at night"
+  },
+  wide: {
+    am: "a.m.",
+    pm: "p.m.",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "in the morning",
+    afternoon: "in the afternoon",
+    evening: "in the evening",
+    night: "at night"
+  }
+};
+var ordinalNumber = (dirtyNumber, _options) => {
+  const number = Number(dirtyNumber);
+  const rem100 = number % 100;
+  if (rem100 > 20 || rem100 < 10) {
+    switch (rem100 % 10) {
+      case 1:
+        return number + "st";
+      case 2:
+        return number + "nd";
+      case 3:
+        return number + "rd";
+    }
+  }
+  return number + "th";
+};
+var localize = {
+  ordinalNumber,
+  era: buildLocalizeFn({
+    values: eraValues,
+    defaultWidth: "wide"
+  }),
+  quarter: buildLocalizeFn({
+    values: quarterValues,
+    defaultWidth: "wide",
+    argumentCallback: (quarter) => quarter - 1
+  }),
+  month: buildLocalizeFn({
+    values: monthValues,
+    defaultWidth: "wide"
+  }),
+  day: buildLocalizeFn({
+    values: dayValues,
+    defaultWidth: "wide"
+  }),
+  dayPeriod: buildLocalizeFn({
+    values: dayPeriodValues,
+    defaultWidth: "wide",
+    formattingValues: formattingDayPeriodValues,
+    defaultFormattingWidth: "wide"
+  })
+};
+
+// node_modules/date-fns/locale/_lib/buildMatchFn.js
+function buildMatchFn(args) {
+  return (string, options = {}) => {
+    const width = options.width;
+    const matchPattern = width && args.matchPatterns[width] || args.matchPatterns[args.defaultMatchWidth];
+    const matchResult = string.match(matchPattern);
+    if (!matchResult) {
+      return null;
+    }
+    const matchedString = matchResult[0];
+    const parsePatterns = width && args.parsePatterns[width] || args.parsePatterns[args.defaultParseWidth];
+    const key = Array.isArray(parsePatterns) ? findIndex(parsePatterns, (pattern) => pattern.test(matchedString)) : (
+      // [TODO] -- I challenge you to fix the type
+      findKey(parsePatterns, (pattern) => pattern.test(matchedString))
+    );
+    let value;
+    value = args.valueCallback ? args.valueCallback(key) : key;
+    value = options.valueCallback ? (
+      // [TODO] -- I challenge you to fix the type
+      options.valueCallback(value)
+    ) : value;
+    const rest = string.slice(matchedString.length);
+    return { value, rest };
+  };
+}
+function findKey(object, predicate) {
+  for (const key in object) {
+    if (Object.prototype.hasOwnProperty.call(object, key) && predicate(object[key])) {
+      return key;
+    }
+  }
+  return void 0;
+}
+function findIndex(array, predicate) {
+  for (let key = 0; key < array.length; key++) {
+    if (predicate(array[key])) {
+      return key;
+    }
+  }
+  return void 0;
+}
+
+// node_modules/date-fns/locale/_lib/buildMatchPatternFn.js
+function buildMatchPatternFn(args) {
+  return (string, options = {}) => {
+    const matchResult = string.match(args.matchPattern);
+    if (!matchResult) return null;
+    const matchedString = matchResult[0];
+    const parseResult = string.match(args.parsePattern);
+    if (!parseResult) return null;
+    let value = args.valueCallback ? args.valueCallback(parseResult[0]) : parseResult[0];
+    value = options.valueCallback ? options.valueCallback(value) : value;
+    const rest = string.slice(matchedString.length);
+    return { value, rest };
+  };
+}
+
+// node_modules/date-fns/locale/en-US/_lib/match.js
+var matchOrdinalNumberPattern = /^(\d+)(th|st|nd|rd)?/i;
+var parseOrdinalNumberPattern = /\d+/i;
+var matchEraPatterns = {
+  narrow: /^(b|a)/i,
+  abbreviated: /^(b\.?\s?c\.?|b\.?\s?c\.?\s?e\.?|a\.?\s?d\.?|c\.?\s?e\.?)/i,
+  wide: /^(before christ|before common era|anno domini|common era)/i
+};
+var parseEraPatterns = {
+  any: [/^b/i, /^(a|c)/i]
+};
+var matchQuarterPatterns = {
+  narrow: /^[1234]/i,
+  abbreviated: /^q[1234]/i,
+  wide: /^[1234](th|st|nd|rd)? quarter/i
+};
+var parseQuarterPatterns = {
+  any: [/1/i, /2/i, /3/i, /4/i]
+};
+var matchMonthPatterns = {
+  narrow: /^[jfmasond]/i,
+  abbreviated: /^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i,
+  wide: /^(january|february|march|april|may|june|july|august|september|october|november|december)/i
+};
+var parseMonthPatterns = {
+  narrow: [
+    /^j/i,
+    /^f/i,
+    /^m/i,
+    /^a/i,
+    /^m/i,
+    /^j/i,
+    /^j/i,
+    /^a/i,
+    /^s/i,
+    /^o/i,
+    /^n/i,
+    /^d/i
+  ],
+  any: [
+    /^ja/i,
+    /^f/i,
+    /^mar/i,
+    /^ap/i,
+    /^may/i,
+    /^jun/i,
+    /^jul/i,
+    /^au/i,
+    /^s/i,
+    /^o/i,
+    /^n/i,
+    /^d/i
+  ]
+};
+var matchDayPatterns = {
+  narrow: /^[smtwf]/i,
+  short: /^(su|mo|tu|we|th|fr|sa)/i,
+  abbreviated: /^(sun|mon|tue|wed|thu|fri|sat)/i,
+  wide: /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)/i
+};
+var parseDayPatterns = {
+  narrow: [/^s/i, /^m/i, /^t/i, /^w/i, /^t/i, /^f/i, /^s/i],
+  any: [/^su/i, /^m/i, /^tu/i, /^w/i, /^th/i, /^f/i, /^sa/i]
+};
+var matchDayPeriodPatterns = {
+  narrow: /^(a|p|mi|n|(in the|at) (morning|afternoon|evening|night))/i,
+  any: /^([ap]\.?\s?m\.?|midnight|noon|(in the|at) (morning|afternoon|evening|night))/i
+};
+var parseDayPeriodPatterns = {
+  any: {
+    am: /^a/i,
+    pm: /^p/i,
+    midnight: /^mi/i,
+    noon: /^no/i,
+    morning: /morning/i,
+    afternoon: /afternoon/i,
+    evening: /evening/i,
+    night: /night/i
+  }
+};
+var match = {
+  ordinalNumber: buildMatchPatternFn({
+    matchPattern: matchOrdinalNumberPattern,
+    parsePattern: parseOrdinalNumberPattern,
+    valueCallback: (value) => parseInt(value, 10)
+  }),
+  era: buildMatchFn({
+    matchPatterns: matchEraPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseEraPatterns,
+    defaultParseWidth: "any"
+  }),
+  quarter: buildMatchFn({
+    matchPatterns: matchQuarterPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseQuarterPatterns,
+    defaultParseWidth: "any",
+    valueCallback: (index) => index + 1
+  }),
+  month: buildMatchFn({
+    matchPatterns: matchMonthPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseMonthPatterns,
+    defaultParseWidth: "any"
+  }),
+  day: buildMatchFn({
+    matchPatterns: matchDayPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseDayPatterns,
+    defaultParseWidth: "any"
+  }),
+  dayPeriod: buildMatchFn({
+    matchPatterns: matchDayPeriodPatterns,
+    defaultMatchWidth: "any",
+    parsePatterns: parseDayPeriodPatterns,
+    defaultParseWidth: "any"
+  })
+};
+
+// node_modules/date-fns/locale/en-US.js
+var enUS = {
+  code: "en-US",
+  formatDistance,
+  formatLong,
+  formatRelative,
+  localize,
+  match,
+  options: {
+    weekStartsOn: 0,
+    firstWeekContainsDate: 1
+  }
+};
+
+// node_modules/date-fns/getDayOfYear.js
+function getDayOfYear(date, options) {
+  const _date = toDate(date, options?.in);
+  const diff = differenceInCalendarDays(_date, startOfYear(_date));
+  const dayOfYear = diff + 1;
+  return dayOfYear;
+}
+
+// node_modules/date-fns/getISOWeek.js
+function getISOWeek(date, options) {
+  const _date = toDate(date, options?.in);
+  const diff = +startOfISOWeek(_date) - +startOfISOWeekYear(_date);
+  return Math.round(diff / millisecondsInWeek) + 1;
+}
+
+// node_modules/date-fns/getWeekYear.js
+function getWeekYear(date, options) {
+  const _date = toDate(date, options?.in);
+  const year = _date.getFullYear();
+  const defaultOptions2 = getDefaultOptions();
+  const firstWeekContainsDate = options?.firstWeekContainsDate ?? options?.locale?.options?.firstWeekContainsDate ?? defaultOptions2.firstWeekContainsDate ?? defaultOptions2.locale?.options?.firstWeekContainsDate ?? 1;
+  const firstWeekOfNextYear = constructFrom(options?.in || date, 0);
+  firstWeekOfNextYear.setFullYear(year + 1, 0, firstWeekContainsDate);
+  firstWeekOfNextYear.setHours(0, 0, 0, 0);
+  const startOfNextYear = startOfWeek(firstWeekOfNextYear, options);
+  const firstWeekOfThisYear = constructFrom(options?.in || date, 0);
+  firstWeekOfThisYear.setFullYear(year, 0, firstWeekContainsDate);
+  firstWeekOfThisYear.setHours(0, 0, 0, 0);
+  const startOfThisYear = startOfWeek(firstWeekOfThisYear, options);
+  if (+_date >= +startOfNextYear) {
+    return year + 1;
+  } else if (+_date >= +startOfThisYear) {
+    return year;
+  } else {
+    return year - 1;
+  }
+}
+
+// node_modules/date-fns/startOfWeekYear.js
+function startOfWeekYear(date, options) {
+  const defaultOptions2 = getDefaultOptions();
+  const firstWeekContainsDate = options?.firstWeekContainsDate ?? options?.locale?.options?.firstWeekContainsDate ?? defaultOptions2.firstWeekContainsDate ?? defaultOptions2.locale?.options?.firstWeekContainsDate ?? 1;
+  const year = getWeekYear(date, options);
+  const firstWeek = constructFrom(options?.in || date, 0);
+  firstWeek.setFullYear(year, 0, firstWeekContainsDate);
+  firstWeek.setHours(0, 0, 0, 0);
+  const _date = startOfWeek(firstWeek, options);
+  return _date;
+}
+
+// node_modules/date-fns/getWeek.js
+function getWeek(date, options) {
+  const _date = toDate(date, options?.in);
+  const diff = +startOfWeek(_date, options) - +startOfWeekYear(_date, options);
+  return Math.round(diff / millisecondsInWeek) + 1;
+}
+
+// node_modules/date-fns/_lib/addLeadingZeros.js
+function addLeadingZeros(number, targetLength) {
+  const sign = number < 0 ? "-" : "";
+  const output = Math.abs(number).toString().padStart(targetLength, "0");
+  return sign + output;
+}
+
+// node_modules/date-fns/_lib/format/lightFormatters.js
+var lightFormatters = {
+  // Year
+  y(date, token) {
+    const signedYear = date.getFullYear();
+    const year = signedYear > 0 ? signedYear : 1 - signedYear;
+    return addLeadingZeros(token === "yy" ? year % 100 : year, token.length);
+  },
+  // Month
+  M(date, token) {
+    const month = date.getMonth();
+    return token === "M" ? String(month + 1) : addLeadingZeros(month + 1, 2);
+  },
+  // Day of the month
+  d(date, token) {
+    return addLeadingZeros(date.getDate(), token.length);
+  },
+  // AM or PM
+  a(date, token) {
+    const dayPeriodEnumValue = date.getHours() / 12 >= 1 ? "pm" : "am";
+    switch (token) {
+      case "a":
+      case "aa":
+        return dayPeriodEnumValue.toUpperCase();
+      case "aaa":
+        return dayPeriodEnumValue;
+      case "aaaaa":
+        return dayPeriodEnumValue[0];
+      case "aaaa":
+      default:
+        return dayPeriodEnumValue === "am" ? "a.m." : "p.m.";
+    }
+  },
+  // Hour [1-12]
+  h(date, token) {
+    return addLeadingZeros(date.getHours() % 12 || 12, token.length);
+  },
+  // Hour [0-23]
+  H(date, token) {
+    return addLeadingZeros(date.getHours(), token.length);
+  },
+  // Minute
+  m(date, token) {
+    return addLeadingZeros(date.getMinutes(), token.length);
+  },
+  // Second
+  s(date, token) {
+    return addLeadingZeros(date.getSeconds(), token.length);
+  },
+  // Fraction of second
+  S(date, token) {
+    const numberOfDigits = token.length;
+    const milliseconds = date.getMilliseconds();
+    const fractionalSeconds = Math.trunc(
+      milliseconds * Math.pow(10, numberOfDigits - 3)
+    );
+    return addLeadingZeros(fractionalSeconds, token.length);
+  }
+};
+
+// node_modules/date-fns/_lib/format/formatters.js
+var dayPeriodEnum = {
+  am: "am",
+  pm: "pm",
+  midnight: "midnight",
+  noon: "noon",
+  morning: "morning",
+  afternoon: "afternoon",
+  evening: "evening",
+  night: "night"
+};
+var formatters = {
+  // Era
+  G: function(date, token, localize2) {
+    const era = date.getFullYear() > 0 ? 1 : 0;
+    switch (token) {
+      // AD, BC
+      case "G":
+      case "GG":
+      case "GGG":
+        return localize2.era(era, { width: "abbreviated" });
+      // A, B
+      case "GGGGG":
+        return localize2.era(era, { width: "narrow" });
+      // Anno Domini, Before Christ
+      case "GGGG":
+      default:
+        return localize2.era(era, { width: "wide" });
+    }
+  },
+  // Year
+  y: function(date, token, localize2) {
+    if (token === "yo") {
+      const signedYear = date.getFullYear();
+      const year = signedYear > 0 ? signedYear : 1 - signedYear;
+      return localize2.ordinalNumber(year, { unit: "year" });
+    }
+    return lightFormatters.y(date, token);
+  },
+  // Local week-numbering year
+  Y: function(date, token, localize2, options) {
+    const signedWeekYear = getWeekYear(date, options);
+    const weekYear = signedWeekYear > 0 ? signedWeekYear : 1 - signedWeekYear;
+    if (token === "YY") {
+      const twoDigitYear = weekYear % 100;
+      return addLeadingZeros(twoDigitYear, 2);
+    }
+    if (token === "Yo") {
+      return localize2.ordinalNumber(weekYear, { unit: "year" });
+    }
+    return addLeadingZeros(weekYear, token.length);
+  },
+  // ISO week-numbering year
+  R: function(date, token) {
+    const isoWeekYear = getISOWeekYear(date);
+    return addLeadingZeros(isoWeekYear, token.length);
+  },
+  // Extended year. This is a single number designating the year of this calendar system.
+  // The main difference between `y` and `u` localizers are B.C. years:
+  // | Year | `y` | `u` |
+  // |------|-----|-----|
+  // | AC 1 |   1 |   1 |
+  // | BC 1 |   1 |   0 |
+  // | BC 2 |   2 |  -1 |
+  // Also `yy` always returns the last two digits of a year,
+  // while `uu` pads single digit years to 2 characters and returns other years unchanged.
+  u: function(date, token) {
+    const year = date.getFullYear();
+    return addLeadingZeros(year, token.length);
+  },
+  // Quarter
+  Q: function(date, token, localize2) {
+    const quarter = Math.ceil((date.getMonth() + 1) / 3);
+    switch (token) {
+      // 1, 2, 3, 4
+      case "Q":
+        return String(quarter);
+      // 01, 02, 03, 04
+      case "QQ":
+        return addLeadingZeros(quarter, 2);
+      // 1st, 2nd, 3rd, 4th
+      case "Qo":
+        return localize2.ordinalNumber(quarter, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
+      case "QQQ":
+        return localize2.quarter(quarter, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
+      case "QQQQQ":
+        return localize2.quarter(quarter, {
+          width: "narrow",
+          context: "formatting"
+        });
+      // 1st quarter, 2nd quarter, ...
+      case "QQQQ":
+      default:
+        return localize2.quarter(quarter, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // Stand-alone quarter
+  q: function(date, token, localize2) {
+    const quarter = Math.ceil((date.getMonth() + 1) / 3);
+    switch (token) {
+      // 1, 2, 3, 4
+      case "q":
+        return String(quarter);
+      // 01, 02, 03, 04
+      case "qq":
+        return addLeadingZeros(quarter, 2);
+      // 1st, 2nd, 3rd, 4th
+      case "qo":
+        return localize2.ordinalNumber(quarter, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
+      case "qqq":
+        return localize2.quarter(quarter, {
+          width: "abbreviated",
+          context: "standalone"
+        });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
+      case "qqqqq":
+        return localize2.quarter(quarter, {
+          width: "narrow",
+          context: "standalone"
+        });
+      // 1st quarter, 2nd quarter, ...
+      case "qqqq":
+      default:
+        return localize2.quarter(quarter, {
+          width: "wide",
+          context: "standalone"
+        });
+    }
+  },
+  // Month
+  M: function(date, token, localize2) {
+    const month = date.getMonth();
+    switch (token) {
+      case "M":
+      case "MM":
+        return lightFormatters.M(date, token);
+      // 1st, 2nd, ..., 12th
+      case "Mo":
+        return localize2.ordinalNumber(month + 1, { unit: "month" });
+      // Jan, Feb, ..., Dec
+      case "MMM":
+        return localize2.month(month, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      // J, F, ..., D
+      case "MMMMM":
+        return localize2.month(month, {
+          width: "narrow",
+          context: "formatting"
+        });
+      // January, February, ..., December
+      case "MMMM":
+      default:
+        return localize2.month(month, { width: "wide", context: "formatting" });
+    }
+  },
+  // Stand-alone month
+  L: function(date, token, localize2) {
+    const month = date.getMonth();
+    switch (token) {
+      // 1, 2, ..., 12
+      case "L":
+        return String(month + 1);
+      // 01, 02, ..., 12
+      case "LL":
+        return addLeadingZeros(month + 1, 2);
+      // 1st, 2nd, ..., 12th
+      case "Lo":
+        return localize2.ordinalNumber(month + 1, { unit: "month" });
+      // Jan, Feb, ..., Dec
+      case "LLL":
+        return localize2.month(month, {
+          width: "abbreviated",
+          context: "standalone"
+        });
+      // J, F, ..., D
+      case "LLLLL":
+        return localize2.month(month, {
+          width: "narrow",
+          context: "standalone"
+        });
+      // January, February, ..., December
+      case "LLLL":
+      default:
+        return localize2.month(month, { width: "wide", context: "standalone" });
+    }
+  },
+  // Local week of year
+  w: function(date, token, localize2, options) {
+    const week = getWeek(date, options);
+    if (token === "wo") {
+      return localize2.ordinalNumber(week, { unit: "week" });
+    }
+    return addLeadingZeros(week, token.length);
+  },
+  // ISO week of year
+  I: function(date, token, localize2) {
+    const isoWeek = getISOWeek(date);
+    if (token === "Io") {
+      return localize2.ordinalNumber(isoWeek, { unit: "week" });
+    }
+    return addLeadingZeros(isoWeek, token.length);
+  },
+  // Day of the month
+  d: function(date, token, localize2) {
+    if (token === "do") {
+      return localize2.ordinalNumber(date.getDate(), { unit: "date" });
+    }
+    return lightFormatters.d(date, token);
+  },
+  // Day of year
+  D: function(date, token, localize2) {
+    const dayOfYear = getDayOfYear(date);
+    if (token === "Do") {
+      return localize2.ordinalNumber(dayOfYear, { unit: "dayOfYear" });
+    }
+    return addLeadingZeros(dayOfYear, token.length);
+  },
+  // Day of week
+  E: function(date, token, localize2) {
+    const dayOfWeek = date.getDay();
+    switch (token) {
+      // Tue
+      case "E":
+      case "EE":
+      case "EEE":
+        return localize2.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      // T
+      case "EEEEE":
+        return localize2.day(dayOfWeek, {
+          width: "narrow",
+          context: "formatting"
+        });
+      // Tu
+      case "EEEEEE":
+        return localize2.day(dayOfWeek, {
+          width: "short",
+          context: "formatting"
+        });
+      // Tuesday
+      case "EEEE":
+      default:
+        return localize2.day(dayOfWeek, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // Local day of week
+  e: function(date, token, localize2, options) {
+    const dayOfWeek = date.getDay();
+    const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
+    switch (token) {
+      // Numerical value (Nth day of week with current locale or weekStartsOn)
+      case "e":
+        return String(localDayOfWeek);
+      // Padded numerical value
+      case "ee":
+        return addLeadingZeros(localDayOfWeek, 2);
+      // 1st, 2nd, ..., 7th
+      case "eo":
+        return localize2.ordinalNumber(localDayOfWeek, { unit: "day" });
+      case "eee":
+        return localize2.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      // T
+      case "eeeee":
+        return localize2.day(dayOfWeek, {
+          width: "narrow",
+          context: "formatting"
+        });
+      // Tu
+      case "eeeeee":
+        return localize2.day(dayOfWeek, {
+          width: "short",
+          context: "formatting"
+        });
+      // Tuesday
+      case "eeee":
+      default:
+        return localize2.day(dayOfWeek, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // Stand-alone local day of week
+  c: function(date, token, localize2, options) {
+    const dayOfWeek = date.getDay();
+    const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
+    switch (token) {
+      // Numerical value (same as in `e`)
+      case "c":
+        return String(localDayOfWeek);
+      // Padded numerical value
+      case "cc":
+        return addLeadingZeros(localDayOfWeek, token.length);
+      // 1st, 2nd, ..., 7th
+      case "co":
+        return localize2.ordinalNumber(localDayOfWeek, { unit: "day" });
+      case "ccc":
+        return localize2.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "standalone"
+        });
+      // T
+      case "ccccc":
+        return localize2.day(dayOfWeek, {
+          width: "narrow",
+          context: "standalone"
+        });
+      // Tu
+      case "cccccc":
+        return localize2.day(dayOfWeek, {
+          width: "short",
+          context: "standalone"
+        });
+      // Tuesday
+      case "cccc":
+      default:
+        return localize2.day(dayOfWeek, {
+          width: "wide",
+          context: "standalone"
+        });
+    }
+  },
+  // ISO day of week
+  i: function(date, token, localize2) {
+    const dayOfWeek = date.getDay();
+    const isoDayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
+    switch (token) {
+      // 2
+      case "i":
+        return String(isoDayOfWeek);
+      // 02
+      case "ii":
+        return addLeadingZeros(isoDayOfWeek, token.length);
+      // 2nd
+      case "io":
+        return localize2.ordinalNumber(isoDayOfWeek, { unit: "day" });
+      // Tue
+      case "iii":
+        return localize2.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      // T
+      case "iiiii":
+        return localize2.day(dayOfWeek, {
+          width: "narrow",
+          context: "formatting"
+        });
+      // Tu
+      case "iiiiii":
+        return localize2.day(dayOfWeek, {
+          width: "short",
+          context: "formatting"
+        });
+      // Tuesday
+      case "iiii":
+      default:
+        return localize2.day(dayOfWeek, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // AM or PM
+  a: function(date, token, localize2) {
+    const hours = date.getHours();
+    const dayPeriodEnumValue = hours / 12 >= 1 ? "pm" : "am";
+    switch (token) {
+      case "a":
+      case "aa":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      case "aaa":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting"
+        }).toLowerCase();
+      case "aaaaa":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "narrow",
+          context: "formatting"
+        });
+      case "aaaa":
+      default:
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // AM, PM, midnight, noon
+  b: function(date, token, localize2) {
+    const hours = date.getHours();
+    let dayPeriodEnumValue;
+    if (hours === 12) {
+      dayPeriodEnumValue = dayPeriodEnum.noon;
+    } else if (hours === 0) {
+      dayPeriodEnumValue = dayPeriodEnum.midnight;
+    } else {
+      dayPeriodEnumValue = hours / 12 >= 1 ? "pm" : "am";
+    }
+    switch (token) {
+      case "b":
+      case "bb":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      case "bbb":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting"
+        }).toLowerCase();
+      case "bbbbb":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "narrow",
+          context: "formatting"
+        });
+      case "bbbb":
+      default:
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // in the morning, in the afternoon, in the evening, at night
+  B: function(date, token, localize2) {
+    const hours = date.getHours();
+    let dayPeriodEnumValue;
+    if (hours >= 17) {
+      dayPeriodEnumValue = dayPeriodEnum.evening;
+    } else if (hours >= 12) {
+      dayPeriodEnumValue = dayPeriodEnum.afternoon;
+    } else if (hours >= 4) {
+      dayPeriodEnumValue = dayPeriodEnum.morning;
+    } else {
+      dayPeriodEnumValue = dayPeriodEnum.night;
+    }
+    switch (token) {
+      case "B":
+      case "BB":
+      case "BBB":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting"
+        });
+      case "BBBBB":
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "narrow",
+          context: "formatting"
+        });
+      case "BBBB":
+      default:
+        return localize2.dayPeriod(dayPeriodEnumValue, {
+          width: "wide",
+          context: "formatting"
+        });
+    }
+  },
+  // Hour [1-12]
+  h: function(date, token, localize2) {
+    if (token === "ho") {
+      let hours = date.getHours() % 12;
+      if (hours === 0) hours = 12;
+      return localize2.ordinalNumber(hours, { unit: "hour" });
+    }
+    return lightFormatters.h(date, token);
+  },
+  // Hour [0-23]
+  H: function(date, token, localize2) {
+    if (token === "Ho") {
+      return localize2.ordinalNumber(date.getHours(), { unit: "hour" });
+    }
+    return lightFormatters.H(date, token);
+  },
+  // Hour [0-11]
+  K: function(date, token, localize2) {
+    const hours = date.getHours() % 12;
+    if (token === "Ko") {
+      return localize2.ordinalNumber(hours, { unit: "hour" });
+    }
+    return addLeadingZeros(hours, token.length);
+  },
+  // Hour [1-24]
+  k: function(date, token, localize2) {
+    let hours = date.getHours();
+    if (hours === 0) hours = 24;
+    if (token === "ko") {
+      return localize2.ordinalNumber(hours, { unit: "hour" });
+    }
+    return addLeadingZeros(hours, token.length);
+  },
+  // Minute
+  m: function(date, token, localize2) {
+    if (token === "mo") {
+      return localize2.ordinalNumber(date.getMinutes(), { unit: "minute" });
+    }
+    return lightFormatters.m(date, token);
+  },
+  // Second
+  s: function(date, token, localize2) {
+    if (token === "so") {
+      return localize2.ordinalNumber(date.getSeconds(), { unit: "second" });
+    }
+    return lightFormatters.s(date, token);
+  },
+  // Fraction of second
+  S: function(date, token) {
+    return lightFormatters.S(date, token);
+  },
+  // Timezone (ISO-8601. If offset is 0, output is always `'Z'`)
+  X: function(date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+    if (timezoneOffset === 0) {
+      return "Z";
+    }
+    switch (token) {
+      // Hours and optional minutes
+      case "X":
+        return formatTimezoneWithOptionalMinutes(timezoneOffset);
+      // Hours, minutes and optional seconds without `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `XX`
+      case "XXXX":
+      case "XX":
+        return formatTimezone(timezoneOffset);
+      // Hours, minutes and optional seconds with `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `XXX`
+      case "XXXXX":
+      case "XXX":
+      // Hours and minutes with `:` delimiter
+      default:
+        return formatTimezone(timezoneOffset, ":");
+    }
+  },
+  // Timezone (ISO-8601. If offset is 0, output is `'+00:00'` or equivalent)
+  x: function(date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+    switch (token) {
+      // Hours and optional minutes
+      case "x":
+        return formatTimezoneWithOptionalMinutes(timezoneOffset);
+      // Hours, minutes and optional seconds without `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `xx`
+      case "xxxx":
+      case "xx":
+        return formatTimezone(timezoneOffset);
+      // Hours, minutes and optional seconds with `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `xxx`
+      case "xxxxx":
+      case "xxx":
+      // Hours and minutes with `:` delimiter
+      default:
+        return formatTimezone(timezoneOffset, ":");
+    }
+  },
+  // Timezone (GMT)
+  O: function(date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+    switch (token) {
+      // Short
+      case "O":
+      case "OO":
+      case "OOO":
+        return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+      // Long
+      case "OOOO":
+      default:
+        return "GMT" + formatTimezone(timezoneOffset, ":");
+    }
+  },
+  // Timezone (specific non-location)
+  z: function(date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+    switch (token) {
+      // Short
+      case "z":
+      case "zz":
+      case "zzz":
+        return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+      // Long
+      case "zzzz":
+      default:
+        return "GMT" + formatTimezone(timezoneOffset, ":");
+    }
+  },
+  // Seconds timestamp
+  t: function(date, token, _localize) {
+    const timestamp = Math.trunc(+date / 1e3);
+    return addLeadingZeros(timestamp, token.length);
+  },
+  // Milliseconds timestamp
+  T: function(date, token, _localize) {
+    return addLeadingZeros(+date, token.length);
+  }
+};
+function formatTimezoneShort(offset, delimiter = "") {
+  const sign = offset > 0 ? "-" : "+";
+  const absOffset = Math.abs(offset);
+  const hours = Math.trunc(absOffset / 60);
+  const minutes = absOffset % 60;
+  if (minutes === 0) {
+    return sign + String(hours);
+  }
+  return sign + String(hours) + delimiter + addLeadingZeros(minutes, 2);
+}
+function formatTimezoneWithOptionalMinutes(offset, delimiter) {
+  if (offset % 60 === 0) {
+    const sign = offset > 0 ? "-" : "+";
+    return sign + addLeadingZeros(Math.abs(offset) / 60, 2);
+  }
+  return formatTimezone(offset, delimiter);
+}
+function formatTimezone(offset, delimiter = "") {
+  const sign = offset > 0 ? "-" : "+";
+  const absOffset = Math.abs(offset);
+  const hours = addLeadingZeros(Math.trunc(absOffset / 60), 2);
+  const minutes = addLeadingZeros(absOffset % 60, 2);
+  return sign + hours + delimiter + minutes;
+}
+
+// node_modules/date-fns/_lib/format/longFormatters.js
+var dateLongFormatter = (pattern, formatLong2) => {
+  switch (pattern) {
+    case "P":
+      return formatLong2.date({ width: "short" });
+    case "PP":
+      return formatLong2.date({ width: "medium" });
+    case "PPP":
+      return formatLong2.date({ width: "long" });
+    case "PPPP":
+    default:
+      return formatLong2.date({ width: "full" });
+  }
+};
+var timeLongFormatter = (pattern, formatLong2) => {
+  switch (pattern) {
+    case "p":
+      return formatLong2.time({ width: "short" });
+    case "pp":
+      return formatLong2.time({ width: "medium" });
+    case "ppp":
+      return formatLong2.time({ width: "long" });
+    case "pppp":
+    default:
+      return formatLong2.time({ width: "full" });
+  }
+};
+var dateTimeLongFormatter = (pattern, formatLong2) => {
+  const matchResult = pattern.match(/(P+)(p+)?/) || [];
+  const datePattern = matchResult[1];
+  const timePattern = matchResult[2];
+  if (!timePattern) {
+    return dateLongFormatter(pattern, formatLong2);
+  }
+  let dateTimeFormat;
+  switch (datePattern) {
+    case "P":
+      dateTimeFormat = formatLong2.dateTime({ width: "short" });
+      break;
+    case "PP":
+      dateTimeFormat = formatLong2.dateTime({ width: "medium" });
+      break;
+    case "PPP":
+      dateTimeFormat = formatLong2.dateTime({ width: "long" });
+      break;
+    case "PPPP":
+    default:
+      dateTimeFormat = formatLong2.dateTime({ width: "full" });
+      break;
+  }
+  return dateTimeFormat.replace("{{date}}", dateLongFormatter(datePattern, formatLong2)).replace("{{time}}", timeLongFormatter(timePattern, formatLong2));
+};
+var longFormatters = {
+  p: timeLongFormatter,
+  P: dateTimeLongFormatter
+};
+
+// node_modules/date-fns/_lib/protectedTokens.js
+var dayOfYearTokenRE = /^D+$/;
+var weekYearTokenRE = /^Y+$/;
+var throwTokens = ["D", "DD", "YY", "YYYY"];
+function isProtectedDayOfYearToken(token) {
+  return dayOfYearTokenRE.test(token);
+}
+function isProtectedWeekYearToken(token) {
+  return weekYearTokenRE.test(token);
+}
+function warnOrThrowProtectedError(token, format2, input) {
+  const _message = message(token, format2, input);
+  console.warn(_message);
+  if (throwTokens.includes(token)) throw new RangeError(_message);
+}
+function message(token, format2, input) {
+  const subject = token[0] === "Y" ? "years" : "days of the month";
+  return `Use \`${token.toLowerCase()}\` instead of \`${token}\` (in \`${format2}\`) for formatting ${subject} to the input \`${input}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
+}
+
+// node_modules/date-fns/format.js
+var formattingTokensRegExp = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g;
+var longFormattingTokensRegExp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
+var escapedStringRegExp = /^'([^]*?)'?$/;
+var doubleQuoteRegExp = /''/g;
+var unescapedLatinCharacterRegExp = /[a-zA-Z]/;
+function format(date, formatStr, options) {
+  const defaultOptions2 = getDefaultOptions();
+  const locale = options?.locale ?? defaultOptions2.locale ?? enUS;
+  const firstWeekContainsDate = options?.firstWeekContainsDate ?? options?.locale?.options?.firstWeekContainsDate ?? defaultOptions2.firstWeekContainsDate ?? defaultOptions2.locale?.options?.firstWeekContainsDate ?? 1;
+  const weekStartsOn = options?.weekStartsOn ?? options?.locale?.options?.weekStartsOn ?? defaultOptions2.weekStartsOn ?? defaultOptions2.locale?.options?.weekStartsOn ?? 0;
+  const originalDate = toDate(date, options?.in);
+  if (!isValid(originalDate)) {
+    throw new RangeError("Invalid time value");
+  }
+  let parts = formatStr.match(longFormattingTokensRegExp).map((substring) => {
+    const firstCharacter = substring[0];
+    if (firstCharacter === "p" || firstCharacter === "P") {
+      const longFormatter = longFormatters[firstCharacter];
+      return longFormatter(substring, locale.formatLong);
+    }
+    return substring;
+  }).join("").match(formattingTokensRegExp).map((substring) => {
+    if (substring === "''") {
+      return { isToken: false, value: "'" };
+    }
+    const firstCharacter = substring[0];
+    if (firstCharacter === "'") {
+      return { isToken: false, value: cleanEscapedString(substring) };
+    }
+    if (formatters[firstCharacter]) {
+      return { isToken: true, value: substring };
+    }
+    if (firstCharacter.match(unescapedLatinCharacterRegExp)) {
+      throw new RangeError(
+        "Format string contains an unescaped latin alphabet character `" + firstCharacter + "`"
+      );
+    }
+    return { isToken: false, value: substring };
+  });
+  if (locale.localize.preprocessor) {
+    parts = locale.localize.preprocessor(originalDate, parts);
+  }
+  const formatterOptions = {
+    firstWeekContainsDate,
+    weekStartsOn,
+    locale
+  };
+  return parts.map((part) => {
+    if (!part.isToken) return part.value;
+    const token = part.value;
+    if (!options?.useAdditionalWeekYearTokens && isProtectedWeekYearToken(token) || !options?.useAdditionalDayOfYearTokens && isProtectedDayOfYearToken(token)) {
+      warnOrThrowProtectedError(token, formatStr, String(date));
+    }
+    const formatter = formatters[token[0]];
+    return formatter(originalDate, token, locale.localize, formatterOptions);
+  }).join("");
+}
+function cleanEscapedString(input) {
+  const matched = input.match(escapedStringRegExp);
+  if (!matched) {
+    return input;
+  }
+  return matched[1].replace(doubleQuoteRegExp, "'");
+}
+
+// node_modules/date-fns/isSameMonth.js
+function isSameMonth(laterDate, earlierDate, options) {
+  const [laterDate_, earlierDate_] = normalizeDates(
+    options?.in,
+    laterDate,
+    earlierDate
+  );
+  return laterDate_.getFullYear() === earlierDate_.getFullYear() && laterDate_.getMonth() === earlierDate_.getMonth();
+}
+
+// node_modules/date-fns/isToday.js
+function isToday(date, options) {
+  return isSameDay(
+    constructFrom(options?.in || date, date),
+    constructNow(options?.in || date)
+  );
+}
+
+// node_modules/date-fns/subMonths.js
+function subMonths(date, amount, options) {
+  return addMonths(date, -amount, options);
+}
+
+// web/src/home/home.calendar.tsx
+function Calendar({
+  tasks,
+  shownTasks,
+  taskFilters
+}) {
+  const [firstMonth, setFirstMonth] = d2(startOfMonth(/* @__PURE__ */ new Date()));
+  const currentYear = useSignal((/* @__PURE__ */ new Date()).getFullYear());
+  const [selectedDate, setSelectedDate] = d2(/* @__PURE__ */ new Date());
+  const months = Array.from({ length: 3 }, (_4, i4) => {
+    const monthDate = addMonths(firstMonth, i4);
+    const nthDayOfWeek = monthDate.getDay();
+    const dateOffset = 24 * 60 * 60 * 1e3 * nthDayOfWeek;
+    const startOfGrid = new Date(monthDate);
+    startOfGrid.setTime(startOfGrid.getTime() - dateOffset);
+    return {
+      date: monthDate,
+      days: eachDayOfInterval({
+        start: startOfGrid,
+        end: endOfMonth(monthDate)
+      })
+    };
+  });
+  const handlePrev = () => {
+    setFirstMonth((prev) => subMonths(prev, 1));
+  };
+  const handleNext = () => {
+    setFirstMonth((prev) => addMonths(prev, 1));
+  };
+  const handleDateClick = (day) => {
+    setSelectedDate(day);
+    taskFilters.value = {
+      ...taskFilters.value,
+      selectedProject: format(day, "dd MMMM yyyy"),
+      time: format(day, "yyyy-MM-dd")
+    };
+  };
+  const allTasksDates = useComputed(() => {
+    const len = tasks.value.length;
+    const dates = [];
+    for (let i4 = 0; i4 < len; i4++) {
+      dates.push(tasks.value[i4].due_date);
+    }
+    return dates;
+  });
+  const shownTasksDates = useComputed(() => {
+    const len = shownTasks.value.length;
+    const dates = [];
+    for (let i4 = 0; i4 < len; i4++) {
+      dates.push(shownTasks.value[i4].due_date);
+    }
+    return dates;
+  });
+  const tasksDoneDates = useComputed(() => {
+    const len = shownTasks.value.length;
+    const dates = [];
+    for (let i4 = 0; i4 < len; i4++) {
+      if (shownTasks.value[i4].done_date !== 0) {
+        const doneDateUnix = new Date(shownTasks.value[i4].done_date * 1e3);
+        dates.push(format(doneDateUnix, "yyyy-MM-dd"));
+      }
+    }
+    return dates;
+  });
+  const isShowDoneDate = useSignal(false);
+  return /* @__PURE__ */ u4("div", { className: "max-w-7xl text-lg mx-auto mb-5", children: [
+    /* @__PURE__ */ u4("div", { className: "flex justify-between items-center mb-1", children: [
+      /* @__PURE__ */ u4(
+        "button",
+        {
+          onClick: handlePrev,
+          className: "p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300",
+          "aria-label": "Previous month",
+          children: /* @__PURE__ */ u4("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", viewBox: "0 0 20 20", fill: "currentColor", children: /* @__PURE__ */ u4("path", { fillRule: "evenodd", d: "M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z", clipRule: "evenodd" }) })
+        }
+      ),
+      /* @__PURE__ */ u4(
+        "h2",
+        {
+          className: "text-xl font-medium text-gray-800 min-w-max cursor-pointer",
+          onClick: () => setSelectedDate(/* @__PURE__ */ new Date()),
+          children: "Calendar"
+        }
+      ),
+      /* @__PURE__ */ u4(
+        "button",
+        {
+          onClick: handleNext,
+          className: "p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300",
+          "aria-label": "Next month",
+          children: /* @__PURE__ */ u4("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", viewBox: "0 0 20 20", fill: "currentColor", children: /* @__PURE__ */ u4("path", { fillRule: "evenodd", d: "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z", clipRule: "evenodd" }) })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ u4("div", { title: "The dates where you completed task(s)", className: "w-full flex flex-row justify-end-safe items-center mb-1 cursor-pointer", children: [
+      /* @__PURE__ */ u4(
+        "button",
+        {
+          onClick: () => isShowDoneDate.value = !isShowDoneDate.value,
+          type: "button",
+          id: "show-done-date",
+          class: `relative inline-flex h-5 w-9 items-center rounded-lg transition
+                    ${isShowDoneDate.value ? "bg-background" : "bg-blue-200"}`,
+          children: /* @__PURE__ */ u4(
+            "span",
+            {
+              class: `inline-block h-3.5 w-3.5 transform rounded-full bg-white transition ease-in-out
+                    ${isShowDoneDate.value ? "translate-x-5" : "translate-x-1"}`
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ u4(
+        "label",
+        {
+          for: "show-done-date",
+          class: `ml-1 text-md cursor-pointer
+                ${isShowDoneDate.value ? "text-background font-semibold" : "text-gray-500"}`,
+          children: "Completed Dates"
+        }
+      )
+    ] }),
+    /* @__PURE__ */ u4("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-1", children: months.map((month, monthIdx) => /* @__PURE__ */ u4("div", { className: "border border-gray-200 overflow-hidden", children: [
+      /* @__PURE__ */ u4(
+        "h2",
+        {
+          onClick: () => taskFilters.value = {
+            ...taskFilters.value,
+            selectedProject: format(month.date, "MMMM yyyy"),
+            time: format(month.date, "MMMM yyyy")
+          },
+          className: "text-xl text-gray-700 py-2 bg-white text-center min-w-max cursor-pointer",
+          children: new Date(month.date).getFullYear() == currentYear.value ? format(month.date, "MMMM") : format(month.date, "MMMM yyyy")
+        }
+      ),
+      /* @__PURE__ */ u4("div", { className: "grid grid-cols-7 bg-[#e0fffd] py-2", children: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => /* @__PURE__ */ u4("div", { className: "text-center text-base font-medium text-gray-500 py-1", children: day }, day)) }),
+      /* @__PURE__ */ u4("div", { className: "grid grid-cols-7 bg-white", children: month.days.map((day, idx) => {
+        const dateStr = format(day, "yyyy-MM-dd");
+        const isCurrentMonth = isSameMonth(day, month.date);
+        const isSelected = isSameDay(day, selectedDate);
+        const isCurrentDay = isToday(day);
+        const isShown = shownTasksDates.value.includes(dateStr);
+        const isDone = tasksDoneDates.value.includes(dateStr) && isShowDoneDate.value;
+        const isInAll = allTasksDates.value.includes(dateStr);
+        const stateCls = isSelected ? "bg-background text-white rounded-sm" : isDone ? "bg-[#709ec1] rounded-sm" : isShown ? "bg-blue-200 rounded-sm" : isCurrentDay ? "bg-blue-50 text-blue-600 rounded-sm" : isInAll ? "bg-[#f6f7f8] rounded-sm" : "hover:bg-gray-100";
+        return /* @__PURE__ */ u4(
+          "button",
+          {
+            onClick: () => handleDateClick(day),
+            className: `
+                      h-12 mx-0.5 my-0.5 font-medium flex items-center justify-center text-base cursor-pointer
+                      ${isCurrentMonth ? "text-gray-900" : "text-gray-400"}
+                      ${stateCls}
+                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
+                    `,
+            children: format(day, "d")
+          },
+          idx
+        );
+      }) })
+    ] }, monthIdx)) })
+  ] });
+}
+
+// web/src/home/home.task.tsx
+function TaskDetails({ taskSignal, setErrorMessage, isDemo }) {
+  const task = taskSignal.value ?? {};
+  const [formData, setFormData] = d2({
+    task_id: task.task_id,
+    task_title: task.task_title,
+    task_desc: task.task_desc,
+    task_priority: task.task_priority,
+    task_due_date: task.task_due_date,
+    task_is_done: task.task_is_done,
+    task_done_date: task.task_done_date
+  });
+  const handleChange = (e4) => {
+    const target = e4.target;
+    const { name, value, type } = target;
+    setFormData((prev) => {
+      const newData = {
+        ...prev,
+        [name]: type === "checkbox" ? target.checked : type === "number" ? parseInt(value) || 0 : value
+      };
+      if (name === "task_is_done") {
+        newData.task_done_date = target.checked ? Math.floor(Date.now() / 1e3) : 0;
+      }
+      if (name === "task_done_date") {
+        newData.task_done_date = Math.floor(new Date(value).getTime() / 1e3);
+      }
+      return newData;
+    });
+  };
+  const submitEditTask = async (e4) => {
+    e4.preventDefault();
+    if (isDemo) {
+      const storedTasksStr = localStorage.getItem("demo_tasks");
+      if (storedTasksStr) {
+        try {
+          const storedTasks = JSON.parse(storedTasksStr);
+          const updatedTasks = storedTasks.map(
+            (t4) => t4.task_id === formData.task_id ? {
+              ...t4,
+              task_title: formData.task_title,
+              task_desc: formData.task_desc,
+              priority: formData.task_priority,
+              due_date: formData.task_due_date,
+              is_done: formData.task_is_done,
+              done_date: formData.task_done_date
+            } : t4
+          );
+          localStorage.setItem("demo_tasks", JSON.stringify(updatedTasks));
+        } catch (err) {
+          console.error("Error updating demo_tasks in localStorage", err);
+        }
+      }
+      if (task.task_is_done !== formData.task_is_done) {
+        const storedProjectsStr = localStorage.getItem("demo_projects");
+        if (storedProjectsStr) {
+          try {
+            const storedProjects = JSON.parse(storedProjectsStr);
+            const updatedProjects = storedProjects.map(
+              (p5) => p5.project_title === task.project_title ? {
+                ...p5,
+                to_dos_done: formData.task_is_done ? p5.to_dos_done + 1 : p5.to_dos_done - 1
+              } : p5
+            );
+            localStorage.setItem("demo_projects", JSON.stringify(updatedProjects));
+          } catch (err) {
+            console.error("Error updating demo_projects in localStorage", err);
+          }
+        }
+      }
+      window.location.reload();
+      return;
+    }
+    try {
+      const response = await fetch(`/task/${formData.task_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          task_title: formData.task_title,
+          task_desc: formData.task_desc,
+          task_priority: formData.task_priority,
+          task_due_date: formData.task_due_date,
+          task_is_done: formData.task_is_done,
+          task_done_date: formData.task_done_date
+        })
+      });
+      if (response.redirected) {
+        window.location.replace(response.url);
+      }
+      const data = await response.json();
+      if (data.success) window.location.reload();
+      if (!data.success) setErrorMessage(data.message);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  y2(() => {
+    const handleKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      taskSignal.value = null;
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+  return /* @__PURE__ */ u4(
+    "form",
+    {
+      onSubmit: submitEditTask,
+      class: "fixed top-1/2 left-1/2 z-13 h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white shadow-lg md:h-fit md:max-w-2xl",
+      children: [
+        /* @__PURE__ */ u4("div", { class: "flex h-1/10 items-center justify-start rounded-t-xl bg-linear-to-r from-hover to-background p-5", children: /* @__PURE__ */ u4("h2", { class: "text-2xl font-bold text-white", children: "Task Details" }) }),
+        /* @__PURE__ */ u4(
+          "span",
+          {
+            class: "absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white",
+            onClick: () => taskSignal.value = null,
+            children: "\u2715"
+          }
+        ),
+        /* @__PURE__ */ u4("div", { class: "p-6", children: [
+          /* @__PURE__ */ u4("div", { class: "mb-6 rounded-lg bg-gray-100 p-4", children: [
+            /* @__PURE__ */ u4("h3", { class: "mb-1 text-lg font-semibold text-gray-800", children: "Project" }),
+            /* @__PURE__ */ u4("div", { className: "flex flex-row items-center", children: [
+              /* @__PURE__ */ u4("h2", { class: " text-xl font-bold text-background", children: task.project_title }),
+              task.project_priority && /* @__PURE__ */ u4("span", { class: "ml-1 inline-block rounded bg-blue-100 px-2 py-1 text-xs font-medium text-background", children: "Priority Project" })
+            ] })
+          ] }),
+          /* @__PURE__ */ u4("div", { class: "grid grid-cols-1 gap-2", children: [
+            /* @__PURE__ */ u4("div", { class: "mb-4", children: [
+              /* @__PURE__ */ u4(
+                "label",
+                {
+                  class: "mb-2 block text-sm font-bold text-gray-700",
+                  for: "task_title",
+                  children: "Task Title"
+                }
+              ),
+              /* @__PURE__ */ u4(
+                "input",
+                {
+                  type: "text",
+                  id: "task_title",
+                  name: "task_title",
+                  value: formData.task_title,
+                  onChange: handleChange,
+                  required: true,
+                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ u4("div", { class: "mb-4", children: [
+              /* @__PURE__ */ u4(
+                "label",
+                {
+                  class: "mb-2 block text-sm font-bold text-gray-700",
+                  for: "task_desc",
+                  children: "Task Description"
+                }
+              ),
+              /* @__PURE__ */ u4(
+                "textarea",
+                {
+                  name: "task_desc",
+                  value: formData.task_desc,
+                  onChange: handleChange,
+                  className: "w-full rounded-lg border border-gray-300 px-3 py-2 text-base outline-none focus:border-transparent focus:ring-1 focus:ring-blue-500",
+                  rows: 4
+                }
+              )
+            ] }),
+            /* @__PURE__ */ u4("div", { class: "mb-4 flex items-center justify-between rounded-md bg-gray-100 p-3", children: [
+              /* @__PURE__ */ u4("label", { for: "priority-toggle", class: "text-base font-medium text-gray-700 cursor-pointer", children: "Priority" }),
+              /* @__PURE__ */ u4("div", { class: "flex items-center", children: [
+                /* @__PURE__ */ u4("span", { class: "mr-2 text-sm text-gray-500", children: "No" }),
+                /* @__PURE__ */ u4(
+                  "button",
+                  {
+                    id: "priority-toggle",
+                    onClick: () => setFormData((prev) => ({
+                      ...prev,
+                      task_priority: !prev.task_priority
+                    })),
+                    type: "button",
+                    class: `
+                  relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer
+                  ${formData.task_priority ? "bg-background" : "bg-gray-400"}
+                `,
+                    children: /* @__PURE__ */ u4(
+                      "span",
+                      {
+                        class: `inline-block h-4 w-4 transform rounded-full bg-white transition ease-in-out
+                    ${formData.task_priority ? "translate-x-6" : "translate-x-1"}`
+                      }
+                    )
+                  }
+                ),
+                /* @__PURE__ */ u4("span", { class: "ml-2 text-sm text-gray-500", children: "Yes" })
+              ] })
+            ] }),
+            /* @__PURE__ */ u4("div", { class: "mb-4", children: [
+              /* @__PURE__ */ u4(
+                "label",
+                {
+                  class: "mb-2 block text-sm font-bold text-gray-700",
+                  for: "task_due_date",
+                  children: "Due Date"
+                }
+              ),
+              /* @__PURE__ */ u4(
+                "input",
+                {
+                  type: "date",
+                  id: "task_due_date",
+                  name: "task_due_date",
+                  value: formData.task_due_date,
+                  onChange: handleChange,
+                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ u4("div", { class: "mb-4", children: [
+              /* @__PURE__ */ u4("label", { class: "flex items-center", children: [
+                /* @__PURE__ */ u4(
+                  "input",
+                  {
+                    id: "task-complete-button",
+                    type: "checkbox",
+                    name: "task_is_done",
+                    checked: formData.task_is_done,
+                    onChange: handleChange,
+                    class: "h-4 w-4 rounded text-blue-600 focus:ring-blue-500"
+                  }
+                ),
+                formData.task_is_done ? /* @__PURE__ */ u4("label", { for: "task-complete-button", class: "ml-2 text-gray-800 cursor-pointer", children: "The task is complete." }) : /* @__PURE__ */ u4("span", { class: "ml-2 text-gray-700", children: "Mark this task as complete?" })
+              ] }),
+              formData.task_is_done && /* @__PURE__ */ u4("div", { class: "mt-2", children: [
+                /* @__PURE__ */ u4(
+                  "label",
+                  {
+                    class: "mb-2 block text-sm font-bold text-gray-700",
+                    for: "task_done_date",
+                    children: "Completion Date"
+                  }
+                ),
+                /* @__PURE__ */ u4(
+                  "input",
+                  {
+                    type: "date",
+                    id: "task_done_date",
+                    name: "task_done_date",
+                    value: formattingDateObj(new Date(formData.task_done_date * 1e3)),
+                    onChange: handleChange,
+                    class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  }
+                )
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ u4("div", { class: "mt-6 flex justify-end space-x-3", children: /* @__PURE__ */ u4(
+            "button",
+            {
+              type: "submit",
+              class: "rounded-md bg-blue-600 px-4 py-2 text-white cursor-pointer hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none",
+              children: "Save Changes"
+            }
+          ) })
+        ] })
+      ]
+    }
+  );
+}
+
+// web/src/home/utils.ts
+function isContainMonthsName(str) {
+  return monthNames.includes(str.split(" ")[0]);
+}
+function filterTasks(tasks, filters, todayStr) {
+  let result = tasks;
+  const todayDate = new Date(todayStr);
+  if (filters.priority !== TaskFiltersPriority.ALL) {
+    result = result.filter((t4) => t4.priority);
+  }
+  if (filters.selectedProject !== ALL && Number.isFinite(filters.selectedProject)) {
+    result = result.filter((t4) => t4.project_id === filters.selectedProject);
+  }
+  if (filters.status !== TaskFiltersStatus.ALL) {
+    if (filters.status === TaskFiltersStatus.Unfinished) {
+      result = result.filter((t4) => !t4.is_done);
+    } else if (filters.status === TaskFiltersStatus.Finished) {
+      result = result.filter((t4) => t4.is_done);
+    } else if (filters.status === TaskFiltersStatus.Overdue) {
+      result = result.filter((t4) => !t4.is_done && todayDate > new Date(t4.due_date));
+    }
+  }
+  if (filters.time !== ALL) {
+    result = result.filter((t4) => {
+      const taskDueDate = new Date(t4.due_date);
+      if (filters.time === TaskFiltersTime.Today) {
+        return t4.due_date === todayStr;
+      }
+      if (filters.time === TaskFiltersTime.ThisWeek) {
+        const { startOfWeek: startOfWeek2, endOfWeek } = getWeekRange(todayDate);
+        return taskDueDate >= startOfWeek2 && taskDueDate <= endOfWeek;
+      }
+      if (filters.time === TaskFiltersTime.SevenDays) {
+        const thisDay = new Date(todayStr);
+        const next7DaysEnd = new Date(todayStr);
+        next7DaysEnd.setDate(thisDay.getDate() + 6);
+        next7DaysEnd.setHours(23, 59, 59, 999);
+        return taskDueDate >= thisDay && taskDueDate <= next7DaysEnd;
+      }
+      if (filters.time === TaskFiltersTime.ThisMonth) {
+        const { startOfMonth: startOfMonth2, endOfMonth: endOfMonth2 } = getMonthRange(todayDate);
+        return taskDueDate >= startOfMonth2 && taskDueDate <= endOfMonth2;
+      }
+      if (filters.time === TaskFiltersTime.ThirtyDays) {
+        const thisDay = new Date(todayStr);
+        const next30DaysEnd = new Date(todayStr);
+        next30DaysEnd.setDate(thisDay.getDate() + 29);
+        next30DaysEnd.setHours(23, 59, 59, 999);
+        return taskDueDate >= thisDay && taskDueDate <= next30DaysEnd;
+      }
+      if (filters.time === TaskFiltersTime.ThisQuarter) {
+        const { startOfQuarter, endOfQuarter } = getQuarterRange(todayDate);
+        return taskDueDate >= startOfQuarter && taskDueDate <= endOfQuarter;
+      }
+      if (isContainMonthsName(filters.time)) {
+        const monthStr = filters.time.split(" ")[0];
+        const month = monthNames.indexOf(monthStr);
+        const year = Number(filters.time.split(" ")[1]);
+        return taskDueDate >= new Date(year, month) && taskDueDate <= new Date(year, month + 1);
+      }
+      if (filters.time) {
+        return t4.due_date === filters.time;
+      }
+      return false;
+    });
+  }
+  return result;
+}
+function convertToTask(unsorted, projectId, newTaskId) {
+  const {
+    unsorted_id,
+    unsorted_title,
+    unsorted_desc,
+    ...commonProps
+  } = unsorted;
+  return {
+    ...commonProps,
+    task_id: newTaskId ?? unsorted_id,
+    project_id: projectId,
+    task_title: unsorted_title,
+    task_desc: unsorted_desc
+  };
+}
+
+// web/src/home/home.tasks.tsx
+var today = todayUserTimeZone();
+var dateToday = new Date(today);
+var TaskListItem = ({
+  task,
+  index,
+  projectTitle,
+  isOverdue,
+  dateToday: dateToday2,
+  today: today3,
+  shownTaskSignal,
+  toggleTaskDoneStatus,
+  handleChangeDueDate
+}) => {
+  return /* @__PURE__ */ u4(
+    "div",
+    {
+      id: `container-task-${task.task_id}`,
+      class: `
+        ${index % 2 == 0 ? "bg-[#e0fffd]" : ""}
+        ${task.is_done ? "bg-pink-200 opacity-60" : ""}
+        flex flex-wrap sm:flex-nowrap items-start px-3 sm:px-4 md:px-6 py-3 sm:py-4 min-h-25
+        hover:${index % 2 == 0 ? "bg-[#e0fffd]" : "bg-white"} hover:opacity-100
+        cursor-pointer
+      `,
+      onClick: () => {
+        shownTaskSignal.value = {
+          task_id: task.task_id,
+          task_title: task.task_title,
+          task_desc: task.task_desc,
+          task_priority: task.priority,
+          task_due_date: task.due_date,
+          task_is_done: task.is_done,
+          task_done_date: task.done_date,
+          project_title: projectTitle,
+          project_priority: false,
+          project_due_date: "",
+          project_is_done: false,
+          project_done_date: 0
+        };
+      },
+      children: [
+        /* @__PURE__ */ u4(
+          "input",
+          {
+            type: "checkbox",
+            class: "mt-1 sm:mt-1.5 h-4 w-4 sm:h-5 sm:w-5 shrink-0 rounded",
+            id: `task-${task.task_id}`,
+            checked: task.is_done,
+            "aria-label": `Mark task "${task.task_title}" as ${task.is_done ? "incomplete" : "complete"}`,
+            onClick: (e4) => {
+              e4.stopPropagation();
+              const inputElement = e4.target;
+              const checked = inputElement?.checked;
+              toggleTaskDoneStatus(checked, task.task_id, task.project_id);
+            }
+          }
+        ),
+        /* @__PURE__ */ u4("div", { class: "ml-2 sm:ml-3 flex-1 min-w-0 sm:w-7/10 text-gray-900 group", children: [
+          /* @__PURE__ */ u4("p", { class: "text-base sm:text-lg font-medium text-[#27354a] wrap-break-words", children: [
+            task.task_title,
+            "\xA0",
+            task.priority && /* @__PURE__ */ u4("span", { class: "inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 sm:p-1 text-[10px] sm:text-xs font-medium text-red-500 whitespace-nowrap", children: "Priority" })
+          ] }),
+          /* @__PURE__ */ u4("p", { class: "my-1 max-h-48 overflow-y-auto text-sm sm:text-base text-gray-500 wrap-break-words", children: task.task_desc }),
+          /* @__PURE__ */ u4("div", { class: "text-xs sm:text-base font-semibold text-[#828a99] flex flex-wrap sm:flex-row items-center gap-x-2 gap-y-1 group-hover:text-gray-500", children: [
+            "Due: ",
+            formattingDateTask(task.due_date),
+            isOverdue && /* @__PURE__ */ u4(
+              "form",
+              {
+                id: "overdue-reschedule",
+                class: "w-full sm:w-auto",
+                onSubmit: handleChangeDueDate,
+                onClick: (e4) => e4.stopPropagation(),
+                children: /* @__PURE__ */ u4("div", { class: "group relative flex flex-row items-center", children: [
+                  /* @__PURE__ */ u4(
+                    "input",
+                    {
+                      type: "date",
+                      id: `unsorted_due_date-${task.task_id}`,
+                      name: `unsorted_due_date-${task.task_id}`,
+                      class: "p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 w-28 sm:w-auto text-xs sm:text-base",
+                      required: true,
+                      min: today3,
+                      "aria-label": "Reschedule due date"
+                    }
+                  ),
+                  /* @__PURE__ */ u4(
+                    "button",
+                    {
+                      type: "submit",
+                      class: "cursor-pointer ml-1 sm:ml-2 text-lg sm:text-2xl font-extrabold text-background hover:text-white hover:bg-hover shrink-0",
+                      "aria-label": "Submit new due date",
+                      children: "\u2713"
+                    }
+                  ),
+                  /* @__PURE__ */ u4("span", { class: "hidden p-1 sm:p-2 z-10 bg-hover text-white w-max sm:w-fit group-hover:flex text-[10px] sm:text-sm rounded absolute bottom-full mb-1 sm:relative sm:bottom-auto sm:mb-auto", children: "Reschedule due date?" })
+                ] })
+              }
+            )
+          ] }),
+          task.done_date > 0 && /* @__PURE__ */ u4("p", { class: "mt-1 sm:mt-0 text-sm sm:text-base font-bold text-gray-500 wrap-break-words", children: [
+            "DONE :",
+            " ",
+            formattingDateTask(
+              new Date(task.done_date * 1e3).toLocaleDateString(
+                "en-CA"
+              )
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ u4("div", { class: "mt-2 sm:mt-0 pl-6 sm:pl-0 sm:ml-4 flex w-full sm:w-3/10 items-center justify-start sm:justify-end text-left sm:text-right text-sm sm:text-lg font-semibold text-gray-600 shrink-0 wrap-break-words", children: projectTitle })
+      ]
+    }
+  );
+};
+function loadPrevData(key) {
+  const stored = localStorage.getItem(key);
+  if (stored !== null) {
+    try {
+      return JSON.parse(stored);
+    } catch (e4) {
+      console.error(`Error parsing ${key}`, e4);
+    }
+  }
+  const randomNum = Math.random() >= 0.5;
+  if (key === "filterDropdown") return randomNum ? String(randomNum) : "";
+  if (key === "homeTaskList") return "dueToday";
+  return "";
+}
+function TaskDisplay({
+  tasks,
+  taskFilters,
+  projectObj,
+  setProjects,
+  setErrorMessage,
+  isDemo
+}) {
+  const defaultTaskList = useSignal(loadPrevData("homeTaskList"));
+  useSignalEffect(() => {
+    const currentTaskList = defaultTaskList.value;
+    localStorage.setItem("homeTaskList", JSON.stringify(currentTaskList));
+  });
+  const showFilterDropdown = useSignal(Boolean(loadPrevData("filterDropdown")));
+  useSignalEffect(() => {
+    const currentDropdown = showFilterDropdown.value;
+    localStorage.setItem("filterDropdown", JSON.stringify(currentDropdown));
+  });
+  const sortCategory = useSignal(TaskSorter.Skip);
+  const sortFunctions = T2(
+    () => ({
+      [TaskSorter.DueDateAsc]: (a4, b3) => {
+        return new Date(a4.due_date).getTime() - new Date(b3.due_date).getTime();
+      },
+      [TaskSorter.DueDateDesc]: (a4, b3) => {
+        return new Date(b3.due_date).getTime() - new Date(a4.due_date).getTime();
+      },
+      [TaskSorter.DoneDateAsc]: (a4, b3) => {
+        return new Date(a4.done_date).getTime() - new Date(b3.done_date).getTime();
+      },
+      [TaskSorter.DoneDateDesc]: (a4, b3) => {
+        return new Date(b3.done_date).getTime() - new Date(a4.done_date).getTime();
+      },
+      [TaskSorter.Priority]: (a4, b3) => {
+        return Number(b3.priority) - Number(a4.priority);
+      }
+    }),
+    []
+  );
+  const shownTasks = useComputed(() => {
+    if (!tasks.value) return [];
+    let result = filterTasks(tasks.value, taskFilters.value, todayUserTimeZone());
+    if (!sortCategory.value) return result;
+    return [...result].sort(sortFunctions[sortCategory.value]);
+  });
+  const setTasks = (taskId, checked) => {
+    const done_date = checked ? Math.floor((/* @__PURE__ */ new Date()).getTime() / 1e3) : 0;
+    tasks.value = tasks.value.map(
+      (task) => task.task_id === taskId ? { ...task, is_done: checked, done_date } : task
+    );
+  };
+  const toggleTaskDoneStatus = async (checked, taskId, projectId) => {
+    try {
+      if (isDemo) {
+        setProjects(projectId, checked);
+        setTasks(taskId, checked);
+        return;
+      }
+      const response = await fetch(`/task/${taskId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ doneStatus: checked, taskId, projectId })
+      });
+      if (response.redirected) {
+        window.location.replace(response.url);
+      }
+      const data = await response.json();
+      if (data.success) {
+        setProjects(projectId, checked);
+        setTasks(taskId, checked);
+      }
+      if (!data.success) setErrorMessage("There's an error in the server");
+    } catch (error) {
+      console.log(error);
+      setTasks(taskId, !checked);
+      setErrorMessage("There's an error in the server");
+    }
+  };
+  const updateTasksDueDate = (taskId, due_date) => {
+    tasks.value = tasks.value.map(
+      (task) => task.task_id === taskId ? { ...task, due_date } : task
+    );
+  };
+  const handleChangeDueDate = async (e4) => {
+    e4.preventDefault();
+    try {
+      const target = e4.target;
+      const inputElement = target.elements[0];
+      const taskId = parseInt(inputElement.name.split("-")[1]);
+      const due_date = inputElement.value;
+      if (isDemo) {
+        updateTasksDueDate(taskId, due_date);
+        return;
+      }
+      const response = await fetch(`/task/${taskId}/due-date`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ due_date, taskId })
+      });
+      if (response.redirected) {
+        window.location.replace(response.url);
+      }
+      const data = await response.json();
+      if (data.success) updateTasksDueDate(taskId, due_date);
+      if (!data.success) setErrorMessage("There's an error in the server");
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("There's an error in the server");
+    }
+  };
+  const showCalendar = useSignal(false);
+  const shownTask = useSignal(null);
+  return /* @__PURE__ */ u4("div", { class: "mx-auto flex flex-col items-center px-1 sm:px-6 lg:max-w-7xl lg:px-8", children: [
+    /* @__PURE__ */ u4("div", { class: "w-full md:px-4 lg:px-0 xl:w-6xl", children: [
+      /* @__PURE__ */ u4(
+        "div",
+        {
+          class: `${showFilterDropdown.value ? "mb-0" : "mb-2"} mt-5 flex flex-col items-center md:flex-row md:justify-between`,
+          children: [
+            /* @__PURE__ */ u4("div", { class: "flex flex-col", children: /* @__PURE__ */ u4("h2", { class: "mb-2 w-screen justify-center sm:w-fit flex flex-row items-center text-center text-base md:text-xl font-medium text-gray-700 md:mb-0", children: [
+              /* @__PURE__ */ u4(
+                "span",
+                {
+                  onClick: () => showCalendar.value = !showCalendar.value,
+                  class: "cursor-pointer text-xl group relative",
+                  children: [
+                    /* @__PURE__ */ u4("img", { src: "/static/images/calendar.svg", alt: "", class: "h-4 w-4 mr-2 fill-background" }),
+                    /* @__PURE__ */ u4("span", { class: "hidden font-normal bg-background text-nowrap text-white absolute text-base py-1 px-2 left-5 group-hover:block", children: "Click to show calendar" })
+                  ]
+                }
+              ),
+              "Task List\xA0",
+              taskFilters.value.selectedProject == ALL ? /* @__PURE__ */ u4("div", { class: "flex items-center font-normal text-hover text-base md:text-xl", children: [
+                "(",
+                /* @__PURE__ */ u4(
+                  "span",
+                  {
+                    onClick: () => {
+                      defaultTaskList.value = "dueToday";
+                      taskFilters.value = {
+                        selectedProject: ALL,
+                        priority: ALL,
+                        status: ALL,
+                        time: TaskFiltersTime.Today
+                      };
+                    },
+                    class: `${defaultTaskList.value === "dueToday" && taskFilters.value.time === TaskFiltersTime.Today ? "font-extrabold text-base md:text-xl" : "font-normal text-base md:text-lg"} cursor-pointer text-background hover:underline`,
+                    children: "Due Today"
+                  }
+                ),
+                "/",
+                /* @__PURE__ */ u4(
+                  "span",
+                  {
+                    onClick: () => {
+                      defaultTaskList.value = "allTasks";
+                      taskFilters.value = {
+                        selectedProject: ALL,
+                        priority: ALL,
+                        status: ALL,
+                        time: ALL
+                      };
+                    },
+                    class: `${defaultTaskList.value === "allTasks" ? "font-extrabold text-base md:text-xl" : "font-normal text-base md:text-lg"} cursor-pointer text-background hover:underline`,
+                    children: "All Tasks"
+                  }
+                ),
+                ")"
+              ] }) : /* @__PURE__ */ u4(
+                "span",
+                {
+                  onClick: () => {
+                    defaultTaskList.value == "allTasks" ? taskFilters.value = {
+                      selectedProject: ALL,
+                      priority: ALL,
+                      status: ALL,
+                      time: ALL
+                    } : taskFilters.value = {
+                      selectedProject: ALL,
+                      priority: ALL,
+                      status: ALL,
+                      time: TaskFiltersTime.Today
+                    };
+                  },
+                  class: "cursor-pointer text-base md:text-xl text-background",
+                  children: [
+                    "(\u2715",
+                    projectObj.value[Number(taskFilters.value.selectedProject)] ? projectObj.value[Number(taskFilters.value.selectedProject)] : taskFilters.value.selectedProject,
+                    ")"
+                  ]
+                }
+              )
+            ] }) }),
+            /* @__PURE__ */ u4("div", { class: "mb-2 flex flex-row flex-wrap items-center justify-center gap-2 md:mb-0 md:gap-0", children: [
+              /* @__PURE__ */ u4(
+                "button",
+                {
+                  onClick: () => showFilterDropdown.value = !showFilterDropdown.value,
+                  class: "flex w-32 cursor-pointer flex-row items-center justify-center text-center text-[15px] hover:underline sm:w-35 sm:text-base md:mr-5 md:w-30",
+                  children: [
+                    /* @__PURE__ */ u4("img", { src: "/static/images/filter2.png", alt: "", class: "h-4 w-4" }),
+                    /* @__PURE__ */ u4("span", { class: "w-full px-2 py-2 text-center text-ellipsis text-nowrap sm:py-3", children: "\xA0Filters" })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ u4("div", { class: "flex w-32 cursor-pointer flex-row items-center justify-center text-center text-[15px] hover:underline sm:w-35 sm:text-base md:mr-5 md:w-30", children: [
+                /* @__PURE__ */ u4("img", { src: "/static/images/sort.png", alt: "", class: "h-4 w-2.5 sm:h-5 sm:w-3" }),
+                /* @__PURE__ */ u4(
+                  "select",
+                  {
+                    onChange: (e4) => sortCategory.value = e4.currentTarget.value,
+                    value: sortCategory.value,
+                    id: "tasksSorterPriority",
+                    name: "tasksSorterPriority",
+                    class: "w-full px-2 py-2 text-center text-ellipsis text-nowrap text-sm sm:py-3 sm:text-base md:w-35",
+                    "aria-label": "Sort tasks by",
+                    children: [
+                      /* @__PURE__ */ u4("option", { value: TaskSorter.Skip, disabled: true, selected: true, children: "Sort by" }),
+                      /* @__PURE__ */ u4("option", { value: TaskSorter.DueDateAsc, children: "Due Date \u2197" }),
+                      /* @__PURE__ */ u4("option", { value: TaskSorter.DueDateDesc, children: "Due Date \u2198" }),
+                      /* @__PURE__ */ u4("option", { value: TaskSorter.DoneDateAsc, children: "Done Date \u2197" }),
+                      /* @__PURE__ */ u4("option", { value: TaskSorter.DoneDateDesc, children: "Done Date \u2198" }),
+                      /* @__PURE__ */ u4("option", { value: TaskSorter.Priority, children: "Priority" })
+                    ]
+                  }
+                )
+              ] })
+            ] })
+          ]
+        }
+      ),
+      showFilterDropdown.value && /* @__PURE__ */ u4("div", { class: "mb-4 sm:mb-0 flex w-full flex-row justify-center items-center md:justify-end", children: [
+        /* @__PURE__ */ u4("div", { class: "flex w-1/3 cursor-pointer flex-col items-center justify-center text-[15px] sm:text-base sm:w-30", children: [
+          /* @__PURE__ */ u4("label", { class: "text-nowrap text-ellipsis", children: "Priority" }),
+          /* @__PURE__ */ u4(
+            "select",
+            {
+              onChange: (e4) => taskFilters.value = {
+                ...taskFilters.value,
+                priority: e4.currentTarget.value
+              },
+              value: taskFilters.value.priority,
+              id: "tasksFilterPriority",
+              name: "tasksFilterPriority",
+              class: "border-border w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis",
+              children: [
+                /* @__PURE__ */ u4("option", { value: TaskFiltersPriority.Priority, children: "Priority only" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersPriority.ALL, selected: true, children: "All" })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ u4("div", { class: "flex w-1/3 cursor-pointer flex-col items-center justify-center text-[15px] sm:text-base sm:w-30", children: [
+          /* @__PURE__ */ u4("label", { class: "text-nowrap text-ellipsis", children: "Status" }),
+          /* @__PURE__ */ u4(
+            "select",
+            {
+              onChange: (e4) => taskFilters.value = {
+                ...taskFilters.value,
+                status: e4.currentTarget.value
+              },
+              value: taskFilters.value.status,
+              id: "tasksFilterStatus",
+              name: "tasksFilterStatus",
+              class: "border-border w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis",
+              children: [
+                /* @__PURE__ */ u4("option", { value: TaskFiltersStatus.ALL, selected: true, children: "All" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersStatus.Unfinished, children: "Unfinished" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersStatus.Finished, children: "Finished" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersStatus.Overdue, children: "Overdue" })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ u4("div", { class: "flex w-1/3 cursor-pointer flex-col items-center justify-center text-[15px] sm:text-base sm:w-30", children: [
+          /* @__PURE__ */ u4("label", { class: "text-nowrap text-ellipsis", children: "Time Range" }),
+          /* @__PURE__ */ u4(
+            "select",
+            {
+              onChange: (e4) => taskFilters.value = {
+                ...taskFilters.value,
+                time: e4.currentTarget.value
+              },
+              value: taskFilters.value.time,
+              id: "tasksFilterTime",
+              name: "tasksFilterTime",
+              class: "border-border w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis",
+              children: [
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.Today, selected: true, children: "Today" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.ThisWeek, children: "This Week" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.SevenDays, children: "Next 7 Days" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.ThisMonth, children: "This Month" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.ThirtyDays, children: "Next 30 Days" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.ThisQuarter, children: "This Quarter" }),
+                /* @__PURE__ */ u4("option", { value: TaskFiltersTime.ALL, children: "All" })
+              ]
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ u4(
+        "div",
+        {
+          class: `${showCalendar.value ? "mb-0" : "mb-5"} m-auto md:mx-0 text-background w-fit`,
+          children: [
+            "Showing ",
+            shownTasks.value.length,
+            " tasks"
+          ]
+        }
+      ),
+      showCalendar.value && /* @__PURE__ */ u4(
+        Calendar,
+        {
+          tasks,
+          shownTasks,
+          taskFilters
+        }
+      ),
+      /* @__PURE__ */ u4("div", { class: "overflow-hidden rounded-lg bg-white shadow", children: /* @__PURE__ */ u4("div", { class: "max-h-[calc(100vh-100px)] divide-y divide-gray-200 overflow-y-auto bg-white", children: shownTasks.value.length > 0 && shownTasks.value.map((task, i4) => /* @__PURE__ */ u4(
+        TaskListItem,
+        {
+          task,
+          index: i4,
+          projectTitle: projectObj.value[task.project_id],
+          isOverdue: !task.is_done && new Date(task.due_date) < dateToday,
+          dateToday,
+          today,
+          shownTaskSignal: shownTask,
+          toggleTaskDoneStatus,
+          handleChangeDueDate
+        },
+        `task-${task.task_id}`
+      )) }) })
+    ] }),
+    shownTask.value && /* @__PURE__ */ u4(
+      TaskDetails,
+      {
+        taskSignal: shownTask,
+        setErrorMessage,
+        isDemo
+      }
+    )
+  ] });
+}
+
+// web/src/home/home.unsorted.tsx
+var today2 = todayUserTimeZone();
+var UnsortedTaskCard = ({
+  unsorted,
+  index,
+  idsToDelete,
+  showDeleteButton,
+  projects,
+  toggleUnsortedDoneStatus,
+  handleDelete,
+  handleAssignProject
+}) => {
+  return /* @__PURE__ */ u4(
+    "div",
+    {
+      class: `${index % 2 === 0 ? "bg-[#cbfdfa]" : "bg-white"} flex flex-col items-start p-4 rounded-lg shadow-sm mb-4 border border-teal-100`,
+      children: [
+        /* @__PURE__ */ u4("div", { class: "flex flex-row w-full", children: [
+          /* @__PURE__ */ u4("div", { class: "flex flex-col h-full justify-center mr-2 mt-1", children: [
+            /* @__PURE__ */ u4(
+              "input",
+              {
+                type: "checkbox",
+                checked: unsorted.is_done,
+                onClick: (e4) => {
+                  const target = e4.target;
+                  toggleUnsortedDoneStatus(target.checked, unsorted.unsorted_id);
+                },
+                class: "w-5 h-5 text-teal-600 mb-2 rounded focus:ring-teal-500 border-teal-300"
+              }
+            ),
+            unsorted.priority && /* @__PURE__ */ u4("p", { class: "group relative font-bold text-xl flex justify-center", children: [
+              "! ",
+              /* @__PURE__ */ u4("span", { class: "hidden font-normal bg-background text-white absolute text-base py-1 px-2 left-5 group-hover:block", children: "Priority" })
+            ] })
+          ] }),
+          /* @__PURE__ */ u4("div", { class: "flex flex-col sm:flex-row justify-between w-full", children: [
+            /* @__PURE__ */ u4("div", { class: "flex-1 min-w-0", children: [
+              /* @__PURE__ */ u4("h4", { class: "text-lg font-bold text-slate-800 mb-1", children: unsorted.unsorted_title }),
+              /* @__PURE__ */ u4("p", { class: "text-slate-900 text-base mb-2 md:mb-0", children: unsorted.unsorted_desc })
+            ] }),
+            /* @__PURE__ */ u4("div", { class: "flex flex-col justify-center text-right text-gray-500 font-semibold text-sm min-w-30", children: [
+              /* @__PURE__ */ u4("span", { class: "mt-1", children: unsorted.due_date ? /* @__PURE__ */ u4("span", { children: [
+                "Due date: ",
+                unsorted.due_date
+              ] }) : /* @__PURE__ */ u4("span", { class: "text-slate-800 italic", children: "No due date" }) }),
+              /* @__PURE__ */ u4("span", { children: [
+                "Created at: ",
+                unsorted.created_at.slice(0, 10)
+              ] })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ u4(
+          "form",
+          {
+            id: `assignUnsortedToProject-${unsorted.unsorted_id}`,
+            onSubmit: handleAssignProject,
+            class: "flex flex-row w-full mt-2 sm:mt-0",
+            children: [
+              /* @__PURE__ */ u4("div", { class: "w-5 mr-2 relative flex justify-center items-center", children: [
+                /* @__PURE__ */ u4(
+                  "img",
+                  {
+                    onClick: () => {
+                      const id = unsorted.unsorted_id;
+                      const isSelected = idsToDelete.value.includes(id);
+                      idsToDelete.value = isSelected ? idsToDelete.value.filter((existingId) => existingId !== id) : [...idsToDelete.value, id];
+                    },
+                    src: "/static/images/bin.svg",
+                    alt: "delete button",
+                    class: "h-4 w-4 cursor-pointer"
+                  }
+                ),
+                showDeleteButton[unsorted.unsorted_id] && /* @__PURE__ */ u4("span", { class: "absolute cursor-text top-8 left-0.5 w-fit whitespace-nowrap bg-background text-white p-2 flex items-center", children: [
+                  "Delete this unsorted tasks?",
+                  /* @__PURE__ */ u4(
+                    "span",
+                    {
+                      class: "ml-2 text-xl cursor-pointer hover:bg-hover px-1",
+                      onClick: () => handleDelete(unsorted.unsorted_id),
+                      children: "\u2713"
+                    }
+                  )
+                ] })
+              ] }),
+              /* @__PURE__ */ u4(
+                "select",
+                {
+                  name: "selected_project_for_unsorted",
+                  class: "w-full cursor-pointer hover:bg-gray-50",
+                  required: true,
+                  children: [
+                    /* @__PURE__ */ u4("option", { value: "", children: "Select Project" }),
+                    /* @__PURE__ */ u4(ProjectOptions, { projects })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ u4("button", { class: "text-2xl cursor-pointer hover:bg-background hover:text-white", children: "\u2713" })
+            ]
+          }
+        )
+      ]
+    }
+  );
+};
+function UnsortedDisplay({
+  unsorteds,
+  showUnsorted,
+  projects,
+  tasks,
+  setErrorMessage,
+  isDemo
+}) {
+  const idsToDelete = useSignal([]);
+  const showDeleteButton = useComputed(() => {
+    const showState = {};
+    if (!unsorteds.value) return showState;
+    const allIds = unsorteds.value.map((item) => item.unsorted_id);
+    allIds.forEach((id) => {
+      if (idsToDelete.value.includes(id)) showState[id] = true;
+      else showState[id] = false;
+    });
+    return showState;
+  });
+  const handleSubmit = async (e4) => {
+    try {
+      e4.preventDefault();
+      const form = e4.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const user_id = unsorteds.value?.[0]?.user_id;
+      if (isDemo) {
+        unsorteds.value = [{
+          unsorted_id: Date.now(),
+          // Generate a mock ID
+          user_id,
+          unsorted_title: data.unsorted_title,
+          unsorted_desc: data.unsorted_desc,
+          priority: data.priority === "on",
+          is_done: false,
+          done_date: 0,
+          due_date: data.unsorted_due_date,
+          created_at: (/* @__PURE__ */ new Date()).toISOString()
+        }, ...unsorteds.value || []];
+        const form2 = document.getElementById("newUnsorted");
+        form2.reset();
+        return;
+      }
+      const response = await fetch("/unsorted-task", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (response.redirected) {
+        window.location.replace(response.url);
+      }
+      const resp = await response.json();
+      if (resp.success) {
+        unsorteds.value = [{
+          unsorted_id: resp.data.unsorted_id,
+          user_id,
+          unsorted_title: data.unsorted_title,
+          unsorted_desc: data.unsorted_desc,
+          priority: data.priority === "on",
+          is_done: false,
+          done_date: 0,
+          due_date: data.unsorted_due_date,
+          created_at: (/* @__PURE__ */ new Date()).toISOString()
+        }, ...unsorteds.value];
+        const form2 = document.getElementById("newUnsorted");
+        form2.reset();
+      }
+      if (!resp.success) setErrorMessage("There's an error in the server");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDelete = async (unsorted_id) => {
+    try {
+      if (isDemo) {
+        unsorteds.value = unsorteds.value.filter(
+          (unsorted) => unsorted.unsorted_id !== unsorted_id
+        );
+        return;
+      }
+      const response = await fetch(`/unsorted-task/${unsorted_id}`, { method: "DELETE" });
+      if (response.redirected) {
+        window.location.replace(response.url);
+      }
+      const resp = await response.json();
+      if (resp.success && resp.data.unsorted_id == unsorted_id) {
+        unsorteds.value = unsorteds.value.filter(
+          (unsorted) => unsorted.unsorted_id !== unsorted_id
+        );
+      }
+      if (!resp.success) setErrorMessage(resp.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const toggleUnsortedDoneStatus = async (checked, unsorted_id) => {
+    try {
+      if (isDemo) {
+        unsorteds.value = unsorteds.value?.map((unsorted) => {
+          if (unsorted.unsorted_id == unsorted_id) {
+            return { ...unsorted, is_done: checked };
+          }
+          return unsorted;
+        });
+        return;
+      }
+      const response = await fetch(`/unsorted-task/${unsorted_id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ checked, unsorted_id })
+      });
+      if (response.redirected) {
+        window.location.replace(response.url);
+      }
+      const resp = await response.json();
+      if (resp.success) {
+        unsorteds.value = unsorteds.value?.map((unsorted) => {
+          if (unsorted.unsorted_id == unsorted_id) {
+            return { ...unsorted, is_done: checked };
+          }
+          return unsorted;
+        });
+      }
+      if (!resp.success) setErrorMessage(resp.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleAssignProject = async (e4) => {
+    try {
+      e4.preventDefault();
+      const target = e4.target;
+      const formId = target.id;
+      const unsorted_id = formId.split("-")[1];
+      const selectElement = target.elements[0];
+      const project_id = selectElement.tagName === "SELECT" ? selectElement.value : "";
+      if (isDemo) {
+        const len = unsorteds.value.length;
+        let unsorted = {};
+        for (let i4 = 0; i4 < len; i4++) {
+          if (unsorteds.value[i4].unsorted_id == Number(unsorted_id)) {
+            unsorted = unsorteds.value[i4];
+            console.log({ unsorted });
+          }
+        }
+        const newTask = convertToTask(unsorted, Number(project_id), Number(unsorted_id));
+        tasks.value = [newTask, ...tasks.value];
+        projects.value = projects.value?.map((project) => {
+          if (project.project_id === newTask.project_id) {
+            return {
+              ...project,
+              to_dos_all: project.to_dos_all + 1,
+              to_dos_done: project.to_dos_done + Number(newTask.is_done)
+            };
+          }
+          return project;
+        });
+        const unsortedIdNum = Number(unsorted_id);
+        unsorteds.value = unsorteds.value?.filter((unsorted2) => unsorted2.unsorted_id !== unsortedIdNum);
+        return;
+      }
+      const response = await fetch(`/unsorted-task/${unsorted_id}/assign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ unsorted_id, project_id })
+      });
+      const resp = await response.json();
+      if (resp.success) {
+        const { task } = resp.data;
+        tasks.value = [task, ...tasks.value];
+        projects.value = projects.value?.map((project) => {
+          if (project.project_id === task.project_id) {
+            return {
+              ...project,
+              to_dos_all: project.to_dos_all + 1,
+              to_dos_done: project.to_dos_done + task.is_done
+            };
+          }
+          return project;
+        });
+        const unsortedIdNum = Number(unsorted_id);
+        unsorteds.value = unsorteds.value?.filter((unsorted) => unsorted.unsorted_id !== unsortedIdNum);
+      }
+      if (!resp.success) setErrorMessage(resp.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return /* @__PURE__ */ u4("div", { class: "fixed top-1/2 left-1/2 z-11 pb-5 md:pb-0 max-h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white shadow-lg h-fit md:max-w-2xl", children: [
+    /* @__PURE__ */ u4("div", { class: "flex h-1/10 items-center justify-start rounded-t-xl bg-linear-to-r from-hover to-background p-5", children: /* @__PURE__ */ u4("h2", { class: "text-2xl font-bold text-white", children: "Unsorted Tasks" }) }),
+    /* @__PURE__ */ u4(
+      "span",
+      {
+        onClick: () => showUnsorted.value = false,
+        class: "absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white",
+        children: "\u2715"
+      }
+    ),
+    /* @__PURE__ */ u4(
+      "form",
+      {
+        id: "newUnsorted",
+        onSubmit: handleSubmit,
+        class: "p-7.5 flex flex-col gap-3",
+        children: [
+          /* @__PURE__ */ u4("div", { class: "flex gap-3", children: /* @__PURE__ */ u4(
+            "input",
+            {
+              type: "text",
+              id: "taskTitle",
+              placeholder: "Task Title",
+              required: true,
+              name: "unsorted_title",
+              style: "flex: 2; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+            }
+          ) }),
+          /* @__PURE__ */ u4(
+            "textarea",
+            {
+              id: "taskDesc",
+              placeholder: "Description",
+              name: "unsorted_desc",
+              style: "padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; min-height: 60px;",
+              required: true
+            }
+          ),
+          /* @__PURE__ */ u4("div", { class: "flex gap-4 items-center", children: [
+            /* @__PURE__ */ u4("label", { class: "flex items-center gap-1.5", children: [
+              /* @__PURE__ */ u4(
+                "input",
+                {
+                  type: "checkbox",
+                  id: "priority",
+                  name: "priority",
+                  class: "w-4 h-4"
+                }
+              ),
+              /* @__PURE__ */ u4("span", { children: "Priority?" })
+            ] }),
+            /* @__PURE__ */ u4(
+              "input",
+              {
+                type: "date",
+                id: "dueDate",
+                name: "unsorted_due_date",
+                style: "padding: 8px; border: 1px solid #ccc; border-radius: 4px; flex: 1;",
+                min: today2,
+                required: true
+              }
+            ),
+            /* @__PURE__ */ u4(
+              "button",
+              {
+                type: "submit",
+                style: "background: #007bff; color: white; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer;",
+                children: "Add Task"
+              }
+            )
+          ] })
+        ]
+      }
+    ),
+    /* @__PURE__ */ u4("div", { class: "w-9/10 mx-auto border-t border-gray-900" }),
+    /* @__PURE__ */ u4("div", { class: "max-h-100 p-7.5 overflow-y-auto", children: unsorteds.value && unsorteds.value.map((unsorted, i4) => /* @__PURE__ */ u4(
+      UnsortedTaskCard,
+      {
+        unsorted,
+        index: i4,
+        idsToDelete,
+        showDeleteButton: showDeleteButton.value,
+        projects,
+        toggleUnsortedDoneStatus,
+        handleDelete,
+        handleAssignProject
+      },
+      unsorted.unsorted_id
+    )) })
+  ] });
+}
+var ProjectOptions = ({ projects }) => {
+  return projects.value?.filter((project) => !project.is_done).map((project) => /* @__PURE__ */ u4("option", { value: project.project_id, children: project.project_title }, project.project_id));
+};
+
+// web/src/components/error_messages.jsx
+function ErrorMessage({ errorMessage, setErrorMessage }) {
+  return /* @__PURE__ */ u4(
+    "div",
+    {
+      class: "fixed top-1/2 left-1/2 z-11 flex h-40 w-9/10 -translate-1/2 items-center justify-center rounded-md border border-background bg-background px-5 py-8 text-white shadow-lg md:w-fit",
+      children: [
+        /* @__PURE__ */ u4(
+          "span",
+          {
+            onClick: () => {
+              setErrorMessage("");
+              setTimeout(() => {
+                location.reload();
+              }, 2e3);
+            },
+            class: "absolute top-2 right-2 cursor-pointer text-2xl font-extrabold text-white",
+            children: "\u2715"
+          }
+        ),
+        /* @__PURE__ */ u4("div", { class: "flex flex-col items-center justify-center", children: /* @__PURE__ */ u4("p", { class: "text-center text-xl font-extrabold", children: errorMessage }) })
+      ]
+    }
+  );
+}
+
+// web/src/home/home.tsx
+function loadDemoData(key, backendData, isDemo) {
+  if (!isDemo) return backendData;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e4) {
+      console.error("Error parsing " + key, e4);
+    }
+  }
+  localStorage.setItem(key, JSON.stringify(backendData));
+  return backendData;
+}
+function App({ projectList, taskList, unsortedList, isDemo = false }) {
+  const projects = useSignal(loadDemoData("demo_projects", projectList, isDemo));
+  useSignalEffect(() => {
+    const currentProjects = projects.value;
+    if (isDemo) {
+      localStorage.setItem("demo_projects", JSON.stringify(currentProjects));
+    }
+  });
+  const projectIdArr = projects.value.map((project) => project.project_id);
+  const projectObj = useComputed(() => {
+    const projectObj2 = {};
+    if (!projects.value) return projectObj2;
+    const len = projects.value.length;
+    for (let i4 = 0; i4 < len; i4++) {
+      projectObj2[projects.value[i4].project_id] = projects.value[i4].project_title;
+    }
+    return projectObj2;
+  });
+  const tasks = useSignal(loadDemoData("demo_tasks", taskList, isDemo));
+  useSignalEffect(() => {
+    const currentTasks = tasks.value;
+    if (isDemo) {
+      localStorage.setItem("demo_tasks", JSON.stringify(currentTasks));
+    }
+  });
+  const getInitialFilters = () => {
+    const storedFilters = localStorage.getItem("taskFilters");
+    if (storedFilters) {
+      try {
+        return JSON.parse(storedFilters);
+      } catch (e4) {
+        console.error("No stored task filters from LocalStorage", e4);
+      }
+    }
+    return defaultTaskFilters;
+  };
+  const taskFilters = useSignal(getInitialFilters());
+  useSignalEffect(() => {
+    localStorage.setItem("taskFilters", JSON.stringify(taskFilters.value));
+  });
+  const setSelectedProject = (projectId) => {
+    taskFilters.value = {
+      ...taskFilters.value,
+      time: ALL,
+      selectedProject: projectId
+    };
+  };
+  const setProjects = (projectId, checked) => {
+    const updateProject = (project) => {
+      if (project.project_id !== projectId) return project;
+      const delta = checked ? 1 : -1;
+      const newDoneCount = project.to_dos_done + delta;
+      const shouldToggleDone = checked ? project.to_dos_all === project.to_dos_done + 1 : project.to_dos_all === project.to_dos_done;
+      if (shouldToggleDone) {
+        const done_date = checked ? Math.floor((/* @__PURE__ */ new Date()).getTime() / 1e3) : 0;
+        return {
+          ...project,
+          to_dos_done: newDoneCount,
+          is_done: !project.is_done,
+          done_date
+        };
+      }
+      return { ...project, to_dos_done: newDoneCount };
+    };
+    projects.value = projects.value.map(updateProject);
+  };
+  const showUnsorted = useSignal(false);
+  const unsorteds = useSignal(loadDemoData("demo_unsorteds", unsortedList, isDemo));
+  useSignalEffect(() => {
+    const currentUnsorteds = unsorteds.value;
+    if (isDemo) {
+      localStorage.setItem("demo_unsorteds", JSON.stringify(currentUnsorteds));
+    }
+  });
+  const unfinishedUnsorted = useComputed(() => {
+    let num = 0;
+    const length = unsorteds.value?.length;
+    for (let i4 = 0; i4 < length; i4++) {
+      num += Number(!unsorteds.value?.[i4]?.is_done);
+    }
+    return num;
+  });
+  const errorMessage = useSignal("");
+  const setErrorMessage = (message2) => errorMessage.value = message2;
+  const handleResetDemo = () => {
+    if (!confirm("Are you sure you want to reset the demo? All your changes will be lost.")) return;
+    localStorage.removeItem("demo_projects");
+    localStorage.removeItem("demo_tasks");
+    localStorage.removeItem("demo_unsorteds");
+    localStorage.removeItem("demo_habits_groups");
+    localStorage.removeItem("demo_habits_done_dates");
+    window.location.reload();
+  };
+  return (
+    // Projects Section
+    /* @__PURE__ */ u4("div", { class: "mx-auto max-w-6xl", children: [
+      isDemo && /* @__PURE__ */ u4("div", { class: "mb-6 flex items-center justify-between rounded-md bg-blue-50 p-4 text-blue-900 shadow-sm border border-blue-200", children: [
+        /* @__PURE__ */ u4("div", { children: [
+          /* @__PURE__ */ u4("p", { class: "font-semibold", children: "You are viewing the Demo Mode" }),
+          /* @__PURE__ */ u4("p", { class: "text-sm", children: "Changes are saved locally to your browser." })
+        ] }),
+        /* @__PURE__ */ u4(
+          "button",
+          {
+            onClick: handleResetDemo,
+            class: "rounded bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm hover:bg-blue-100 border border-blue-300 transition-colors",
+            children: "Reset Demo"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ u4(
+        ProjectsDisplay,
+        {
+          projects,
+          setSelectedProject,
+          showUnsorted,
+          unfinishedUnsorted,
+          isDemo
+        }
+      ),
+      /* @__PURE__ */ u4("div", { class: "mt-5 border-t border-gray-900" }),
+      /* @__PURE__ */ u4(
+        TaskDisplay,
+        {
+          tasks,
+          taskFilters,
+          projectObj,
+          setProjects,
+          setErrorMessage,
+          isDemo
+        }
+      ),
+      showUnsorted.value && /* @__PURE__ */ u4(
+        UnsortedDisplay,
+        {
+          unsorteds,
+          showUnsorted,
+          projects,
+          tasks,
+          setErrorMessage,
+          isDemo
+        }
+      ),
+      errorMessage.value && /* @__PURE__ */ u4(
+        ErrorMessage,
+        {
+          errorMessage,
+          setErrorMessage
+        }
+      ),
+      /* @__PURE__ */ u4("div", { id: "form-container", class: "flex items-center justify-center" })
+    ] })
+  );
+}
+var dataWindow = window;
+G(
+  /* @__PURE__ */ u4(
+    App,
+    {
+      projectList: dataWindow.projectList,
+      taskList: dataWindow.taskList,
+      unsortedList: dataWindow.unsortedList,
+      isDemo: dataWindow.isDemo || false
+    }
+  ),
+  document.getElementById("home")
+);

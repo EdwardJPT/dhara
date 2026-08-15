@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS decrement_todos_after_tasks_delete;

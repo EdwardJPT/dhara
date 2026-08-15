@@ -1,0 +1,20 @@
+{{define "create_project_resp"}}
+<div
+  class="fixed top-1/2 left-1/2 z-11 flex h-40 w-9/10 -translate-1/2 items-center justify-center rounded-md border border-background bg-background px-5 py-8 text-white shadow-lg md:w-fit">
+
+  <span class="absolute top-2 right-2 cursor-pointer text-2xl font-extrabold text-white"
+    onclick="window.location.reload();">&#x2715;
+  </span>
+
+  <div class="flex flex-col items-center justify-center">
+    <p class="text-center text-xl font-extrabold">
+      {{ .Message }}
+    </p>
+    <button class="mt-5 w-full cursor-pointer bg-white py-2.5 text-base font-medium text-background"
+      hx-get="/home/create-project-form" hx-target="#form-container" hx-swap="innerHTML">
+      Add Another
+    </button>
+  </div>
+
+</div>
+{{end}}

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+
+    "jsx": "react-jsx",             // Required for automatic JSX transform
+    "jsxImportSource": "preact",    // Point JSX runtime to Preact
+
+    "allowJs": true,                // <-- important (you have .js files)
+    "checkJs": false,               // optional, if you don't want js errors
+    "strict": true,                 // optional
+
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["web/src/**/*"]
+}
+

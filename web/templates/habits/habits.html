@@ -1,0 +1,36 @@
+{{define "habits"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Habits Tracker | Dhara</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A project-centric task management app">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/static/images/logo.ico">
+  <link rel="stylesheet" type="text/css" href="/static/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="flex flex-col bg-linear-to-tl from-[#daddff] to-[#e0f2fe]">
+  {{template "nav" .}}
+
+  <main id="habits" class="mt-15 w-screen min-h-screen px-4 md:mt-0"></main>
+
+  {{template "footer" .}}
+
+  <script>
+    // Data from Go backend
+    window.habitsGroupList = JSON.parse(`{{.HabitsJSON}}`);
+    window.habitsDoneDateList = JSON.parse(`{{.HabitsDateJSON}}`);
+    window.isDemo = JSON.parse(`{{.IsDemo}}`);
+  </script>
+
+  <script type="module" src="/static/js/habits/habits.js"></script>
+</body>
+
+</html>
+{{end}}

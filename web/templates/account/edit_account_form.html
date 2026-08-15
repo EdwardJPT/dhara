@@ -1,0 +1,118 @@
+{{define "edit_account_form"}}
+<div
+  class="fixed top-1/2 left-1/2 z-11 h-fit w-fit -translate-1/2 rounded-xl border border-background bg-white shadow-lg">
+
+  <div class="w-xl bg-white p-0 border border-gray-100 shadow-xl rounded-2xl">
+
+    <span class="absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white"
+      onclick="document.getElementById('form-container').innerHTML=''">&#x2715;
+    </span>
+    <div class="flex h-1/10 w-full mb-4 items-center rounded-t-xl bg-background p-5">
+      <h2 class="text-3xl font-extrabold text-white tracking-tight">Edit Your Account</h2>
+    </div>
+
+    <form hx-post="/account" hx-target="#form-container" hx-swap="innerHTML" id="form" class="space-y-6 px-8 pb-8">
+
+      {{ if eq .Message "" }}
+      <p></p>
+      {{ else }}
+      <p class="mb-2 text-white bg-hover py-2 text-base w-full text-center font-bold">
+        {{ .Message }}
+      </p>
+      {{ end }}
+
+      <div>
+        <label for="username" class="block text-md font-semibold text-gray-700 mb-1.5">
+          Username
+        </label>
+        <input type="text" id="username" name="username" placeholder="username"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1a6582]/40 focus:border-[#1a6582] transition-colors duration-200">
+      </div>
+
+      <div>
+        <label for="email" class="block text-md font-semibold text-gray-700 mb-1.5">
+          Email Address
+        </label>
+        <input type="email" id="email" name="email" placeholder="user@email.com"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a6582]/40 focus:border-[#1a6582] transition-colors duration-200">
+      </div>
+
+      <div>
+        <label for="password" class="block text-md font-semibold text-gray-700 mb-1.5">
+          Password
+        </label>
+        <input type="password" id="password" name="password" placeholder="••••••••" minlength="8"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a6582]/40 focus:border-[#1a6582] transition-colors duration-200">
+      </div>
+
+      <div>
+        <label for="confirm-password" class="block text-md font-semibold text-gray-700 mb-1.5">
+          Confirm Password
+        </label>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" minlength="8"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a6582]/40 focus:border-[#1a6582] transition-colors duration-200">
+      </div>
+
+      <span id="error-message" class="text-white bg-hover py-2 text-base mb-6 w-full text-center font-bold"
+        style="display: none;">Passwords do not match!</span>
+
+      <div class="pt-2">
+        <button type="submit"
+          class="w-full bg-[#1a6582] hover:bg-[#134b61] text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1a6582]">
+          Edit Account
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // Function to check if passwords match
+    function checkPasswordMatch() {
+      // Get the values of the password and confirm password inputs
+      var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("confirm-password").value;
+
+      // Get the error message span element
+      var errorMessage = document.getElementById("error-message");
+
+      // Compare the values
+      if (password !== confirmPassword) {
+        // If passwords don't match, show the error message
+        errorMessage.style.display = "block";
+      } else {
+        // If passwords match, hide the error message
+        errorMessage.style.display = "none";
+      }
+    }
+
+    // Add event listeners to both password fields to check on input
+    document.getElementById("password").addEventListener("input", checkPasswordMatch);
+    document.getElementById("confirm-password").addEventListener("input", checkPasswordMatch);
+
+    // Optionally, prevent form submission if passwords don't match
+    document.getElementById("form").addEventListener("submit", function (event) {
+      if (document.getElementById("password").value !== document.getElementById("confirm_password").value) {
+        event.preventDefault();  // Prevent form submission
+        alert("Passwords do not match!");
+      }
+    });
+
+    // Redirect to account if the request succeed
+    document.body.addEventListener('htmx:beforeSwap', function (evt) {
+      // Check if the response status is 400
+      if (evt.detail.xhr.status === 400) {
+        // Tell HTMX to treat this as a successful swap (status 200)
+        // This prevents HTMX from triggering error events or redirects
+        evt.detail.shouldSwap = true;
+        evt.detail.isError = false;
+        // Explicitly define where to swap (optional if hx-target is set, but safer)
+        evt.detail.target = document.querySelector('#form-container');
+        // Ensure no redirect happens by clearing any potential redirect instruction
+        // (Though if backend sent HX-Redirect, this might be too late, hence Step 1 is crucial)
+        delete evt.detail.serverResponse.headers['HX-Redirect'];
+      }
+    });
+  </script>
+</div>
+{{end}}

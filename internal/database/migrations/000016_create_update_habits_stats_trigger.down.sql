@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS update_habits_stats_after_insert_habits_done_date;

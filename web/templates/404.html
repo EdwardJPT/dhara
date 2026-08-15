@@ -1,0 +1,256 @@
+{{define "404"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>404 Not Found</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/static/images/logo.webp">
+  <link rel="stylesheet" type="text/css" href="/static/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .error-title {
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .error-message {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #e0e0e0;
+      max-width: 600px;
+    }
+
+    .server-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .server {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .server-body {
+      width: 140px;
+      height: 100px;
+      background: #2c3e50;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .server-lights {
+      display: flex;
+      position: absolute;
+      top: 15px;
+      gap: 12px;
+    }
+
+    .light {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e74c3c;
+      box-shadow: 0 0 10px #e74c3c;
+      animation: blink 1.5s infinite;
+    }
+
+    .light:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .light:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    .server-bottom {
+      width: 160px;
+      height: 20px;
+      background: #34495e;
+      border-radius: 0 0 10px 10px;
+      margin-top: -5px;
+      position: relative;
+    }
+
+    .server-bottom::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      width: 120px;
+      height: 10px;
+      background: #34495e;
+      border-radius: 5px;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    .suggestions {
+      background: rgba(44, 62, 80, 0.6);
+      padding: 25px;
+      width: 100%;
+      max-width: 550px;
+      margin-bottom: 45px;
+    }
+
+    .suggestions h3 {
+      margin-bottom: 15px;
+      color: whitesmoke;
+      font-size: 22px;
+    }
+
+    .suggestions ul {
+      list-style: none;
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    .suggestions li {
+      margin: 12px 0;
+      padding-left: 25px;
+      position: relative;
+      color: #ecf0f1;
+    }
+
+    .suggestions li::before {
+      content: "•";
+      color: #ff8a00;
+      font-size: 24px;
+      position: absolute;
+      left: 0;
+      top: -3px;
+    }
+
+    .btn {
+      background: linear-gradient(to right, whitesmoke, lightblue);
+      color: #0a144b;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(218, 27, 96, 0.4);
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(218, 27, 96, 0.6);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: #bdc3c7;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      .error-code {
+        font-size: 80px;
+      }
+
+      .error-title {
+        font-size: 24px;
+      }
+
+      .error-message {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen max-w-screen flex-col items-center justify-center bg-background font-mono">
+  <div
+    class="flex w-full max-w-4xl flex-col items-center h-[95vh] overflow-hidden bg-lighter_background p-10 text-center">
+    <div class="text-9xl font-extrabold text-white">404</div>
+    <h1 class="error-title">Page not found!</h1>
+    <p class="error-message">We're sorry, but we don't have that.</p>
+
+    <div class="server-container">
+      <div class="server">
+        <div class="server-body">
+          <div class="server-lights">
+            <div class="light"></div>
+            <div class="light"></div>
+            <div class="light"></div>
+          </div>
+        </div>
+        <div class="server-bottom"></div>
+      </div>
+    </div>
+
+    <div class="suggestions">
+      <h3>What you can try:</h3>
+      <ul>
+        <li>Refresh the page in a few minutes</li>
+        <li>Check the url in your browser, and see if there's a mistake</li>
+      </ul>
+    </div>
+
+    <button class="btn" onclick="goToHome()">Home Page</button>
+    <button class="btn" onclick="window.location.reload()">Refresh Page</button>
+  </div>
+
+</body>
+
+<script>
+  function goToHome() {
+    window.location.href = "/home";
+  }
+</script>
+
+</html>
+{{end}}

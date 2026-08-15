@@ -1,0 +1,297 @@
+{{define "create_project"}}
+<div
+  class="fixed top-1/2 left-1/2 z-11 h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white pb-3 shadow-lg md:max-w-2xl">
+  <span class="absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white"
+    onclick="document.getElementById('form-container').innerHTML=''">&#x2715;
+  </span>
+  <div class="flex h-1/10 items-center rounded-t-xl bg-linear-to-r from-hover to-background p-5">
+    <h1 class="flex items-center gap-2 text-2xl font-bold text-white">
+      Add New Project
+    </h1>
+  </div>
+
+  <form hx-post="/home/create-project" hx-target="#form-container" hx-swap="innerHTML" id="taskForm"
+    class="h-9/10 space-y-3 overflow-y-auto bg-white px-6 py-4">
+    <div>
+      <label for="title" class="mb-1 block text-base font-medium text-gray-700">Project Title *</label>
+      <input type="text" id="title" name="title" required
+        class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2"
+        placeholder="Enter project title" />
+    </div>
+
+    <div>
+      <label for="desc" class="block text-base font-medium text-gray-700">Project description *</label>
+      <textarea id="desc" name="desc" rows="3"
+        class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2"
+        placeholder="Add project description..." required></textarea>
+    </div>
+
+    <div id="priorityParent" class="flex items-center justify-between rounded-md bg-gray-100 p-2">
+      <div>
+        <label class="block text-base font-medium text-gray-700">
+          A priority project?
+        </label>
+        <p id="priorityAllowed" class="text-md mt-1 text-gray-500">
+          Only allowed to have 3 priority projects
+        </p>
+      </div>
+      <div class="flex items-center">
+        <span class="mr-2 text-sm text-gray-500">No</span>
+        <button type="button" id="priorityToggle"
+          class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition">
+          <span
+            class="inline-block h-4 w-4 translate-x-1 transform rounded-full bg-white transition ease-in-out"></span>
+        </button>
+        <span class="ml-2 text-sm text-gray-500">Yes</span>
+      </div>
+      <input type="hidden" id="priority" name="priority" value="0" />
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div>
+        <label for="start_date" class="mb-1 block text-sm font-medium text-gray-700">
+          Start Date
+        </label>
+        <input type="date" id="start_date" name="start_date"
+          class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2" />
+      </div>
+      <div>
+        <label for="due_date" class="mb-1 block text-sm font-medium text-gray-700">
+          Due Date *
+        </label>
+        <input type="date" id="due_date" name="due_date" required
+          class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2" />
+      </div>
+    </div>
+
+    <div class="border-t pt-3">
+      <div class="flex items-center justify-between">
+        <h3 class="flex items-center mb-2 gap-2 font-medium text-gray-700">
+          Add 1 task to the project
+        </h3>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label for="task-title" class="mb-1 block text-sm font-medium text-gray-700">Task title *</label>
+          <input type="text" id="task-title" name="task-title" required
+            class="focus:ring-primary w-full rounded-lg border border-gray-300 px-3 py-2 text-base outline-none focus:border-transparent focus:ring-1"
+            placeholder="Enter task title">
+        </div>
+        <div>
+          <label for="task-desc" class="mb-1 block text-sm font-medium text-gray-700">Task description</label>
+          <textarea id="task-desc" name="task-desc" rows="2"
+            class="focus:ring-primary w-full rounded-lg border border-gray-300 px-3 py-2 text-base outline-none focus:border-transparent focus:ring-1"
+            placeholder="Add description..."></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label for="task-due_date" class="mb-1 block text-sm font-medium text-gray-700">
+              Task due date *
+            </label>
+            <input type="date" id="task-due_date" name="task-due_date" required
+              class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2" />
+          </div>
+
+          <div id="taskPriorityParent" class="flex items-center justify-between rounded-md bg-gray-100 p-2">
+            <div>
+              <label class="block text-base font-medium text-gray-700">
+                A priority task?
+              </label>
+            </div>
+            <div class="flex items-center">
+              <span class="mr-2 text-sm text-gray-500">No</span>
+              <button type="button" id="taskPriorityToggle"
+                class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition">
+                <span
+                  class="inline-block h-4 w-4 translate-x-1 transform rounded-full bg-white transition ease-in-out"></span>
+              </button>
+              <span class="ml-2 text-sm text-gray-500">Yes</span>
+            </div>
+            <input type="hidden" id="taskPriority" name="task-priority" value="0" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button type="submit"
+      class="mt-4 flex w-full flex-1 items-center justify-center gap-2 rounded-lg bg-background px-4 py-2.5 font-medium text-white transition hover:bg-hover">
+      Submit Project
+    </button>
+  </form>
+
+  <script>
+    (function () {
+      let priorityProjects = 0;
+      let projectsArray = window.projectList;
+      let len = projectsArray ? projectsArray.length : 0;
+      for (let i = 0; i < len; i++) {
+        if (projectsArray[i].priority && !projectsArray[i].is_done) {
+          priorityProjects += 1;
+        }
+      }
+
+      // Priority toggle functionality
+      let priorityToggle = document.getElementById("priorityToggle");
+      let priorityInput = document.getElementById("priority");
+      let priorityAllowed = document.getElementById("priorityAllowed");
+      let priorityParent = document.getElementById("priorityParent");
+
+      if (priorityProjects >= 3) {
+        priorityToggle.disabled = true;
+        priorityParent.style.cursor = "not-allowed";
+        priorityInput.value = "0";
+        priorityAllowed.innerText = "Not allowed. You already have 3 priority projects."
+      }
+
+      priorityToggle.addEventListener("click", () => {
+        priorityToggle.classList.toggle("bg-gray-200");
+        priorityToggle.classList.toggle("bg-background");
+
+        if (priorityToggle.classList.contains("bg-background")) {
+          priorityInput.value = "1";
+          priorityToggle.querySelector("span").classList.replace("translate-x-1", "translate-x-6");
+        } else {
+          priorityInput.value = "0";
+          priorityToggle.querySelector("span").classList.replace("translate-x-6", "translate-x-1");
+        }
+      });
+
+      // Task priority toggle functionality
+      let taskPriorityToggle = document.getElementById("taskPriorityToggle");
+      let taskPriorityInput = document.getElementById("taskPriority");
+
+      taskPriorityToggle.addEventListener("click", () => {
+        taskPriorityToggle.classList.toggle("bg-gray-200");
+        taskPriorityToggle.classList.toggle("bg-background");
+
+        if (taskPriorityToggle.classList.contains("bg-background")) {
+          taskPriorityInput.value = "1";
+          taskPriorityToggle.querySelector("span").classList.replace("translate-x-1", "translate-x-6");
+        } else {
+          taskPriorityInput.value = "0";
+          taskPriorityToggle.querySelector("span").classList.replace("translate-x-6", "translate-x-1");
+        }
+      });
+
+      // Set the contraint of date input
+      // return YYYY-MM-DD of the user, at user timezone
+      const todayUserTimeZone = () => {
+        const now = new Date();
+        const options = {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          // Dynamically get the user"s browser timezone
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        };
+        // "en-CA" ensures YYYY-MM-DD format as a base
+        return now.toLocaleDateString("en-CA", options);
+      }
+
+      const today = todayUserTimeZone();
+      document.getElementById("due_date").setAttribute("min", today);
+      document.getElementById("task-due_date").setAttribute("min", today);
+    })();
+  </script>
+
+  {{if .IsDemo}}
+  <script>
+    (function () {
+      document.getElementById("taskForm").addEventListener("htmx:beforeRequest", function (e) {
+        e.preventDefault();
+        saveDemoProjectAndTask();
+      });
+
+      function saveDemoProjectAndTask() {
+        // Read form fields
+        const title = document.getElementById("title").value.trim();
+        const desc = document.getElementById("desc").value.trim();
+        const isPriority = document.getElementById("priority").value === "1";
+        const startDate = document.getElementById("start_date").value;
+        const dueDate = document.getElementById("due_date").value;
+
+        const taskTitle = document.getElementById("task-title").value.trim();
+        const taskDesc = document.getElementById("task-desc").value.trim();
+        const taskDueDate = document.getElementById("task-due_date").value;
+        const isTaskPriority = document.getElementById("taskPriority").value === "1";
+
+        // Load existing data
+        let projects = [];
+        let tasks = [];
+        try {
+          const rawProjects = localStorage.getItem("demo_projects");
+          const rawTasks = localStorage.getItem("demo_tasks");
+          if (rawProjects) projects = JSON.parse(rawProjects);
+          if (rawTasks) tasks = JSON.parse(rawTasks);
+        } catch (_) { /* start fresh if corrupt */}
+
+        // Generate Ids
+        const newProjectId = projects.reduce((m, p) => Math.max(m, p.project_id), 0) + 1;
+        const newTaskId = tasks.reduce((m, t) => Math.max(m, t.task_id), 0) + 1;
+
+        // Build created_at ("2026-08-01T21:31:36+07:00" format)
+        const now = new Date();
+        const pad = n => String(n).padStart(2, "0");
+        const tzOff = -now.getTimezoneOffset();
+        const tzSign = tzOff >= 0 ? "+" : "-";
+        const tzH = pad(Math.floor(Math.abs(tzOff) / 60));
+        const tzM = pad(Math.abs(tzOff) % 60);
+        const createdAt =
+          `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}` +
+          `T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}` +
+          `${tzSign}${tzH}:${tzM}`;
+
+        // Build new project
+        const newProject = {
+          project_id: newProjectId,
+          public_id: "demo-proj-" + newProjectId,
+          user_id: 1,
+          project_title: title,
+          project_desc: desc,
+          priority: isPriority,
+          start_date: startDate,
+          due_date: dueDate,
+          to_dos_all: 1,
+          to_dos_done: 0,
+          is_done: false,
+          done_date: 0,
+          created_at: createdAt,
+        };
+
+        // Build new task (linked to the new project)
+        const newTask = {
+          task_id: newTaskId,
+          project_id: newProjectId,
+          user_id: 1,
+          task_title: taskTitle,
+          task_desc: taskDesc,
+          priority: isTaskPriority,
+          due_date: taskDueDate,
+          is_done: false,
+          done_date: 0,
+          created_at: createdAt,
+        };
+
+        // Persist both and reload
+        projects.push(newProject);
+        tasks.push(newTask);
+
+        // Sort the projects to put the priority ones to be the first
+        const sortedProjects = projects.sort((a, b) =>
+          Number(b.priority) - Number(a.priority)
+        );
+
+        localStorage.setItem("demo_projects", JSON.stringify(sortedProjects));
+        localStorage.setItem("demo_tasks", JSON.stringify(tasks));
+
+        document.getElementById("form-container").innerHTML = "";
+        window.location.reload();
+      }
+    })();
+  </script>
+  {{end}}
+</div>
+{{end}}

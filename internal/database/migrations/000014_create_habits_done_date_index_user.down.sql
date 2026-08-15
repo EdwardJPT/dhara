@@ -1,0 +1,3 @@
+DROP INDEX IF EXISTS idx_habits_done_date_user_id_composite;
+DROP INDEX IF EXISTS idx_habits_done_date_habit_id_composite;
+DROP INDEX IF EXISTS idx_habits_done_date_user_id_created_at;

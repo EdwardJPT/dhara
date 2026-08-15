@@ -1,0 +1,29 @@
+{
+  "name": "go-blog-chi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch-preact": "esbuild web/src/**/*.{js,jsx,ts,tsx} --bundle          --legal-comments=none --outdir=web/static/js --format=esm --watch --jsx=automatic --jsx-import-source=preact",
+    "build-preact": "esbuild \"web/src/**/*.tsx\"         --bundle --minify --legal-comments=none --outdir=web/static/js --format=esm         --jsx=automatic --jsx-import-source=preact",
+    "watch-tailwind": "npx @tailwindcss/cli -i ./web/static/css/input.css -o ./web/static/css/output.css --watch",
+    "build-tailwind": "npx @tailwindcss/cli -i ./web/static/css/input.css -o ./web/static/css/output.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@preact/signals": "^2.3.2",
+    "@tailwindcss/cli": "^4.1.4",
+    "date-fns": "^4.1.0",
+    "emoji-picker-element": "^1.28.1",
+    "preact": "^10.27.2",
+    "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  }
+}
