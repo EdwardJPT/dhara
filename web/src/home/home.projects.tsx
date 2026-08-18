@@ -159,6 +159,18 @@ export function ProjectsDisplay({
     [ProjectSorter.DoneDateDesc]: (a: Project, b: Project) => {
       return (new Date(b.done_date)).getTime() - (new Date(a.done_date)).getTime()
     },
+    [ProjectSorter.StartDateAsc]: (a: Project, b: Project) => {
+      return (new Date(a.start_date)).getTime() - (new Date(b.start_date)).getTime();
+    },
+    [ProjectSorter.StartDateDesc]: (a: Project, b: Project) => {
+      return (new Date(b.start_date)).getTime() - (new Date(a.start_date)).getTime()
+    },
+    [ProjectSorter.CompletionAsc]: (a: Project, b: Project) => {
+      return (a.to_dos_done / a.to_dos_all) - (b.to_dos_done / b.to_dos_all);
+    },
+    [ProjectSorter.CompletionDesc]: (a: Project, b: Project) => {
+      return (b.to_dos_done / b.to_dos_all) - (a.to_dos_done / a.to_dos_all);
+    },
     [ProjectSorter.Priority]: (a: Project, b: Project) => {
       return Number(b.priority) - Number(a.priority)
     },
@@ -243,6 +255,10 @@ export function ProjectsDisplay({
               <option value={ProjectSorter.DueDateDesc}>Due Date<span class="flex items-start text-3xl">&#8600;</span></option>
               <option value={ProjectSorter.DoneDateAsc}>Done Date<span class="flex items-start text-3xl">&#8599;</span></option>
               <option value={ProjectSorter.DoneDateDesc}>Done Date<span class="flex items-start text-3xl">&#8600;</span></option>
+              <option value={ProjectSorter.StartDateAsc}>Start Date<span class="flex items-start text-3xl">&#8599;</span></option>
+              <option value={ProjectSorter.StartDateDesc}>Start Date<span class="flex items-start text-3xl">&#8600;</span></option>
+              <option value={ProjectSorter.CompletionAsc}>Completion<span class="flex items-start text-3xl">&#8599;</span></option>
+              <option value={ProjectSorter.CompletionDesc}>Completion<span class="flex items-start text-3xl">&#8600;</span></option>
               <option value={ProjectSorter.Priority}>Priority</option>
             </select>
           </div>

@@ -130,7 +130,7 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
 
   // Helper function to load initial sorter
   const getInitialSortCategory = () => {
-    const storedSorter = localStorage.getItem("projectTaskSorter");
+    const storedSorter = localStorage.getItem("taskSorter");
     if (storedSorter) {
       try {
         return JSON.parse(storedSorter);
@@ -145,7 +145,7 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
 
   // Sync back to Local Storage whenever sortCategory changes
   useSignalEffect(() => {
-    localStorage.setItem("projectTaskSorter", JSON.stringify(sortCategory.value));
+    localStorage.setItem("taskSorter", JSON.stringify(sortCategory.value));
   });
 
   const sortFunctions = useMemo(

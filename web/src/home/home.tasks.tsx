@@ -207,7 +207,26 @@ export function TaskDisplay({
     localStorage.setItem("filterDropdown", JSON.stringify(currentDropdown));
   });
 
-  const sortCategory: Signal<SortValue> = useSignal(TaskSorter.Skip);
+  // Helper function to load initial sorter
+  const getInitialSortCategory = () => {
+    const storedSorter = localStorage.getItem("taskSorter");
+    if (storedSorter) {
+      try {
+        return JSON.parse(storedSorter);
+      } catch (e) {
+        console.error("Failed to parse stored task sorter from LocalStorage", e);
+      }
+    }
+    return TaskSorter.Skip;
+  };
+
+  const sortCategory: Signal<string> = useSignal(getInitialSortCategory());
+
+  // Sync back to Local Storage whenever sortCategory changes
+  useSignalEffect(() => {
+    localStorage.setItem("taskSorter", JSON.stringify(sortCategory.value));
+  });
+
   const sortFunctions = useMemo(
     () => ({
       [TaskSorter.DueDateAsc]: (a: Task, b: Task) => {

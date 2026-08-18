@@ -12,6 +12,10 @@ export const ProjectSorter = Object.freeze({
     DueDateDesc: "dueDateDesc",
     DoneDateAsc: "doneDateAsc",
     DoneDateDesc: "doneDateDesc",
+    StartDateAsc: "startDateAsc",
+    StartDateDesc: "startDateDesc",
+    CompletionAsc: "completionAsc",
+    CompletionDesc: "completionDesc",
     Priority,
 });
 export const TaskFiltersPriority = Object.freeze({ ALL, Priority });
