@@ -109,6 +109,14 @@ func (s *HabitService) CheckIn(userId int64, req models.HabitCheckInRequest) ([]
 	return ids, doneDates, nil
 }
 
+func (s *HabitService) EditHabit(userId, habitId int64, req models.EditHabitRequest) error {
+	return s.repoHabit.EditHabit(userId, habitId, req)
+}
+
+func (s *HabitService) DeleteHabit(userId, habitId int64) error {
+	return s.repoHabit.DeleteHabit(userId, habitId)
+}
+
 func (s *HabitService) GetHabitsDoneToday(userID int64, userOffset string) ([]models.HabitDoneToday, error) {
 	return s.repoHabit.GetHabitsDoneToday(userID, userOffset)
 }

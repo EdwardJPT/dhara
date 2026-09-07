@@ -85,6 +85,23 @@ type HabitDoneToday struct {
 	HabitCreatedDate string `json:"habit_created_date"`
 }
 
+// Type for when we want to modify the habit
+type HabitWithGroup struct {
+	HabitID          int64  `json:"habit_id"`
+	HabitTitle       string `json:"habit_title"`
+	HabitIcon        string `json:"habit_icon"`
+	HabitFrequency   int    `json:"habit_frequency"`
+	HabitIsShow      bool   `json:"habit_is_show"`
+	HabitsGroupTitle string `json:"habits_group_title"`
+}
+
+type EditHabitRequest struct {
+	HabitTitle     string `json:"habit_title"`
+	HabitIcon      string `json:"habit_icon"`
+	HabitFrequency int    `json:"habit_frequency"`
+	HabitIsShow    bool   `json:"habit_is_show"`
+}
+
 // HabitAllStats is used only for scanning the DB row
 type HabitAllStats struct {
 	HabitID     int64

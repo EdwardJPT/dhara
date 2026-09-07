@@ -16,8 +16,9 @@ import {
 interface HabitCardProps {
   habitObj: HabitWithDoneDates;
   dateRange: ReadonlySignal<Date[]>;
-  errorMessage: Signal<String>;
+  errorMessage: Signal<string>;
   habitsDoneDates: Signal<HabitWithDoneDates[]>;
+  showHabitDetails: Signal<number>
   isDemo: boolean;
 }
 
@@ -42,6 +43,7 @@ export const HabitCard = ({
   dateRange,
   errorMessage,
   habitsDoneDates,
+  showHabitDetails,
   isDemo = false,
 }: HabitCardProps) => {
   const habit = useSignal(habitObj);
@@ -192,7 +194,7 @@ export const HabitCard = ({
   };
 
   return (
-    <div className="bg-white rounded-sm shadow-sm border border-slate-200 py-5 px-2.5 flex flex-col h-full w-full hover:shadow-md transition-shadow">
+    <div className="group bg-white rounded-sm shadow-sm border border-slate-200 py-5 px-2.5 flex flex-col h-full w-full hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-3 group">
           <div
@@ -206,8 +208,14 @@ export const HabitCard = ({
             <i className="text-xl not-italic">{habit.value.habit.habit_icon}</i>
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-800 leading-tight">
-              {habit.value.habit.habit_title}
+            <h3
+              className="text-lg font-bold text-slate-800 leading-tight cursor-pointer"
+              onClick={() => showHabitDetails.value = habit.value.habit.habit_id}
+              title="View Habit's details"
+            >
+              <span className="hover:underline">
+                {habit.value.habit.habit_title}
+              </span>
               <span className="hidden group-hover:flex text-base text-slate-500 font-medium">
                 <span className="min-w-23">Frequency</span>: per {freq} day{freq > 1 ? "s" : ""}
               </span>
@@ -313,6 +321,29 @@ export const HabitCard = ({
               </button>
             );
           })}
+        </div>
+      </div>
+
+      <div className="pt-3 border-t border-slate-100 justify-center w-full hidden group-hover:flex duration-200">
+        <div className="flex items-center gap-2">
+          <button
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-hover hover:bg-background rounded-sm transition-colors shadow-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+            onClick={() => habitCheckIn()}
+            disabled={Boolean(habit.value.done_dates[today])}
+            title={habit.value.done_dates[today] ? "You already checked in!" : "Check in for today"}
+          >
+            <img src="/static/images/checkmark.svg" alt="Check In" className="h-4 w-4" />
+            <span>{habit.value.done_dates[today] ? "Done" : "Check In"}</span>
+          </button>
+
+          <button
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-hover hover:bg-background rounded-sm transition-colors cursor-pointer"
+            onClick={() => showHabitDetails.value = habit.value.habit.habit_id}
+            title="View Details"
+          >
+            <img src="/static/images/list.svg" alt="Details" className="h-4 w-4 opacity-70" />
+            <span>Details</span>
+          </button>
         </div>
       </div>
     </div>

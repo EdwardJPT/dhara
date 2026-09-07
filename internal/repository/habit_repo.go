@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"strings"
 	"time"
 
@@ -78,14 +79,15 @@ func (r *HabitRepository) GetUserHabitsGroups(userId int64) ([]models.HabitsGrou
 			h.habit_id,
 			h.habit_title,
 			h.habit_icon,
+			h.frequency,
 			h.is_show AS habit_is_show,
 			h.created_at AS habit_created_at
 		FROM habits_group hg
 		LEFT JOIN habits h
-			ON hg.habits_group_id = h.habits_group_id
-		WHERE hg.user_id = ? AND h.user_id = ?
+			ON hg.habits_group_id = h.habits_group_id AND h.user_id = ?
+		WHERE hg.user_id = ?
 		ORDER BY hg.habits_group_id, h.habit_id
-	`
+    `
 	rows, err := r.db.Query(query, userId, userId)
 	if err != nil {
 		return []models.HabitsGroupWithHabits{}, err
@@ -101,11 +103,13 @@ func (r *HabitRepository) GetUserHabitsGroups(userId int64) ([]models.HabitsGrou
 		var groupIsShow bool
 		var groupCreatedAt string
 
-		var habitID int64
-		var habitTitle string
-		var habitIcon string
-		var habitIsShow bool
-		var habitCreatedAt string
+		// Use sql.Null* types for the right side of the LEFT JOIN
+		var habitID sql.NullInt64
+		var habitTitle sql.NullString
+		var habitIcon sql.NullString
+		var habitFreq sql.NullInt32
+		var habitIsShow sql.NullBool
+		var habitCreatedAt sql.NullString
 
 		err := rows.Scan(
 			&groupID,
@@ -115,6 +119,7 @@ func (r *HabitRepository) GetUserHabitsGroups(userId int64) ([]models.HabitsGrou
 			&habitID,
 			&habitTitle,
 			&habitIcon,
+			&habitFreq,
 			&habitIsShow,
 			&habitCreatedAt,
 		)
@@ -129,20 +134,24 @@ func (r *HabitRepository) GetUserHabitsGroups(userId int64) ([]models.HabitsGrou
 				HabitsGroupTitle: groupTitle,
 				IsShow:           groupIsShow,
 				CreatedAt:        groupCreatedAt,
-				Habits:           []models.Habit{},
+				Habits:           []models.Habit{}, // Defaults to an empty array, not nil
 			}
 			resultOrder = append(resultOrder, groupID)
 		}
 
-		habit := models.Habit{
-			HabitID:       habitID,
-			HabitsGroupID: groupID,
-			HabitTitle:    habitTitle,
-			HabitIcon:     habitIcon,
-			IsShow:        habitIsShow,
-			CreatedAt:     habitCreatedAt,
+		// Only construct and append the habit if the ID is valid (not NULL)
+		if habitID.Valid {
+			habit := models.Habit{
+				HabitID:       habitID.Int64,
+				HabitsGroupID: groupID,
+				HabitTitle:    habitTitle.String,
+				HabitIcon:     habitIcon.String,
+				Frequency:     int(habitFreq.Int32),
+				IsShow:        habitIsShow.Bool,
+				CreatedAt:     habitCreatedAt.String,
+			}
+			groupMap[groupID].Habits = append(groupMap[groupID].Habits, habit)
 		}
-		groupMap[groupID].Habits = append(groupMap[groupID].Habits, habit)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -314,6 +323,87 @@ func (r *HabitRepository) HabitCheckIn(userId int64, req models.HabitCheckInRequ
 	}
 
 	return ids, doneDates, nil
+}
+
+func (r *HabitRepository) EditHabit(userId, habitId int64, req models.EditHabitRequest) error {
+	query := `
+		UPDATE habits
+		SET
+			habit_title = ?,
+			habit_icon = ?,
+			frequency = ?,
+			is_show = ?
+		WHERE habit_id = ? AND user_id = ?
+	`
+
+	result, err := r.db.Exec(query,
+		req.HabitTitle,
+		req.HabitIcon,
+		req.HabitFrequency,
+		req.HabitIsShow,
+		habitId,
+		userId,
+	)
+	if err != nil {
+		return err
+	}
+
+	// Ensure we actually updated something (prevents returning success if the habit didn't exist or didn't belong to the user)
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("no rows updated - habit not found or unauthorized")
+	}
+
+	return nil
+}
+
+func (r *HabitRepository) DeleteHabit(userId, habitId int64) error {
+	// Begin a transaction since we need to delete from multiple tables safely
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Delete associated dates first to avoid foreign key constraint failures
+	deleteDatesQuery := `
+		DELETE FROM habits_done_date
+		WHERE habit_id = ? AND user_id = ?
+	`
+	_, err = tx.Exec(deleteDatesQuery, habitId, userId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Delete the actual habit
+	deleteHabitQuery := `
+		DELETE FROM habits
+		WHERE habit_id = ? AND user_id = ?
+	`
+	result, err := tx.Exec(deleteHabitQuery, habitId, userId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Optional: check if a row was actually deleted (to prevent 404s/silent fails)
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if rowsAffected == 0 {
+		tx.Rollback()
+		// Could return a custom error here like sql.ErrNoRows if you want to handle 404s in the handler
+		return nil
+	}
+
+	return tx.Commit()
 }
 
 func (r *HabitRepository) GetUserHabitsByDoneDate(userId int64) (map[string][]models.HabitDoneInfo, error) {

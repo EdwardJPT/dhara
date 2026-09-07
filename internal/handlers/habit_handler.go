@@ -198,3 +198,63 @@ func (h *HabitHandler) HabitCheckIn(w http.ResponseWriter, r *http.Request) {
 		// IDs?
 	})
 }
+func (h *HabitHandler) EditHabit(w http.ResponseWriter, r *http.Request) {
+	// Get user info from context
+	_, claims, _ := jwtauth.FromContext(r.Context())
+	userId, err := strconv.ParseInt(claims["user_id"].(string), 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusUnauthorized, err, "Invalid credentials")
+		return
+	}
+
+	// Get habit_id from chi URL params
+	habitIdParam := chi.URLParam(r, "habit_id")
+	habitId, err := strconv.ParseInt(habitIdParam, 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, err, "Invalid habit ID")
+		return
+	}
+
+	// Parse JSON body
+	var reqBody models.EditHabitRequest
+	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, err, "Invalid request format")
+		return
+	}
+
+	// Execute update
+	err = h.habitService.EditHabit(userId, habitId, reqBody)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusInternalServerError, err, "There's a problem in the server")
+		return
+	}
+
+	utils.SuccessResponse(w, http.StatusOK, nil, "Habit updated successfully")
+}
+
+func (h *HabitHandler) DeleteHabit(w http.ResponseWriter, r *http.Request) {
+	// Get user info from context
+	_, claims, _ := jwtauth.FromContext(r.Context())
+	userId, err := strconv.ParseInt(claims["user_id"].(string), 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusUnauthorized, err, "Invalid credentials")
+		return
+	}
+
+	// Get habit_id from chi URL params
+	habitIdParam := chi.URLParam(r, "habit_id")
+	habitId, err := strconv.ParseInt(habitIdParam, 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, err, "Invalid habit ID")
+		return
+	}
+
+	// Execute deletion
+	err = h.habitService.DeleteHabit(userId, habitId)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusInternalServerError, err, "There's a problem in the server")
+		return
+	}
+
+	utils.SuccessResponse(w, http.StatusOK, nil, "Habit deleted successfully")
+}

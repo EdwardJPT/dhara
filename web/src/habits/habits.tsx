@@ -8,7 +8,8 @@ import { NewHabitForm } from "./habits.form.js";
 
 import { monthNames } from "../components/constants.js";
 
-import type { HabitsGroupWithHabits, HabitWithDoneDates } from "./types.ts";
+import type { HabitsGroupWithHabits, HabitWithDoneDates, HabitWithGroup } from "./types.ts";
+import { HabitDetails } from "./habits.details.js";
 
 interface BackEndData {
   habitsGroupList: HabitsGroupWithHabits[];
@@ -67,7 +68,7 @@ function App({ habitsGroupList, habitsDoneDateList, isDemo = false }: AppProps) 
     habitsGroups.value = habitsGroups.value.map((group) =>
       group.habits_group_id === habitGroupId ? { ...group, is_show: checked } : group
     );
-  }
+  };
 
   // To control the height of habits group div
   const expandGroupsDiv = useSignal(false);
@@ -111,6 +112,44 @@ function App({ habitsGroupList, habitsDoneDateList, isDemo = false }: AppProps) 
 
   // To add new habit
   const showHabitForm = useSignal(false);
+
+  // Stored the Id of a habit that we show the details
+  const showHabitDetails = useSignal(0);
+
+  // The habit that we show the details
+  const selectedHabit = useSignal<HabitWithGroup | null>(null);
+
+  // Automatically search and format the data whenever the showHabitDetails changes
+  useSignalEffect(() => {
+    const targetId = showHabitDetails.value;
+
+    if (targetId === 0) {
+      selectedHabit.value = null;
+      return;
+    }
+
+    let foundHabit: HabitWithGroup | null = null;
+
+    // Loop through groups to find the matching habit
+    for (const group of habitsGroups.value) {
+      const match = group.habits.find((h) => h.habit_id === targetId);
+
+      if (match) {
+        // Map the backend data to your specific interface
+        foundHabit = {
+          habit_id: match.habit_id,
+          habit_title: match.habit_title,
+          habit_icon: match.habit_icon,
+          habit_frequency: match.frequency,
+          habit_is_show: match.is_show,
+          habits_group_title: group.habits_group_title,
+        };
+        break;
+      }
+    }
+
+    selectedHabit.value = foundHabit;
+  });
 
   const errorMessage = useSignal("");
 
@@ -217,6 +256,7 @@ function App({ habitsGroupList, habitsDoneDateList, isDemo = false }: AppProps) 
                   dateRange={dateRange}
                   errorMessage={errorMessage}
                   habitsDoneDates={habitsDoneDates}
+                  showHabitDetails={showHabitDetails}
                   isDemo={isDemo}
                 />
               );
@@ -230,6 +270,15 @@ function App({ habitsGroupList, habitsDoneDateList, isDemo = false }: AppProps) 
           showHabitForm={showHabitForm}
           groupList={habitsGroups}
           errorMessage={errorMessage}
+          isDemo={isDemo}
+        />
+      }
+
+      {(showHabitDetails.value > 0) &&
+        <HabitDetails
+          habitSignal={selectedHabit}
+          errorMessage={errorMessage}
+          showHabitDetails={showHabitDetails}
           isDemo={isDemo}
         />
       }

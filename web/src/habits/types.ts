@@ -24,3 +24,11 @@ export interface HabitWithDoneDates {
     habit: Habit;
     done_dates: {[key: string]: HabitDoneDate};
 }
+export interface HabitWithGroup {
+    habit_id: number;
+    habit_title: string;
+    habit_icon: string;
+    habit_frequency: number;
+    habit_is_show: boolean;
+    habits_group_title: string;
+}

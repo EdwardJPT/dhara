@@ -113,6 +113,7 @@ func habitsTypesConvert() {
 
 	habits.Add(models.HabitsGroupWithHabits{})
 	habits.Add(models.HabitWithDoneDates{})
+	habits.Add(models.HabitWithGroup{})
 
 	// Config
 	habits.CreateInterface = true
