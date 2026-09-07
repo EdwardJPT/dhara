@@ -67,7 +67,10 @@ func main() {
 	habitHandler := handlers.NewHabitHandler(habitService)
 	calendarHandler := handlers.NewCalendarHandler(db)
 	reportHandler := handlers.NewReportHandler(projectService, taskService, habitService)
-	demoHandler := handlers.NewDemoHandler(projectService, taskService, habitService, taskRepo, unsortedRepo, habitRepo)
+	demoHandler := handlers.NewDemoHandler(
+		projectService, taskService, habitService, taskRepo, unsortedRepo, habitRepo,
+	)
+	miscHandler := handlers.NewMiscHandler()
 
 	// Init the chi router
 	r := chi.NewRouter()
@@ -133,6 +136,8 @@ func main() {
 		r.Post("/", habitHandler.AddHabit)
 		r.Post("/check-in/{group_id}/{habit_id}", habitHandler.HabitCheckIn)
 		r.Patch("/group/{group_id}/is-show", habitHandler.PatchHabitsGroupIsShow)
+		r.Patch("/{habit_id}", habitHandler.EditHabit)
+		r.Delete("/{habit_id}", habitHandler.DeleteHabit)
 	})
 	// Calendar routers - Protected
 	r.Route("/calendar", func(r chi.Router) {
@@ -154,6 +159,10 @@ func main() {
 		r.Get("/habits", demoHandler.DemoHabitPage)
 		r.Get("/reports", demoHandler.DemoReportPage)
 	})
+	// Misc routers
+	r.Get("/about", miscHandler.AboutPage)
+	r.Get("/terms", miscHandler.TermsPage)
+	r.Get("/help", miscHandler.HelpPage)
 	// 404 handlers
 	r.NotFound(handlers.NotFoundHandler)
 

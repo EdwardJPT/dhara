@@ -1,0 +1,109 @@
+{{define "help"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Help & Support | Dhara</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Frequently Asked Questions and Help for Dhara">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/static/images/logo.ico">
+  <link rel="stylesheet" type="text/css" href="/static/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body class="flex flex-col items-center bg-linear-to-br from-slate-100 to-slate-200 min-h-screen pt-15">
+  <div class="w-9/10 max-w-2xl md:w-full pb-10">
+
+    <!-- Logo/Brand -->
+    <div class="mb-8 text-center">
+      <a href="/" class="inline-block">
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl border-2 border-background bg-white shadow-sm">
+          <img src="/static/images/logo.png" alt="Dhara logo">
+        </div>
+      </a>
+      <h1 class="text-3xl font-bold text-gray-800">Help & FAQ</h1>
+      <p class="mt-2 text-gray-600">Frequently asked questions and getting started guide</p>
+    </div>
+
+    <!-- Help Content Card -->
+    <div class="overflow-hidden rounded-2xl bg-white shadow-xl p-8 space-y-6 text-gray-700">
+
+      <!-- FAQ Items -->
+      <div class="space-y-4">
+        <div class="border-b border-gray-100 pb-4">
+          <h2 class="font-semibold text-gray-800 flex items-center text-base">
+            <i class="fas fa-question-circle text-background mr-2"></i> How do I get started?
+          </h2>
+          <p class="text-md leading-relaxed text-gray-600 mt-1 pl-6">
+            You can create a free account via the <a href="/signup"
+              class="text-background hover:underline font-medium">Sign Up</a> page or click
+            <a href="/demo" class="text-background hover:underline font-medium">
+              <strong>View Demo</strong>
+            </a>
+            on the main login page to explore features instantly without creating an account.
+          </p>
+        </div>
+
+        <div class="border-b border-gray-100 pb-4">
+          <h2 class="font-semibold text-gray-800 flex items-center text-base">
+            <i class="fas fa-question-circle text-background mr-2"></i> Is this application free to use?
+          </h2>
+          <p class="text-md leading-relaxed text-gray-600 mt-1 pl-6">
+            Yes, Dhara is completely free to use. It is maintained as an open portfolio application.
+          </p>
+        </div>
+
+        <div class="border-b border-gray-100 pb-4">
+          <h2 class="font-semibold text-gray-800 flex items-center text-base">
+            <i class="fas fa-question-circle text-background mr-2"></i> How does Demo Mode work?
+          </h2>
+          <p class="text-md leading-relaxed text-gray-600 mt-1 pl-6">
+            Demo Mode loads a pre-populated sandbox environment allowing you to test task management features. Any
+            changes made in demo mode may be reset periodically.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-800 flex items-center text-base">
+            <i class="fas fa-question-circle text-background mr-2"></i> I forgot my password. How can I reset it?
+          </h2>
+          <p class="text-md leading-relaxed text-gray-600 mt-1 pl-6">
+            Since this is a portfolio application, automated password reset emails are currently disabled. Please
+            contact the administrator or register a new testing account.
+          </p>
+        </div>
+      </div>
+
+      <!-- Support Footer inside Card -->
+      <div
+        class="bg-gray-50 -mx-8 -mb-8 p-6 mt-8 rounded-b-2xl border-t border-gray-100 flex justify-between items-center text-sm">
+        <span class="text-gray-500">Need further assistance?</span>
+        <a href="mailto:email@edward.wtf"
+          class="font-semibold text-background hover:text-hover transition flex items-center">
+          <i class="fas fa-envelope mr-1"></i> Contact Support
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Navigation Link -->
+    <div class="mt-8 text-center">
+      <a href="/"
+        class="font-bold text-background transition hover:text-background/80 flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Sign In
+      </a>
+    </div>
+
+  </div>
+
+  {{template "footer" .}}
+</body>
+
+</html>
+{{end}}

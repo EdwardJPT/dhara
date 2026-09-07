@@ -1,0 +1,117 @@
+{{define "about"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>About | Dhara</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Dhara - A project-centric task management app">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/static/images/logo.ico">
+  <link rel="stylesheet" type="text/css" href="/static/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body class="flex flex-col items-center bg-linear-to-br from-slate-100 to-slate-200 min-h-screen pt-15">
+  <div class="w-9/10 max-w-2xl md:w-full pb-10">
+
+    <!-- Logo/Brand -->
+    <div class="mb-8 text-center">
+      <a href="/" class="inline-block">
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl border-2 border-background bg-white shadow-sm">
+          <img src="/static/images/logo.png" alt="Dhara logo">
+        </div>
+      </a>
+      <h1 class="text-3xl font-bold text-gray-800">About Dhara</h1>
+      <p class="mt-2 text-gray-600">A minimal, project-centric task management application</p>
+    </div>
+
+    <!-- About Content Card -->
+    <div class="overflow-hidden rounded-2xl bg-white shadow-xl p-8 space-y-6 text-gray-700">
+
+      <!-- The Name Section -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
+          <i class="fas fa-water text-background mr-2"></i> The Name "Dhara"
+        </h2>
+        <p class="text-md leading-relaxed">
+          The name <strong>Dhara</strong> (<em>dhārā</em> / धारा) comes from Sanskrit, meaning <em>"flow,"
+            "stream,"</em> or <em>"continuous current"</em>. This project was meant to help me to get into the flow
+          state
+          easily when I'm working with a lot of my projects, while also serve as a portfolio project to apply for jobs,
+          and lastly to learn about Go programming language. Tho I should admit I don't know Sanskrit and not sure if
+          the use of the word is correct!
+        </p>
+      </div>
+
+      <hr class="border-gray-200">
+
+      <!-- Purpose Section -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
+          <i class="fas fa-bullseye text-background mr-2"></i> Purpose & Architecture
+        </h2>
+        <p class="text-md leading-relaxed">Dhara was built as a portfolio project to demonstrate clean and efficient web
+          app. I built this web app without heavy JS frameworks, prefering for compiled Preact sent as plain JavaScript
+          to the frontend instead. The web app provides a simple, clutter-free space to organize tasks around distinct
+          projects, keeping work neatly separated so tasks from different projects never mix together.
+        </p>
+      </div>
+
+      <hr class="border-gray-200">
+
+      <div>
+        <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+          <i class="fas fa-layer-group text-background mr-2"></i> Key Features
+        </h2>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-md">
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mt-1 mr-2 shrink-0"></i>
+            <span><strong>Project-Centric:</strong> Group tasks cleanly by projects and goals.</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mt-1 mr-2 shrink-0"></i>
+            <span><strong>Fast & Lightweight:</strong> Designed for low latency and high responsiveness.</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mt-1 mr-2 shrink-0"></i>
+            <span><strong>Minimalist UI:</strong> Clean interface focused on task completion.</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mt-1 mr-2 shrink-0"></i>
+            <span><strong>Instant Demo:</strong> Explore full capabilities without registering.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Footer inside Card -->
+      <div
+        class="bg-gray-50 -mx-8 -mb-8 p-6 mt-8 rounded-b-2xl border-t border-gray-100 flex justify-between items-center text-md">
+        <span class="text-gray-500">Want to test it out?</span>
+        <a href="/demo" class="font-semibold text-background hover:text-hover transition flex items-center">
+          <i class="fas fa-compass mr-1 text-blue-500"></i> Try Demo Mode
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Navigation Link -->
+    <div class="mt-8 text-center">
+      <a href="/"
+        class="font-bold text-background transition hover:text-background/80 flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Sign In
+      </a>
+    </div>
+
+  </div>
+
+  {{template "footer" .}}
+</body>
+
+</html>
+{{end}}

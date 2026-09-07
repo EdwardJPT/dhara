@@ -1,0 +1,117 @@
+{{define "terms"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Terms & Privacy | Dhara</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Privacy Policy and Terms of Service for Dhara">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/static/images/logo.ico">
+  <link rel="stylesheet" type="text/css" href="/static/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body class="flex flex-col items-center bg-linear-to-br from-slate-100 to-slate-200 min-h-screen pt-15">
+  <div class="w-9/10 max-w-3xl md:w-full pb-10">
+
+    <div class="mb-8 text-center">
+      <a href="/" class="inline-block">
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl border-2 border-background bg-white shadow-sm">
+          <img src="/static/images/logo.png" alt="Dhara logo">
+        </div>
+      </a>
+      <h1 class="text-3xl font-bold text-gray-800">Legal Information</h1>
+      <p class="mt-2 text-gray-600">Privacy Policy & Terms of Service</p>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl bg-white shadow-xl p-8 space-y-8 text-gray-700">
+
+      <section class="space-y-4">
+        <div class="border-b border-gray-100 pb-3">
+          <h2 class="text-xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-user-shield text-background mr-2"></i> Privacy Policy
+          </h2>
+          <p class="text-sm text-gray-400 mt-1">Last Updated: September 2026</p>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-800">1. Overview</h2>
+          <p class="text-md leading-relaxed mt-1">This website is a personal portfolio project created strictly for
+            hobby and demonstration purposes. Data collection is kept to a minimal standard.</p>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-800">2. Information Collection</h2>
+          <ul class="list-disc list-inside text-md leading-relaxed mt-1 space-y-1">
+            <li><strong>Personal Data:</strong> No payment details or sensitive personal identification information are
+              collected. Any voluntary contact information provided is only used to respond to your inquiry.</li>
+            <li><strong>Log Files:</strong> Basic non-identifiable technical data (e.g., browser type, IP address) may
+              be logged by the hosting provider for security and analytics.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-800">3. Cookies</h2>
+          <p class="text-md leading-relaxed mt-1">This site does not use tracking or marketing cookies. Any cookies used
+            are limited strictly to functional session management.</p>
+        </div>
+      </section>
+
+      <hr class="border-gray-200">
+
+      <section class="space-y-4">
+        <div class="border-b border-gray-100 pb-3">
+          <h2 class="text-xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-file-contract text-background mr-2"></i> Terms of Service
+          </h2>
+          <p class="text-sm text-gray-400 mt-1">Last Updated: September 2026</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-gray-800">1. Acceptance & Usage</h3>
+          <p class="text-md leading-relaxed mt-1">By accessing this site, you acknowledge that it is a personal
+            portfolio. Content, features, and code samples are provided for demonstration purposes only.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-gray-800">2. Intellectual Property</h3>
+          <p class="text-md leading-relaxed mt-1">Unless stated otherwise, the design and original implementation belong
+            to the site creator. Open-source tools remain under their respective licenses.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-gray-800">3. Disclaimer</h3>
+          <p class="text-md leading-relaxed mt-1">This website is provided on an <strong>"AS IS"</strong> basis without
+            warranties of any kind. The creator is not liable for any issues arising from its usage.</p>
+        </div>
+      </section>
+
+      <div
+        class="bg-gray-50 -mx-8 -mb-8 p-6 mt-8 rounded-b-2xl border-t border-gray-100 flex justify-between items-center text-sm">
+        <span class="text-gray-500">Have questions?</span>
+        <a href="mailto:email@edward.wtf" class="font-semibold text-background hover:text-hover transition">Contact
+          Owner</a>
+      </div>
+
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="/"
+        class="font-bold text-background transition hover:text-background/80 flex items-center justify-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Sign In
+      </a>
+    </div>
+
+  </div>
+
+  {{template "footer" .}}
+</body>
+
+</html>
+{{end}}
