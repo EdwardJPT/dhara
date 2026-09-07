@@ -1,5 +1,5 @@
 import { useSignal, useComputed, Signal, useSignalEffect } from "@preact/signals";
-import { useMemo } from "preact/hooks";
+import { useMemo, useRef } from "preact/hooks";
 
 import { Calendar } from "./home.calendar.jsx";
 import { TaskDetails } from "./home.task";
@@ -63,7 +63,7 @@ const TaskListItem = ({
 }: TaskListItemProps) => {
   return (
     <div
-      id={`container-task-${task.task_id}`}
+      id={`task-item-${task.task_id}`}
       class={`
         ${index % 2 == 0 ? "bg-[#e0fffd]" : ""}
         ${task.is_done ? "bg-pink-200 opacity-60" : ""}
@@ -141,7 +141,7 @@ const TaskListItem = ({
                 >
                   &#x2713;
                 </button>
-                <span class="hidden p-1 sm:p-2 z-10 bg-hover text-white w-max sm:w-fit group-hover:flex text-[10px] sm:text-sm rounded absolute bottom-full mb-1 sm:relative sm:bottom-auto sm:mb-auto">
+                <span class="hidden p-1 sm:p-2 z-10 bg-hover text-white w-max sm:w-fit group-hover:flex text-[10px] sm:text-sm rounded absolute bottom-full mb-1 sm:relative sm:bottom-auto sm:mb-0">
                   Reschedule due date?
                 </span>
               </div>
@@ -220,7 +220,7 @@ export function TaskDisplay({
     return TaskSorter.Skip;
   };
 
-  const sortCategory: Signal<string> = useSignal(getInitialSortCategory());
+  const sortCategory: Signal<SortValue> = useSignal(getInitialSortCategory());
 
   // Sync back to Local Storage whenever sortCategory changes
   useSignalEffect(() => {
@@ -346,6 +346,37 @@ export function TaskDisplay({
       setErrorMessage("There's an error in the server");
     }
   };
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  useSignalEffect(() => {
+    // TODO:: sortCategory.value is doneDateAsc | doneDateDesc no need to scroll
+    // to the first not done task. Add this TODO: to dhara so we can track what
+    // we do
+
+    const firstIncomplete = shownTasks.value.find(task => !task.is_done);
+
+    if (firstIncomplete) {
+      const targetId = `task-item-${firstIncomplete.task_id}`;
+
+      // setTimeout ensures the DOM has painted before we try to scroll
+      setTimeout(() => {
+        const container = scrollContainerRef.current;
+        const targetElement = document.getElementById(targetId);
+
+        if (container && targetElement) {
+          // Calculate the exact top position of the target relative to the container
+          const containerRect = container.getBoundingClientRect();
+          const targetRect = targetElement.getBoundingClientRect();
+
+          // Current scroll position + distance from the top of the container to the target
+          const scrollPos = container.scrollTop + (targetRect.top - containerRect.top);
+
+          // Scroll to the specific div
+          container.scrollTo({ top: scrollPos, behavior: 'smooth' });
+        }
+      }, 10);
+    }
+  });
 
   const showCalendar = useSignal(false);
   const shownTask: Signal<TasksWithProject | null> = useSignal(null);
@@ -574,7 +605,10 @@ export function TaskDisplay({
         )}
 
         <div class="overflow-hidden rounded-lg bg-white shadow">
-          <div class="max-h-[calc(100vh-100px)] divide-y divide-gray-200 overflow-y-auto bg-white">
+          <div
+            ref={scrollContainerRef}
+            class="max-h-[calc(100vh-100px)] divide-y divide-gray-200 overflow-y-auto bg-white"
+          >
             {shownTasks.value.length > 0 && shownTasks.value.map((task, i) => (
               <TaskListItem
                 key={`task-${task.task_id}`}

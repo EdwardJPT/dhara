@@ -291,7 +291,6 @@ export function UnsortedDisplay({
         for (let i = 0; i < len; i++) {
           if (unsorteds.value[i].unsorted_id == Number(unsorted_id)) {
             unsorted = unsorteds.value[i];
-            console.log({ unsorted });
           }
         }
         const newTask = convertToTask(unsorted, Number(project_id), Number(unsorted_id));

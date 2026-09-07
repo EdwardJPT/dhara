@@ -254,11 +254,11 @@ export function TasksDisplay({
               ${i % 2 == 0 ? "bg-[#e0fffd]" : ""}
               ${task.is_done && idToDelete.value != task.task_id ? "bg-pink-200 opacity-60" : ""}
               hover:${i % 2 == 0 ? "bg-[#e0fffd]" : "bg-white"} hover:opacity-100
-              flex flex-col w-full
+              flex flex-col w-full group
             `}
             >
               <div
-                class="group flex flex-row items-start cursor-pointer px-3 py-3 sm:px-6 sm:py-4 w-full sm:min-h-[6.25rem] md:min-w-[42rem] hover:bg-white hover:opacity-100"
+                class="group flex flex-row items-start cursor-pointer px-3 py-3 sm:px-6 sm:py-4 w-full sm:min-h-25 md:min-w-2xl hover:bg-white hover:opacity-100"
                 onClick={() => {
                   shownTask.value = {
                     task_id: task.task_id,
@@ -292,7 +292,7 @@ export function TasksDisplay({
                 />
 
                 <div class="ml-2 sm:ml-3 flex-1 min-w-0 text-gray-900 group">
-                  <p class="text-base sm:text-lg font-medium break-words">
+                  <p class="text-base sm:text-lg font-medium wrap-break-words">
                     {task.task_title}&nbsp;
                     {task.priority && (
                       <span class="inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 sm:p-1 text-[10px] sm:text-xs font-medium text-red-500 whitespace-nowrap">
@@ -300,11 +300,11 @@ export function TasksDisplay({
                       </span>
                     )}
                   </p>
-                  <p class="my-1 max-h-48 overflow-y-auto text-sm sm:text-base text-gray-500 break-words">
+                  <p class="my-1 max-h-48 overflow-y-auto text-sm sm:text-base text-gray-500 wrap-break-words">
                     {task.task_desc}
                   </p>
                   {task.done_date > 0 && (
-                    <p class="text-sm sm:text-base font-bold text-gray-500 break-words">
+                    <p class="text-sm sm:text-base font-bold text-gray-500 wrap-break-words">
                       DONE :{" "}
                       {formattingDateTask(
                         new Date(task.done_date * 1000).toLocaleDateString(
@@ -329,7 +329,7 @@ export function TasksDisplay({
                             type="date"
                             id={`unsorted_due_date-${task.task_id}`}
                             name={`unsorted_due_date-${task.task_id}`}
-                            class="p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 text-[10px] sm:text-sm w-24 sm:w-full max-w-[130px]"
+                            class="p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 text-[10px] sm:text-sm w-24 sm:w-full max-w-32.5"
                             required
                             min={today}
                           />
@@ -349,6 +349,7 @@ export function TasksDisplay({
                 </div>
               </div>
 
+              {/* Delete button */}
               <div
                 class={`
                 group-hover:flex flex-row items-center px-3 sm:px-6 py-2 sm:py-1 text-xs sm:text-base

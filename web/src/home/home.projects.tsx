@@ -113,7 +113,7 @@ export function ProjectsDisplay({
   // 1 row, or 2 rows
   const isViewMore = useSignal(false);
 
-  // Helper function to load the initial project filter
+  // Helper function to load the initial projects filter
   const getInitialProjectFilter = (): FilterValue => {
     const storedFilter = localStorage.getItem("projectFilter");
     if (storedFilter) {
@@ -131,6 +131,7 @@ export function ProjectsDisplay({
     localStorage.setItem("projectFilter", JSON.stringify(projectFilter.value));
   });
 
+  // Helper function to load the initial projects sorter
   const getInitialProjectSorter = (): SortValue => {
     const storedSorter = localStorage.getItem("projectSorter");
     if (storedSorter) {
@@ -191,10 +192,110 @@ export function ProjectsDisplay({
         result = result.filter(p => !p.is_done && new Date(today) > new Date(p.due_date))
       }
     }
+
+    // When the projects is after sorted manually with drag and drop
+    if (projectSorter.value === ProjectSorter.Skip) {
+      const projectMap = new Map(result.map(p => [p.project_id, p]));
+
+      return projectsIdsOrder.value.length !== 0
+        ? projectsIdsOrder.value
+          .map(id => projectMap.get(id))
+          .filter((p): p is Project => p !== undefined)
+        : result;
+    }
+
     // sort the projects
     if (!projectSorter.value) return result;
     return [...result].sort(sortFunctions[projectSorter.value]);
   });
+
+  // Drag and drop state
+  const draggedItemIndex = useSignal<number | null>(null);
+  const dragOriginalList = useSignal<Project[] | null>(null);
+  const isDroppedSuccessfully = useSignal(false);
+  // Arrays of projects ids after we manually sorted it with drag and drop
+  const getProjectsOrder = (): number[] => {
+    const storedFilter = localStorage.getItem("projectsOrder");
+    if (storedFilter) {
+      try {
+        return JSON.parse(storedFilter);
+      } catch (e) {
+        console.error("No stored projectsOrder from LocalStorage", e);
+      }
+    }
+    return [];
+  };
+  const projectsIdsOrder = useSignal<number[]>(getProjectsOrder())
+  // Sync back to Local Storage whenever projectsIdsOrder.value changes
+  useSignalEffect(() => {
+    localStorage.setItem("projectsOrder", JSON.stringify(projectsIdsOrder.value));
+  });
+
+  const handleDragStart = (e: DragEvent, index: number) => {
+    draggedItemIndex.value = index;
+    dragOriginalList.value = [...projects.value]; // Backup in case of cancel/drop outside
+    isDroppedSuccessfully.value = false;
+
+    // Immediately switch to manual sort so the live reordering isn't blocked by math
+    if (projectSorter.value !== ProjectSorter.Skip) {
+      projectSorter.value = ProjectSorter.Skip;
+    }
+
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+    }
+  };
+
+  const handleDragEnter = (e: DragEvent, index: number) => {
+    e.preventDefault();
+    const dragIndex = draggedItemIndex.value;
+
+    // Ignore if not dragging, or if entering the space we are already in
+    if (dragIndex === null || dragIndex === index) return;
+
+    // Identify the exact projects
+    const currentShown = shownProjects.value;
+    const draggedProject = currentShown[dragIndex];
+    const targetProject = currentShown[index];
+
+    const newList = [...projects.value];
+    const origDragIndex = newList.findIndex(
+      p => p.project_id === draggedProject.project_id
+    );
+    const origDropIndex = newList.findIndex(
+      p => p.project_id === targetProject.project_id
+    );
+
+    // Live-swap the items in the main array
+    if (origDragIndex !== -1 && origDropIndex !== -1) {
+      const [removed] = newList.splice(origDragIndex, 1);
+      newList.splice(origDropIndex, 0, removed);
+
+      projects.value = newList; // Triggers UI reflow, items will shift!
+      draggedItemIndex.value = index; // Update our drag index to the new position
+      projectsIdsOrder.value = newList.map((project) => project.project_id);
+    }
+  };
+
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault(); // Required by browser to allow dropping
+  };
+
+  const handleDrop = (e: DragEvent) => {
+    e.preventDefault();
+    isDroppedSuccessfully.value = true;
+  };
+
+  const handleDragEnd = () => {
+    // If dropped outside a valid zone, revert to the original order
+    if (!isDroppedSuccessfully.value && dragOriginalList.value) {
+      projects.value = dragOriginalList.value;
+    }
+
+    draggedItemIndex.value = null;
+    dragOriginalList.value = null;
+    isDroppedSuccessfully.value = false;
+  };
 
   return (
     <>
@@ -250,16 +351,36 @@ export function ProjectsDisplay({
               name="projectsFilterPriority"
               class="w-full px-2 py-3 text-center text-nowrap text-ellipsis md:w-35"
             >
-              <option value={ProjectSorter.Skip} disabled selected>Sort by</option>
-              <option value={ProjectSorter.DueDateAsc}>Due Date<span class="flex items-start text-3xl">&#8599;</span></option>
-              <option value={ProjectSorter.DueDateDesc}>Due Date<span class="flex items-start text-3xl">&#8600;</span></option>
-              <option value={ProjectSorter.DoneDateAsc}>Done Date<span class="flex items-start text-3xl">&#8599;</span></option>
-              <option value={ProjectSorter.DoneDateDesc}>Done Date<span class="flex items-start text-3xl">&#8600;</span></option>
-              <option value={ProjectSorter.StartDateAsc}>Start Date<span class="flex items-start text-3xl">&#8599;</span></option>
-              <option value={ProjectSorter.StartDateDesc}>Start Date<span class="flex items-start text-3xl">&#8600;</span></option>
-              <option value={ProjectSorter.CompletionAsc}>Completion<span class="flex items-start text-3xl">&#8599;</span></option>
-              <option value={ProjectSorter.CompletionDesc}>Completion<span class="flex items-start text-3xl">&#8600;</span></option>
-              <option value={ProjectSorter.Priority}>Priority</option>
+              <option value={ProjectSorter.Skip} disabled selected>
+                Sort by
+              </option>
+              <option value={ProjectSorter.DueDateAsc}>
+                Due Date<span class="flex items-start text-3xl">&#8599;</span>
+              </option>
+              <option value={ProjectSorter.DueDateDesc}>
+                Due Date<span class="flex items-start text-3xl">&#8600;</span>
+              </option>
+              <option value={ProjectSorter.DoneDateAsc}>
+                Done Date<span class="flex items-start text-3xl">&#8599;</span>
+              </option>
+              <option value={ProjectSorter.DoneDateDesc}>
+                Done Date<span class="flex items-start text-3xl">&#8600;</span>
+              </option>
+              <option value={ProjectSorter.StartDateAsc}>
+                Start Date<span class="flex items-start text-3xl">&#8599;</span>
+              </option>
+              <option value={ProjectSorter.StartDateDesc}>
+                Start Date<span class="flex items-start text-3xl">&#8600;</span>
+              </option>
+              <option value={ProjectSorter.CompletionAsc}>
+                Completion<span class="flex items-start text-3xl">&#8599;</span>
+              </option>
+              <option value={ProjectSorter.CompletionDesc}>
+                Completion<span class="flex items-start text-3xl">&#8600;</span>
+              </option>
+              <option value={ProjectSorter.Priority}>
+                Priority
+              </option>
             </select>
           </div>
         </div>
@@ -271,13 +392,28 @@ export function ProjectsDisplay({
             id="projectsContainer"
             class={`${isViewMore.value ? 'h-132.5' : 'h-64'} grid snap-y snap-mandatory grid-cols-1 gap-3 overflow-hidden overflow-y-auto transition-all duration-300 ease-in-out md:grid-cols-2 lg:grid-cols-3`}
           >
-            {shownProjects.value.map(project => (
-              <ProjectCard
+            {shownProjects.value.map((project, index) => (
+              <div
                 key={project.project_id}
-                project={project}
-                setSelectedProject={setSelectedProject}
-                isDemo={isDemo}
-              />
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDragOver={handleDragOver}
+                onDragEnd={handleDragEnd}
+                onDrop={handleDrop}
+                class={`cursor-grab active:cursor-grabbing transition-opacity duration-200
+                  ${draggedItemIndex.value === index
+                    ? 'opacity-30 border-2 border-dashed border-gray-400 rounded-xl scale-95'
+                    : 'opacity-100 border-2 border-transparent'
+                  }
+                `}
+              >
+                <ProjectCard
+                  project={project}
+                  setSelectedProject={setSelectedProject}
+                  isDemo={isDemo}
+                />
+              </div>
             ))}
           </div>
 
