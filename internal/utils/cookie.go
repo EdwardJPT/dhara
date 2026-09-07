@@ -6,9 +6,9 @@ import (
 )
 
 func SetTokenCookie(w http.ResponseWriter, token string, remember bool) {
-	maxAge := int(24 * time.Hour.Seconds()) // 24 hours
+	maxAge := int(7 * 24 * time.Hour.Seconds()) // 7 days
 	if remember {
-		maxAge = int(30 * 24 * time.Hour.Seconds()) // 30 days
+		maxAge = int(90 * 24 * time.Hour.Seconds()) // 90 days
 	}
 	cookie := &http.Cookie{
 		Name:     "bearer",
