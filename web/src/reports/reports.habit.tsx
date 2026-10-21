@@ -248,7 +248,9 @@ export function HabitsReports({
         // Max possible completions is now correctly calculated based on the data!
         const maxPossibleCompletions = totalDays * numberOfHabits;
 
-        // TODO: totalDays is not considering when the habit is created
+        // TODO: totalDays is not considering when the habit is created, it's
+        // because done date is just YYYY-MM-DD rather than also the time.
+        // So we can decide which timezone we need to use
         if (group.habits_group_title == "Report Bug") {
           console.log(group)
           console.log({ totalDays })

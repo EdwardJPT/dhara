@@ -98,8 +98,8 @@ const PortfolioRow = ({
 };
 
 interface ProjectPortfolioProps {
-  projects: Signal<Project[]>;
-  tasks: Signal<Task[]>;
+  projects: ReadonlySignal<Project[]>;
+  tasks: ReadonlySignal<Task[]>;
   timeRange: Signal<TimeRangeType>;
   rangeDate: ReadonlySignal<{ start: Date; end: Date }>;
   isDemo: boolean;

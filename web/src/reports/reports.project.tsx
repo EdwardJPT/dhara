@@ -13,8 +13,8 @@ import ProjectProductivity from "./reports.project.productivity";
 import { unixToYYYYMMDD } from "../utils";
 
 interface ProjectsReportsProps {
-  projects: Signal<Project[]>;
-  tasks: Signal<Task[]>;
+  projects: ReadonlySignal<Project[]>;
+  tasks: ReadonlySignal<Task[]>;
   taskStats: ReadonlySignal<TaskStats>;
   isDemo: boolean;
 }

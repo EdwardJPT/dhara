@@ -303,7 +303,7 @@ const VelocityChart = ({ data, labels }: VelocityChartProps) => {
 };
 
 interface ProjectProductivityProps {
-  tasks: Signal<Task[]>;
+  tasks: ReadonlySignal<Task[]>;
   timeRange: Signal<TimeRangeType>;
   rangeDate: ReadonlySignal<{ start: Date; end: Date }>;
   percetageCompletedTasks: ReadonlySignal<number>;

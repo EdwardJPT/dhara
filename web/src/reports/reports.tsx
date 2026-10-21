@@ -95,8 +95,7 @@ function calculateTaskStats(tasks: Task[]): TaskStats {
 
   // Both due dates and completion dates use the same local-time boundaries.
   const inRange = (d: Date, start: Date, end: Date) =>
-    d.getTime() >= start.getTime()
-    && d.getTime() < end.getTime();
+    (d.getTime() >= start.getTime()) && (d.getTime() < end.getTime());
 
   for (const t of tasks) {
     // Completion counts are independent of whether the task has a due date.
@@ -170,46 +169,39 @@ function App({
   isDemo = false,
 }: AppProps) {
   const projects = useSignal(loadDemoData("demo_projects", projectList, isDemo));
-  useSignalEffect(() => {
-    // Explicitly reading .value outside the condition forces Preact to track it
-    const currentProjects = projects.value;
-    if (isDemo) {
-      localStorage.setItem("demo_projects", JSON.stringify(currentProjects));
-    }
-  });
-
   const tasks = useSignal(loadDemoData("demo_tasks", taskList, isDemo));
-  useSignalEffect(() => {
-    const currentTasks = tasks.value;
-    if (isDemo) {
-      localStorage.setItem("demo_tasks", JSON.stringify(currentTasks));
-    }
+  const reportProjects = useComputed(() =>
+    isDemo ? projects.value.filter(project => !project.hide) : projects.value
+  );
+  const reportTasks = useComputed(() => {
+    if (!isDemo) return tasks.value;
+    const projectIDs = new Set(reportProjects.value.map(project => project.project_id));
+    return tasks.value.filter(task => projectIDs.has(task.project_id));
   });
 
   const computedTaskStats = useComputed(() => {
-    if (isDemo) {
-      return calculateTaskStats(tasks.value);
-    }
-    return taskStats;
+    if (!isDemo) return taskStats;
+    return calculateTaskStats(reportTasks.value);
   });
 
-  // Handle cross-tab/window localStorage sync in Demo Mode using useSignalEffect
+  // Keep reports in sync with demo edits made in other tabs.
   useSignalEffect(() => {
     if (!isDemo) return;
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "demo_tasks" && e.newValue) {
-        try {
-          // Writing to tasks.value automatically triggers taskStats to recompute
-          tasks.value = JSON.parse(e.newValue);
-        } catch (err) {
-          console.error("Error parsing updated demo_tasks from storage event", err);
+      try {
+        if (e.key === "demo_projects" || e.key === null) {
+          projects.value = e.newValue ? JSON.parse(e.newValue) : projectList;
         }
+        if (e.key === "demo_tasks" || e.key === null) {
+          tasks.value = e.newValue ? JSON.parse(e.newValue) : taskList;
+        }
+      } catch (err) {
+        console.error("Error parsing updated demo data from storage event", err);
       }
     };
 
     window.addEventListener("storage", handleStorageChange);
-    // Return the cleanup function just like you would in useEffect
     return () => window.removeEventListener("storage", handleStorageChange);
   });
 
@@ -225,8 +217,8 @@ function App({
       </div>
 
       <ProjectsReports
-        projects={projects}
-        tasks={tasks}
+        projects={reportProjects}
+        tasks={reportTasks}
         taskStats={computedTaskStats}
         isDemo={isDemo}
       />
