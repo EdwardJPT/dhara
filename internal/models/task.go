@@ -75,24 +75,43 @@ type TasksWithProject struct {
 }
 
 type TaskStats struct {
-	ThisWeekTotal        int `json:"thisWeekTotal"`
-	ThisWeekDone         int `json:"thisWeekDone"`
-	ThisMonthTotal       int `json:"thisMonthTotal"`
-	ThisMonthDone        int `json:"thisMonthDone"`
-	Last7DaysTotal       int `json:"last7DaysTotal"`
-	Last7DaysDone        int `json:"last7DaysDone"`
-	Last30DaysTotal      int `json:"last30DaysTotal"`
-	Last30DaysDone       int `json:"last30DaysDone"`
-	Last90DaysTotal      int `json:"last90DaysTotal"`
-	Last90DaysDone       int `json:"last90DaysDone"`
-	Last180DaysTotal     int `json:"last180DaysTotal"`
-	Last180DaysDone      int `json:"last180DaysDone"`
-	CurrentQuarterTotal  int `json:"currentQuarterTotal"`
-	CurrentQuarterDone   int `json:"currentQuarterDone"`
-	CurrentSemesterTotal int `json:"currentSemesterTotal"`
-	CurrentSemesterDone  int `json:"currentSemesterDone"`
-	ThisYearTotal        int `json:"thisYearTotal"`
-	ThisYearDone         int `json:"thisYearDone"`
-	AllTimeTotal         int `json:"allTimeTotal"`
-	AllTimeDone          int `json:"allTimeDone"`
+	ThisWeekTotal            int `json:"total_this_week"`
+	ThisWeekDone             int `json:"done_this_week"`
+	ThisWeekCompleted        int `json:"completed_this_week"`
+
+	ThisMonthTotal           int `json:"total_this_month"`
+	ThisMonthDone            int `json:"done_this_month"`
+	ThisMonthCompleted       int `json:"completed_this_month"`
+
+	Last7DaysTotal           int `json:"total_last_7_days"`
+	Last7DaysDone            int `json:"done_last_7_days"`
+	Last7DaysCompleted       int `json:"completed_last_7_days"`
+
+	Last30DaysTotal          int `json:"total_last_30_days"`
+	Last30DaysDone           int `json:"done_last_30_days"`
+	Last30DaysCompleted      int `json:"completed_last_30_days"`
+
+	Last90DaysTotal          int `json:"total_last_90_days"`
+	Last90DaysDone           int `json:"done_last_90_days"`
+	Last90DaysCompleted      int `json:"completed_last_90_days"`
+
+	Last180DaysTotal         int `json:"total_last_180_days"`
+	Last180DaysDone          int `json:"done_last_180_days"`
+	Last180DaysCompleted     int `json:"completed_last_180_days"`
+
+	CurrentQuarterTotal      int `json:"total_this_quarter"`
+	CurrentQuarterDone       int `json:"done_this_quarter"`
+	CurrentQuarterCompleted  int `json:"completed_this_quarter"`
+
+	CurrentSemesterTotal     int `json:"total_this_semester"`
+	CurrentSemesterDone      int `json:"done_this_semester"`
+	CurrentSemesterCompleted int `json:"completed_this_semester"`
+
+	ThisYearTotal            int `json:"total_this_year"`
+	ThisYearDone             int `json:"done_this_year"`
+	ThisYearCompleted        int `json:"completed_this_year"`
+
+	AllTimeTotal             int `json:"total_all_time"`
+	AllTimeDone              int `json:"done_all_time"`
+	AllTimeCompleted         int `json:"completed_all_time"`
 }

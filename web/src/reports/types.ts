@@ -12,6 +12,7 @@ export type Project = {
     is_done: boolean;
     done_date: number;
     created_at: string;
+    hide: boolean;
 }
 export type Task = {
     task_id: number;
@@ -26,26 +27,36 @@ export type Task = {
     created_at: string;
 }
 export type TaskStats = {
-    thisWeekTotal: number;
-    thisWeekDone: number;
-    thisMonthTotal: number;
-    thisMonthDone: number;
-    last7DaysTotal: number;
-    last7DaysDone: number;
-    last30DaysTotal: number;
-    last30DaysDone: number;
-    last90DaysTotal: number;
-    last90DaysDone: number;
-    last180DaysTotal: number;
-    last180DaysDone: number;
-    currentQuarterTotal: number;
-    currentQuarterDone: number;
-    currentSemesterTotal: number;
-    currentSemesterDone: number;
-    thisYearTotal: number;
-    thisYearDone: number;
-    allTimeTotal: number;
-    allTimeDone: number;
+    total_this_week: number;
+    done_this_week: number;
+    completed_this_week: number;
+    total_this_month: number;
+    done_this_month: number;
+    completed_this_month: number;
+    total_last_7_days: number;
+    done_last_7_days: number;
+    completed_last_7_days: number;
+    total_last_30_days: number;
+    done_last_30_days: number;
+    completed_last_30_days: number;
+    total_last_90_days: number;
+    done_last_90_days: number;
+    completed_last_90_days: number;
+    total_last_180_days: number;
+    done_last_180_days: number;
+    completed_last_180_days: number;
+    total_this_quarter: number;
+    done_this_quarter: number;
+    completed_this_quarter: number;
+    total_this_semester: number;
+    done_this_semester: number;
+    completed_this_semester: number;
+    total_this_year: number;
+    done_this_year: number;
+    completed_this_year: number;
+    total_all_time: number;
+    done_all_time: number;
+    completed_all_time: number;
 }
 export type Habit = {
     habit_id: number;

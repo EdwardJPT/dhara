@@ -4,7 +4,7 @@ import {
   nDaysAgo,
   nDaysAgoDone,
   nDaysLeft,
-} from "../components/constants";
+} from "../utils";
 
 import { Project } from "../home/types";
 
@@ -14,15 +14,27 @@ export function ProjectDisplay({ project }: { project: Signal<Project> }) {
       <div class="mb-2 flex items-center justify-between gap-2">
         <h2
           id="tasksFilterTime"
-          class="h-fit max-w-[70%] overflow-hidden text-ellipsis text-nowrap text-left text-xl font-extrabold text-background md:max-w-none md:py-3 md:text-2xl"
+          class="h-fit min-w-0 flex-1 overflow-hidden text-ellipsis text-nowrap text-left text-xl font-extrabold text-background md:py-3 md:text-2xl"
         >
           {project.value.project_title}
         </h2>
 
-        {project.value.priority && (
-          <span class="my-auto inline-flex max-h-6 w-fit shrink-0 items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 md:p-2 md:text-sm">
-            Priority
-          </span>
+        {(project.value.priority || project.value.hide) && (
+          <div class="my-auto flex shrink-0 flex-col items-end gap-1 sm:flex-row sm:items-center">
+            {project.value.priority && (
+              <span class="inline-flex max-h-6 w-fit shrink-0 items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 md:p-2 md:text-sm">
+                Priority
+              </span>
+            )}
+            {project.value.hide && (
+              <span
+                title="Hidden from Home and Reports"
+                class="inline-flex max-h-6 w-fit shrink-0 items-center rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 md:p-2 md:text-sm"
+              >
+                Hidden
+              </span>
+            )}
+          </div>
         )}
       </div>
 

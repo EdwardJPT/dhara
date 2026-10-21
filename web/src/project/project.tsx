@@ -9,15 +9,18 @@ import { TasksDisplay } from "./project.tasks";
 
 import {
   ALL,
-  todayUserTimeZone,
   TaskFiltersPriority,
   TaskFiltersStatus,
   TaskFiltersTime,
   TaskSorter,
+} from "../constants";
+
+import {
+  todayUserTimeZone,
   getWeekRange,
   getMonthRange,
   getQuarterRange,
-} from "../components/constants";
+} from "../utils";
 
 import { Project, Task } from "./types";
 
@@ -29,6 +32,8 @@ interface BackEndData {
 }
 
 interface AppProps extends BackEndData { }
+
+export type SortValue = (typeof TaskSorter)[keyof typeof TaskSorter];
 
 // Helper to extract the updated project from your global demo_projects array
 function loadDemoProject(backendProject: Project, isDemo: boolean): Project {
@@ -141,7 +146,7 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
     return TaskSorter.Skip;
   };
 
-  const sortCategory: Signal<string> = useSignal(getInitialSortCategory());
+  const sortCategory: Signal<SortValue> = useSignal(getInitialSortCategory());
 
   // Sync back to Local Storage whenever sortCategory changes
   useSignalEffect(() => {
@@ -244,15 +249,19 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
             new Date(t.due_date) <= endOfQuarter
           );
         }
+        if (taskFilters.value.time == TaskFiltersTime.ThisYear) {
+          const taskYear = new Date(t.due_date).getFullYear();
+          const currentYear = new Date(today).getFullYear();
+          return taskYear === currentYear;
+        }
         // filter for clicking the calendar
         if (taskFilters.value.time) {
           return t.due_date == taskFilters.value.time;
         }
       });
     }
-    if (!sortCategory.value || sortCategory.value === TaskSorter.Skip) {
-      return result;
-    }
+    // Return early if skip or the first value of options
+    if (sortCategory.value === TaskSorter.Skip) return result;
     return [...result].sort(sortFunctions[sortCategory.value]);
   });
 
@@ -322,7 +331,7 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
         <div class="flex w-32 cursor-pointer flex-row items-center justify-center text-center text-sm font-medium hover:underline sm:w-35 sm:text-lg md:w-fit">
           <img src="/static/images/sort.png" alt="" class="h-4 w-2.5 sm:h-5 sm:w-3" />
           <select
-            onChange={(e) => (sortCategory.value = e.currentTarget.value)}
+            onChange={(e) => (sortCategory.value = e.currentTarget.value as SortValue)}
             value={sortCategory.value}
             id="tasksFilterPriority"
             name="tasksFilterPriority"
@@ -411,12 +420,27 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
               <option value={TaskFiltersTime.Today} selected>
                 Today
               </option>
-              <option value={TaskFiltersTime.ThisWeek}>This Week</option>
-              <option value={TaskFiltersTime.SevenDays}>Next 7 Days</option>
-              <option value={TaskFiltersTime.ThisMonth}>This Month</option>
-              <option value={TaskFiltersTime.ThirtyDays}>Next 30 Days</option>
-              <option value={TaskFiltersTime.ThisQuarter}>This Quarter</option>
-              <option value={TaskFiltersTime.ALL}>All</option>
+              <option value={TaskFiltersTime.ThisWeek}>
+                This Week
+              </option>
+              <option value={TaskFiltersTime.SevenDays}>
+                Next 7 Days
+              </option>
+              <option value={TaskFiltersTime.ThisMonth}>
+                This Month
+              </option>
+              <option value={TaskFiltersTime.ThirtyDays}>
+                Next 30 Days
+              </option>
+              <option value={TaskFiltersTime.ThisQuarter}>
+                This Quarter
+              </option>
+              <option value={TaskFiltersTime.ThisYear}>
+                This Year
+              </option>
+              <option value={TaskFiltersTime.ALL}>
+                All
+              </option>
             </select>
           </div>
         </div>
@@ -426,6 +450,7 @@ function App({ projectData, taskList, countPriorityProjects, isDemo = false }: A
         tasks={tasks}
         shownTasks={shownTasks}
         project={project}
+        sortCategory={sortCategory}
         setErrorMessage={setErrorMessage}
         isDemo={isDemo}
       />

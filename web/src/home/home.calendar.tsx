@@ -86,12 +86,12 @@ export function Calendar({
   const isShowDoneDate = useSignal(false);
 
   return (
-    <div className="max-w-7xl text-lg mx-auto mb-5">
+    <div className="w-full min-w-0 max-w-7xl text-lg mx-auto mb-5">
       {/* Navigation Controls */}
       <div className="flex justify-between items-center mb-1">
         <button
           onClick={handlePrev}
-          className="p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+          className="flex min-h-11 min-w-11 items-center justify-center p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 md:min-h-0 md:min-w-0"
           aria-label="Previous month"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -100,7 +100,7 @@ export function Calendar({
         </button>
 
         <h2
-          className="text-xl font-medium text-gray-800 min-w-max cursor-pointer"
+          className="flex min-h-11 items-center text-xl font-medium text-gray-800 min-w-max cursor-pointer md:min-h-0"
           onClick={() => setSelectedDate(new Date())}
         >
           Calendar
@@ -108,7 +108,7 @@ export function Calendar({
 
         <button
           onClick={handleNext}
-          className="p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+          className="flex min-h-11 min-w-11 items-center justify-center p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 md:min-h-0 md:min-w-0"
           aria-label="Next month"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -117,12 +117,12 @@ export function Calendar({
         </button>
       </div>
 
-      <div title="The dates where you completed task(s)" className="w-full flex flex-row justify-end-safe items-center mb-1 cursor-pointer">
+      <div title="The dates where you completed task(s)" className="min-h-11 w-full flex flex-row justify-end-safe items-center mb-1 cursor-pointer md:min-h-0">
         <button
           onClick={() => isShowDoneDate.value = !isShowDoneDate.value}
           type="button"
           id="show-done-date"
-          class={`relative inline-flex h-5 w-9 items-center rounded-lg transition
+          class={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-lg transition before:absolute before:-inset-y-3 before:inset-x-0 md:before:hidden
                     ${isShowDoneDate.value ? "bg-background" : "bg-blue-200"}`}
         >
           <span
@@ -140,9 +140,9 @@ export function Calendar({
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-1">
         {months.map((month, monthIdx) => (
-          <div key={monthIdx} className="border border-gray-200 overflow-hidden">
+          <div key={monthIdx} className="min-w-0 border border-gray-200 overflow-hidden">
             <h2
               onClick={() =>
                 taskFilters.value = {
@@ -190,7 +190,7 @@ export function Calendar({
                     key={idx}
                     onClick={() => handleDateClick(day)}
                     className={`
-                      h-12 mx-0.5 my-0.5 font-medium flex items-center justify-center text-base cursor-pointer
+                      h-12 min-w-0 mx-0.5 my-0.5 font-medium flex items-center justify-center text-base cursor-pointer
                       ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
                       ${stateCls}
                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
@@ -207,4 +207,3 @@ export function Calendar({
     </div>
   );
 };
-

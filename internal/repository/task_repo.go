@@ -378,150 +378,223 @@ func (r *TaskRepository) GetTaskStatsByUserID(userID int64, offset, inverseOffse
 		SELECT
 			-- ====== THIS WEEK ======
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-' || strftime('%w', 'now', '@USER_OFFSET') || ' days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+' || (7 - strftime('%w', 'now', '@USER_OFFSET')) || ' days'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-' || strftime('%w', 'now', '@USER_OFFSET') || ' days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+' || (7 - strftime('%w', 'now', '@USER_OFFSET')) || ' days')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_this_week,
 
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-' || strftime('%w', 'now', '@USER_OFFSET') || ' days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+' || (7 - strftime('%w', 'now', '@USER_OFFSET')) || ' days'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-' || strftime('%w', 'now', '@USER_OFFSET') || ' days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+' || (7 - strftime('%w', 'now', '@USER_OFFSET')) || ' days')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_this_week,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND datetime(done_date, 'unixepoch') >= datetime(date('now', '@USER_OFFSET', '-' || strftime('%w', 'now', '@USER_OFFSET') || ' days'), '@INVERSE_OFFSET')
+					  AND datetime(done_date, 'unixepoch') <  datetime(date('now', '@USER_OFFSET', '+' || (7 - strftime('%w', 'now', '@USER_OFFSET')) || ' days'), '@INVERSE_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_this_week,
+
 			-- ====== THIS MONTH ======
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y-%m', due_date, '@USER_OFFSET') = strftime('%Y-%m', 'now', '@USER_OFFSET')
+				CASE WHEN strftime('%Y-%m', due_date) = strftime('%Y-%m', 'now', '@USER_OFFSET')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_this_month,
 
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y-%m', due_date, '@USER_OFFSET') = strftime('%Y-%m', 'now', '@USER_OFFSET')
+				CASE WHEN strftime('%Y-%m', due_date) = strftime('%Y-%m', 'now', '@USER_OFFSET')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_this_month,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND strftime('%Y-%m', datetime(done_date, 'unixepoch'), '@USER_OFFSET') = strftime('%Y-%m', 'now', '@USER_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_this_month,
+
 			-- ====== LAST 7 DAYS ======
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-7 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-7 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_last_7_days,
 
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-7 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-7 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_last_7_days,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND datetime(done_date, 'unixepoch') >= datetime(date('now', '@USER_OFFSET', '-7 days'), '@INVERSE_OFFSET')
+					  AND datetime(done_date, 'unixepoch') <  datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_last_7_days,
+
 			-- ====== LAST 30 DAYS ======
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-30 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-30 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_last_30_days,
 
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-30 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-30 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_last_30_days,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND datetime(done_date, 'unixepoch') >= datetime(date('now', '@USER_OFFSET', '-30 days'), '@INVERSE_OFFSET')
+					  AND datetime(done_date, 'unixepoch') <  datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_last_30_days,
+
 			-- ====== LAST 90 DAYS ======
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-90 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-90 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_last_90_days,
 
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-90 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-90 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_last_90_days,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND datetime(done_date, 'unixepoch') >= datetime(date('now', '@USER_OFFSET', '-90 days'), '@INVERSE_OFFSET')
+					  AND datetime(done_date, 'unixepoch') <  datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_last_90_days,
+
 			-- ====== LAST 180 DAYS ======
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-180 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-180 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_last_180_days,
 
 			COALESCE(SUM(
-				CASE WHEN due_date >= datetime(date('now', '@USER_OFFSET', '-180 days'), '@INVERSE_OFFSET')
-					  AND due_date < datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+				CASE WHEN due_date >= date('now', '@USER_OFFSET', '-180 days')
+					  AND due_date <  date('now', '@USER_OFFSET', '+1 day')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_last_180_days,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND datetime(done_date, 'unixepoch') >= datetime(date('now', '@USER_OFFSET', '-180 days'), '@INVERSE_OFFSET')
+					  AND datetime(done_date, 'unixepoch') <  datetime(date('now', '@USER_OFFSET', '+1 day'), '@INVERSE_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_last_180_days,
+
 			-- ====== THIS QUARTER ======
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y', due_date, '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
-					  AND (strftime('%m', due_date, '@USER_OFFSET') + 2) / 3 = (strftime('%m', 'now', '@USER_OFFSET') + 2) / 3
+				CASE WHEN strftime('%Y', due_date) = strftime('%Y', 'now', '@USER_OFFSET')
+					  AND (strftime('%m', due_date) + 2) / 3 = (strftime('%m', 'now', '@USER_OFFSET') + 2) / 3
 					 THEN 1 ELSE 0 END
 			), 0) AS total_this_quarter,
 
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y', due_date, '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
-					  AND (strftime('%m', due_date, '@USER_OFFSET') + 2) / 3 = (strftime('%m', 'now', '@USER_OFFSET') + 2) / 3
+				CASE WHEN strftime('%Y', due_date) = strftime('%Y', 'now', '@USER_OFFSET')
+					  AND (strftime('%m', due_date) + 2) / 3 = (strftime('%m', 'now', '@USER_OFFSET') + 2) / 3
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_this_quarter,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND strftime('%Y', datetime(done_date, 'unixepoch'), '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
+					  AND (strftime('%m', datetime(done_date, 'unixepoch'), '@USER_OFFSET') + 2) / 3 = (strftime('%m', 'now', '@USER_OFFSET') + 2) / 3
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_this_quarter,
+
 			-- ====== THIS SEMESTER (HALF-YEAR) ======
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y', due_date, '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
-					  AND (strftime('%m', due_date, '@USER_OFFSET') + 5) / 6 = (strftime('%m', 'now', '@USER_OFFSET') + 5) / 6
+				CASE WHEN strftime('%Y', due_date) = strftime('%Y', 'now', '@USER_OFFSET')
+					  AND (strftime('%m', due_date) + 5) / 6 = (strftime('%m', 'now', '@USER_OFFSET') + 5) / 6
 					 THEN 1 ELSE 0 END
 			), 0) AS total_this_semester,
 
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y', due_date, '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
-					  AND (strftime('%m', due_date, '@USER_OFFSET') + 5) / 6 = (strftime('%m', 'now', '@USER_OFFSET') + 5) / 6
+				CASE WHEN strftime('%Y', due_date) = strftime('%Y', 'now', '@USER_OFFSET')
+					  AND (strftime('%m', due_date) + 5) / 6 = (strftime('%m', 'now', '@USER_OFFSET') + 5) / 6
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_this_semester,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND strftime('%Y', datetime(done_date, 'unixepoch'), '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
+					  AND (strftime('%m', datetime(done_date, 'unixepoch'), '@USER_OFFSET') + 5) / 6 = (strftime('%m', 'now', '@USER_OFFSET') + 5) / 6
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_this_semester,
+
 			-- ====== THIS YEAR ======
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y', due_date, '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
+				CASE WHEN strftime('%Y', due_date) = strftime('%Y', 'now', '@USER_OFFSET')
 					 THEN 1 ELSE 0 END
 			), 0) AS total_this_year,
 
 			COALESCE(SUM(
-				CASE WHEN strftime('%Y', due_date, '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
+				CASE WHEN strftime('%Y', due_date) = strftime('%Y', 'now', '@USER_OFFSET')
 					  AND is_done = 1
 					 THEN 1 ELSE 0 END
 			), 0) AS done_this_year,
 
+			COALESCE(SUM(
+				CASE WHEN is_done = 1
+					  AND strftime('%Y', datetime(done_date, 'unixepoch'), '@USER_OFFSET') = strftime('%Y', 'now', '@USER_OFFSET')
+					 THEN 1 ELSE 0 END
+			), 0) AS completed_this_year,
+
 			-- ====== ALL TIME ======
-			COUNT(task_id) AS total_all_time,
+			-- Counts ONLY tasks that have a due date (matches legacy behavior)
+			COALESCE(SUM(CASE WHEN due_date != '' THEN 1 ELSE 0 END), 0) AS total_all_time,
 
-			COALESCE(SUM(is_done), 0) AS done_all_time
+			-- Counts ONLY tasks that have a due date AND are done
+			COALESCE(SUM(CASE WHEN due_date != '' AND is_done = 1 THEN 1 ELSE 0 END), 0) AS done_all_time,
 
-		FROM tasks WHERE user_id = ? AND due_date != '';
+			-- Counts ALL completed tasks, regardless of whether they have a due date
+			COALESCE(SUM(is_done), 0) AS completed_all_time
+
+		FROM tasks
+		WHERE
+			user_id = ? AND EXISTS (
+				SELECT 1 FROM projects
+				WHERE projects.project_id = tasks.project_id
+					AND projects.user_id = tasks.user_id
+					AND projects.hide = 0
+			);
 	`
+
 	// Safely inject the parsed offsets into the query string
 	query := strings.ReplaceAll(queryTemplate, "@USER_OFFSET", offset)
 	query = strings.ReplaceAll(query, "@INVERSE_OFFSET", inverseOffset)
 
-	// Execute the query, leaving only `userID` as the dynamic SQL argument
 	var stats models.TaskStats
 	err := r.db.QueryRow(query, userID).Scan(
-		&stats.ThisWeekTotal, &stats.ThisWeekDone,
-		&stats.ThisMonthTotal, &stats.ThisMonthDone,
-		&stats.Last7DaysTotal, &stats.Last7DaysDone,
-		&stats.Last30DaysTotal, &stats.Last30DaysDone,
-		&stats.Last90DaysTotal, &stats.Last90DaysDone,
-		&stats.Last180DaysTotal, &stats.Last180DaysDone,
-		&stats.CurrentQuarterTotal, &stats.CurrentQuarterDone,
-		&stats.CurrentSemesterTotal, &stats.CurrentSemesterDone,
-		&stats.ThisYearTotal, &stats.ThisYearDone,
-		&stats.AllTimeTotal, &stats.AllTimeDone,
+		&stats.ThisWeekTotal, &stats.ThisWeekDone, &stats.ThisWeekCompleted,
+		&stats.ThisMonthTotal, &stats.ThisMonthDone, &stats.ThisMonthCompleted,
+		&stats.Last7DaysTotal, &stats.Last7DaysDone, &stats.Last7DaysCompleted,
+		&stats.Last30DaysTotal, &stats.Last30DaysDone, &stats.Last30DaysCompleted,
+		&stats.Last90DaysTotal, &stats.Last90DaysDone, &stats.Last90DaysCompleted,
+		&stats.Last180DaysTotal, &stats.Last180DaysDone, &stats.Last180DaysCompleted,
+		&stats.CurrentQuarterTotal, &stats.CurrentQuarterDone, &stats.CurrentQuarterCompleted,
+		&stats.CurrentSemesterTotal, &stats.CurrentSemesterDone, &stats.CurrentSemesterCompleted,
+		&stats.ThisYearTotal, &stats.ThisYearDone, &stats.ThisYearCompleted,
+		&stats.AllTimeTotal, &stats.AllTimeDone, &stats.AllTimeCompleted,
 	)
 
 	if err != nil {

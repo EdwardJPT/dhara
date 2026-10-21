@@ -32,18 +32,18 @@ interface BackEndData {
 
 interface AppProps extends BackEndData { }
 
-function calculateTaskStats(tasks: Task[]) {
-  const stats = {
-    allTimeTotal: 0, allTimeDone: 0,
-    thisWeekTotal: 0, thisWeekDone: 0,
-    thisMonthTotal: 0, thisMonthDone: 0,
-    currentQuarterTotal: 0, currentQuarterDone: 0,
-    currentSemesterTotal: 0, currentSemesterDone: 0,
-    thisYearTotal: 0, thisYearDone: 0,
-    last7DaysTotal: 0, last7DaysDone: 0,
-    last30DaysTotal: 0, last30DaysDone: 0,
-    last90DaysTotal: 0, last90DaysDone: 0,
-    last180DaysTotal: 0, last180DaysDone: 0,
+function calculateTaskStats(tasks: Task[]): TaskStats {
+  const stats: TaskStats = {
+    total_all_time: 0, done_all_time: 0, completed_all_time: 0,
+    total_this_week: 0, done_this_week: 0, completed_this_week: 0,
+    total_this_month: 0, done_this_month: 0, completed_this_month: 0,
+    total_this_quarter: 0, done_this_quarter: 0, completed_this_quarter: 0,
+    total_this_semester: 0, done_this_semester: 0, completed_this_semester: 0,
+    total_this_year: 0, done_this_year: 0, completed_this_year: 0,
+    total_last_7_days: 0, done_last_7_days: 0, completed_last_7_days: 0,
+    total_last_30_days: 0, done_last_30_days: 0, completed_last_30_days: 0,
+    total_last_90_days: 0, done_last_90_days: 0, completed_last_90_days: 0,
+    total_last_180_days: 0, done_last_180_days: 0, completed_last_180_days: 0,
   };
 
   const now = new Date();
@@ -81,12 +81,35 @@ function calculateTaskStats(tasks: Task[]) {
   const startLast90 = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90);
   const startLast180 = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 180);
 
-  // Helper to check if the due date falls inside the bounds
+  const periods = [
+    ["this_week", startOfWeek, endOfWeek],
+    ["this_month", startOfMonth, endOfMonth],
+    ["this_quarter", startOfQuarter, endOfQuarter],
+    ["this_semester", startOfSemester, endOfSemester],
+    ["this_year", startOfYear, endOfYear],
+    ["last_7_days", startLast7, endRolling],
+    ["last_30_days", startLast30, endRolling],
+    ["last_90_days", startLast90, endRolling],
+    ["last_180_days", startLast180, endRolling],
+  ] as const;
+
+  // Both due dates and completion dates use the same local-time boundaries.
   const inRange = (d: Date, start: Date, end: Date) =>
     d.getTime() >= start.getTime()
     && d.getTime() < end.getTime();
 
   for (const t of tasks) {
+    // Completion counts are independent of whether the task has a due date.
+    if (t.is_done) {
+      stats.completed_all_time++;
+      const doneDate = new Date(t.done_date * 1000);
+      for (const [period, start, end] of periods) {
+        if (inRange(doneDate, start, end)) {
+          stats[`completed_${period}`]++;
+        }
+      }
+    }
+
     if (!t.due_date) continue;
 
     // Parse 'YYYY-MM-DD' safely as local midnight to prevent UTC timezone shifting
@@ -104,61 +127,14 @@ function calculateTaskStats(tasks: Task[]) {
     if (isNaN(dueDate.getTime())) continue;
 
     // All Time
-    stats.allTimeTotal++;
-    if (t.is_done) stats.allTimeDone++;
+    stats.total_all_time++;
+    if (t.is_done) stats.done_all_time++;
 
-    // This Week
-    if (inRange(dueDate, startOfWeek, endOfWeek)) {
-      stats.thisWeekTotal++;
-      if (t.is_done) stats.thisWeekDone++;
-    }
-
-    // This Month
-    if (inRange(dueDate, startOfMonth, endOfMonth)) {
-      stats.thisMonthTotal++;
-      if (t.is_done) stats.thisMonthDone++;
-    }
-
-    // Current Quarter
-    if (inRange(dueDate, startOfQuarter, endOfQuarter)) {
-      stats.currentQuarterTotal++;
-      if (t.is_done) stats.currentQuarterDone++;
-    }
-
-    // Current Semester
-    if (inRange(dueDate, startOfSemester, endOfSemester)) {
-      stats.currentSemesterTotal++;
-      if (t.is_done) stats.currentSemesterDone++;
-    }
-
-    // This Year
-    if (inRange(dueDate, startOfYear, endOfYear)) {
-      stats.thisYearTotal++;
-      if (t.is_done) stats.thisYearDone++;
-    }
-
-    // Last 7 Days
-    if (inRange(dueDate, startLast7, endRolling)) {
-      stats.last7DaysTotal++;
-      if (t.is_done) stats.last7DaysDone++;
-    }
-
-    // Last 30 Days
-    if (inRange(dueDate, startLast30, endRolling)) {
-      stats.last30DaysTotal++;
-      if (t.is_done) stats.last30DaysDone++;
-    }
-
-    // Last 90 Days
-    if (inRange(dueDate, startLast90, endRolling)) {
-      stats.last90DaysTotal++;
-      if (t.is_done) stats.last90DaysDone++;
-    }
-
-    // Last 180 Days
-    if (inRange(dueDate, startLast180, endRolling)) {
-      stats.last180DaysTotal++;
-      if (t.is_done) stats.last180DaysDone++;
+    for (const [period, start, end] of periods) {
+      if (inRange(dueDate, start, end)) {
+        stats[`total_${period}`]++;
+        if (t.is_done) stats[`done_${period}`]++;
+      }
     }
   }
 
@@ -252,6 +228,7 @@ function App({
         projects={projects}
         tasks={tasks}
         taskStats={computedTaskStats}
+        isDemo={isDemo}
       />
 
       <div className="my-7.5"></div>

@@ -1,6 +1,6 @@
 import { Signal, ReadonlySignal, useComputed } from "@preact/signals";
 
-import { formattingDateObj } from "../components/constants";
+import { formattingDateObj } from "../utils";
 
 import { HabitWithDoneDates } from "./types";
 

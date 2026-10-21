@@ -2,7 +2,7 @@ import { Signal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 
 import { TasksWithProject } from "./types";
-import { formattingDateObj } from "../components/constants";
+import { formattingDateObj } from "../utils";
 
 interface TaskDetailsProps {
   taskSignal: Signal<TasksWithProject | null>;
@@ -147,18 +147,20 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
   return (
     <form
       onSubmit={submitEditTask}
-      class="fixed top-1/2 left-1/2 z-13 h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white shadow-lg md:h-fit md:max-w-2xl"
+      class="fixed top-1/2 left-1/2 z-13 flex h-9/10 w-9/10 -translate-1/2 flex-col overflow-hidden rounded-xl border border-background bg-white shadow-lg md:h-auto md:max-h-[90vh] md:max-w-2xl"
     >
-      <div class="flex h-1/10 items-center justify-start rounded-t-xl bg-linear-to-r from-hover to-background p-5">
+      <div class="flex shrink-0 items-center justify-start bg-linear-to-r from-hover to-background p-5">
         <h2 class="text-2xl font-bold text-white">Task Details</h2>
       </div>
+
       <span
         class="absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white"
         onClick={() => (taskSignal.value = null)}
       >
         &#x2715;
       </span>
-      <div class="p-6">
+
+      <div class="flex-1 overflow-y-auto p-6">
         {/* Project Info (Read-only) */}
         <div class="mb-6 rounded-lg bg-gray-100 p-4">
           <h3 class="mb-1 text-lg font-semibold text-gray-800">Project</h3>
@@ -297,7 +299,7 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
         </div>
 
         {/* Action Buttons */}
-        <div class="mt-6 flex justify-end space-x-3">
+        <div class="mt-6 flex shrink-0 justify-end space-x-3 pb-2">
           <button
             type="submit"
             class="rounded-md bg-blue-600 px-4 py-2 text-white cursor-pointer hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"

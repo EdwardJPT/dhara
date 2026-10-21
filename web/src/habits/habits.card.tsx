@@ -6,12 +6,9 @@ import {
 } from "@preact/signals";
 
 import { HabitWithDoneDates } from "./types";
-import {
-  daysName,
-  formattingDateObj,
-  todayUserTimeZone,
-  daysInitial,
-} from "../components/constants";
+
+import { daysName, daysInitial } from "../constants";
+import { formattingDateObj, todayUserTimeZone } from "../utils";
 
 interface HabitCardProps {
   habitObj: HabitWithDoneDates;
@@ -324,7 +321,7 @@ export const HabitCard = ({
         </div>
       </div>
 
-      <div className="pt-3 border-t border-slate-100 justify-center w-full hidden group-hover:flex duration-200">
+      <div className="justify-center w-full flex overflow-hidden max-h-0 opacity-0 pt-0 border-transparent group-hover:max-h-20 group-hover:opacity-100 group-hover:pt-3 group-hover:border-t group-hover:border-slate-100 transition-all duration-300 ease-in-out">
         <div className="flex items-center gap-2">
           <button
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-hover hover:bg-background rounded-sm transition-colors shadow-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"

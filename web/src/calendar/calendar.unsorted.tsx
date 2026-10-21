@@ -1,7 +1,7 @@
 import { Signal } from "@preact/signals";
 
 import { UnsortedTask } from "./types";
-import { formattingDateObj } from "../components/constants";
+import { formattingDateObj } from "../utils";
 
 interface UnsortedDetailsProps {
   unsortedSignal: Signal<UnsortedTask | null>;

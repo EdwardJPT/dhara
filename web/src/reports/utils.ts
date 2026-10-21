@@ -11,11 +11,16 @@ export function padList<T>(list: T[], maxLength: number): (T | null)[] {
 
 /**
  * Checks if a date string is within the given date range.
+ * date string or dateStr is in the form of YYYY-MM-DD
  */
-export function isDateWithinRange(dateStr: string, start: Date, end: Date, isAllTime: boolean): boolean {
+export function isDateWithinRange(
+    dateStr: string,
+    rangeDate: { start: Date, end: Date },
+    isAllTime: boolean,
+): boolean {
     if (isAllTime) return true;
     const dateObj = new Date(dateStr);
-    return dateObj >= start && dateObj <= end;
+    return dateObj >= rangeDate.start && dateObj <= rangeDate.end;
 }
 
 /**

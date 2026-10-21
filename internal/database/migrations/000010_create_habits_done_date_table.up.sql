@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS habits_done_date (
     habit_id         INTEGER NOT NULL,
     habits_group_id  INTEGER NOT NULL,
     user_id          INTEGER NOT NULL,
-    done_date        TEXT NOT NULL DEFAULT (DATE()),
+    done_date        TEXT NOT NULL DEFAULT (DATE()), -- TODO: change it DATETIME instead
     created_at       TEXT NOT NULL DEFAULT (DATETIME()),
     FOREIGN KEY (habit_id) REFERENCES habits (habit_id),
     FOREIGN KEY (habits_group_id) REFERENCES habits_group (habits_group_id),

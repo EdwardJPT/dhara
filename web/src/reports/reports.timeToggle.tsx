@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { ReportsTimeRange } from "../components/constants";
+import { ReportsTimeRange } from "../constants";
 import { TimeRangeType } from "./hooks";
 
 interface TimeToggleProps {

@@ -11,9 +11,12 @@ import {
   TaskFiltersStatus,
   TaskFiltersTime,
   TaskSorter,
+} from "../constants";
+
+import {
   formattingDateTask,
   todayUserTimeZone,
-} from "../components/constants";
+} from "../utils";
 
 import type { Task } from "./types.ts";
 import {
@@ -69,7 +72,7 @@ const TaskListItem = ({
         ${task.is_done ? "bg-pink-200 opacity-60" : ""}
         flex flex-wrap sm:flex-nowrap items-start px-3 sm:px-4 md:px-6 py-3 sm:py-4 min-h-25
         hover:${index % 2 == 0 ? "bg-[#e0fffd]" : "bg-white"} hover:opacity-100
-        cursor-pointer
+        cursor-pointer snap-start
       `}
       onClick={() => {
         shownTaskSignal.value = {
@@ -90,7 +93,7 @@ const TaskListItem = ({
     >
       <input
         type="checkbox"
-        class="mt-1 sm:mt-1.5 h-4 w-4 sm:h-5 sm:w-5 shrink-0 rounded"
+        class="mt-1 sm:mt-1.5 h-6 w-6 sm:h-5 sm:w-5 shrink-0 rounded"
         id={`task-${task.task_id}`}
         checked={task.is_done}
         aria-label={`Mark task "${task.task_title}" as ${task.is_done ? 'incomplete' : 'complete'}`}
@@ -104,7 +107,7 @@ const TaskListItem = ({
       />
 
       <div class="ml-2 sm:ml-3 flex-1 min-w-0 sm:w-7/10 text-gray-900 group">
-        <p class="text-base sm:text-lg font-medium text-[#27354a] wrap-break-words">
+        <p class="text-base sm:text-lg font-medium text-[#27354a] wrap-anywhere">
           {task.task_title}&nbsp;
           {task.priority && (
             <span class="inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 sm:p-1 text-[10px] sm:text-xs font-medium text-red-500 whitespace-nowrap">
@@ -112,7 +115,7 @@ const TaskListItem = ({
             </span>
           )}
         </p>
-        <p class="my-1 max-h-48 overflow-y-auto text-sm sm:text-base text-gray-500 wrap-break-words">
+        <p class="my-1 max-h-48 overflow-y-auto text-sm sm:text-base text-gray-500 wrap-anywhere">
           {task.task_desc}
         </p>
         <div class="text-xs sm:text-base font-semibold text-[#828a99] flex flex-wrap sm:flex-row items-center gap-x-2 gap-y-1 group-hover:text-gray-500">
@@ -124,24 +127,24 @@ const TaskListItem = ({
               onSubmit={handleChangeDueDate}
               onClick={(e) => e.stopPropagation()}
             >
-              <div class="group relative flex flex-row items-center">
+              <div class="group relative flex min-w-0 flex-row items-center">
                 <input
                   type="date"
                   id={`unsorted_due_date-${task.task_id}`}
                   name={`unsorted_due_date-${task.task_id}`}
-                  class="p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 w-28 sm:w-auto text-xs sm:text-base"
+                  class="min-h-11 min-w-0 p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 w-28 sm:min-h-0 sm:w-auto text-base"
                   required
                   min={today}
                   aria-label="Reschedule due date"
                 />
                 <button
                   type="submit"
-                  class="cursor-pointer ml-1 sm:ml-2 text-lg sm:text-2xl font-extrabold text-background hover:text-white hover:bg-hover shrink-0"
+                  class="min-h-11 min-w-11 cursor-pointer ml-1 sm:ml-2 text-lg sm:min-h-0 sm:min-w-0 sm:text-2xl font-extrabold text-background hover:text-white hover:bg-hover shrink-0"
                   aria-label="Submit new due date"
                 >
                   &#x2713;
                 </button>
-                <span class="hidden p-1 sm:p-2 z-10 bg-hover text-white w-max sm:w-fit group-hover:flex text-[10px] sm:text-sm rounded absolute bottom-full mb-1 sm:relative sm:bottom-auto sm:mb-0">
+                <span class="hidden max-w-full p-1 sm:p-2 z-10 bg-hover text-white w-max group-hover:flex text-xs sm:text-sm rounded absolute bottom-full mb-1">
                   Reschedule due date?
                 </span>
               </div>
@@ -160,7 +163,7 @@ const TaskListItem = ({
         )}
       </div>
 
-      <div class="mt-2 sm:mt-0 pl-6 sm:pl-0 sm:ml-4 flex w-full sm:w-3/10 items-center justify-start sm:justify-end text-left sm:text-right text-sm sm:text-lg font-semibold text-gray-600 shrink-0 wrap-break-words">
+      <div class="mt-2 sm:mt-0 pl-8 sm:pl-0 sm:ml-4 flex min-w-0 w-full sm:w-3/10 items-center justify-start sm:justify-end text-left sm:text-right text-sm sm:text-lg font-semibold text-gray-600 shrink-0 wrap-anywhere">
         {projectTitle}
       </div>
     </div>
@@ -347,16 +350,25 @@ export function TaskDisplay({
     }
   };
 
+  // Effect so that when we have a lot of tasks, when change the value of shownTasks
+  // it would automatically scroll to the first unfinished/finished task
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useSignalEffect(() => {
-    // TODO:: sortCategory.value is doneDateAsc | doneDateDesc no need to scroll
-    // to the first not done task. Add this TODO: to dhara so we can track what
-    // we do
+    let taskTarget;
 
-    const firstIncomplete = shownTasks.value.find(task => !task.is_done);
+    // if the user sort the task based on done_date of the task,
+    // scroll to the first finished task
+    if (sortCategory.value === "doneDateAsc" || sortCategory.value === "doneDateDesc") {
+      taskTarget = shownTasks.value.find(task => task.is_done);
+    }
+    // if the user sort the task based on due_date of the task or priority,
+    // scroll to the first unfinished task
+    else {
+      taskTarget = shownTasks.value.find(task => !task.is_done);
+    }
 
-    if (firstIncomplete) {
-      const targetId = `task-item-${firstIncomplete.task_id}`;
+    if (taskTarget) {
+      const targetId = `task-item-${taskTarget.task_id}`;
 
       // setTimeout ensures the DOM has painted before we try to scroll
       setTimeout(() => {
@@ -382,16 +394,16 @@ export function TaskDisplay({
   const shownTask: Signal<TasksWithProject | null> = useSignal(null);
 
   return (
-    <div class="mx-auto flex flex-col items-center px-1 sm:px-6 lg:max-w-7xl lg:px-8">
-      <div class="w-full md:px-4 lg:px-0 xl:w-6xl">
+    <div class="mx-auto flex w-full min-w-0 flex-col items-center px-1 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div class="w-full min-w-0 md:px-4 lg:px-0">
         <div
-          class={`${showFilterDropdown.value ? "mb-0" : "mb-2"} mt-5 flex flex-col items-center md:flex-row md:justify-between`}
+          class={`${showFilterDropdown.value ? "mb-0" : "mb-2"} mt-5 flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-between`}
         >
-          <div class="flex flex-col">
-            <h2 class="mb-2 w-screen justify-center sm:w-fit flex flex-row items-center text-center text-base md:text-xl font-medium text-gray-700 md:mb-0">
+          <div class="flex min-w-0 max-w-full flex-col md:flex-1">
+            <h2 class="mb-2 w-full justify-center flex flex-row flex-wrap items-center text-center text-base md:text-xl font-medium text-gray-700 md:mb-0 md:justify-start">
               <span
                 onClick={() => (showCalendar.value = !showCalendar.value)}
-                class="cursor-pointer text-xl group relative"
+                class="flex min-h-11 min-w-11 items-center justify-center cursor-pointer text-xl group relative sm:min-h-0 sm:min-w-0"
               >
                 <img src="/static/images/calendar.svg" alt="" class="h-4 w-4 mr-2 fill-background" />
                 <span class="hidden font-normal bg-background text-nowrap text-white absolute text-base py-1 px-2 left-5 group-hover:block">
@@ -457,7 +469,7 @@ export function TaskDisplay({
                         time: TaskFiltersTime.Today,
                       });
                   }}
-                  class="cursor-pointer text-base md:text-xl text-background"
+                  class="min-w-0 max-w-full cursor-pointer text-base md:text-xl text-background wrap-anywhere"
                 >
                   (&#x2715;
                   {projectObj.value[Number(taskFilters.value.selectedProject)]
@@ -469,19 +481,19 @@ export function TaskDisplay({
             </h2>
           </div>
 
-          <div class="mb-2 flex flex-row flex-wrap items-center justify-center gap-2 md:mb-0 md:gap-0">
+          <div class="mb-2 flex max-w-full shrink-0 flex-row flex-wrap items-center justify-center gap-2 md:mb-0 md:gap-0">
             <button
               onClick={() =>
                 (showFilterDropdown.value = !showFilterDropdown.value)
               }
-              class="flex w-32 cursor-pointer flex-row items-center justify-center text-center text-[15px] hover:underline sm:w-35 sm:text-base md:mr-5 md:w-30"
+              class="flex min-h-11 w-32 cursor-pointer flex-row items-center justify-center text-center text-base hover:underline sm:min-h-0 sm:w-35 md:mr-5 md:w-30"
             >
               <img src="/static/images/filter2.png" alt="" class="h-4 w-4" />
               <span class="w-full px-2 py-2 text-center text-ellipsis text-nowrap sm:py-3">
                 &nbsp;Filters
               </span>
             </button>
-            <div class="flex w-32 cursor-pointer flex-row items-center justify-center text-center text-[15px] hover:underline sm:w-35 sm:text-base md:mr-5 md:w-30">
+            <div class="flex min-w-0 w-32 cursor-pointer flex-row items-center justify-center text-center text-base hover:underline sm:w-35 md:mr-5 md:w-30">
               <img src="/static/images/sort.png" alt="" class="h-4 w-2.5 sm:h-5 sm:w-3" />
               <select
                 onChange={(e) =>
@@ -490,7 +502,7 @@ export function TaskDisplay({
                 value={sortCategory.value}
                 id="tasksSorterPriority"
                 name="tasksSorterPriority"
-                class="w-full px-2 py-2 text-center text-ellipsis text-nowrap text-sm sm:py-3 sm:text-base md:w-35"
+                class="min-h-11 min-w-0 w-full px-2 py-2 text-center text-ellipsis text-nowrap text-base sm:min-h-0 sm:py-3 md:w-35"
                 aria-label="Sort tasks by"
               >
                 <option value={TaskSorter.Skip} disabled selected>
@@ -515,8 +527,8 @@ export function TaskDisplay({
         </div>
 
         {showFilterDropdown.value && (
-          <div class="mb-4 sm:mb-0 flex w-full flex-row justify-center items-center md:justify-end">
-            <div class="flex w-1/3 cursor-pointer flex-col items-center justify-center text-[15px] sm:text-base sm:w-30">
+          <div class="mb-4 sm:mb-0 flex w-full flex-col justify-center items-stretch gap-2 sm:flex-row sm:items-center sm:gap-0 md:justify-end">
+            <div class="flex min-w-0 w-full cursor-pointer flex-col items-center justify-center text-base sm:w-30">
               <label class="text-nowrap text-ellipsis">Priority</label>
               <select
                 onChange={(e) =>
@@ -528,7 +540,7 @@ export function TaskDisplay({
                 value={taskFilters.value.priority}
                 id="tasksFilterPriority"
                 name="tasksFilterPriority"
-                class="border-border w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis"
+                class="border-border min-w-0 w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis"
               >
                 <option value={TaskFiltersPriority.Priority}>
                   Priority only
@@ -538,7 +550,7 @@ export function TaskDisplay({
                 </option>
               </select>
             </div>
-            <div class="flex w-1/3 cursor-pointer flex-col items-center justify-center text-[15px] sm:text-base sm:w-30">
+            <div class="flex min-w-0 w-full cursor-pointer flex-col items-center justify-center text-base sm:w-30">
               <label class="text-nowrap text-ellipsis">Status</label>
               <select
                 onChange={(e) =>
@@ -550,7 +562,7 @@ export function TaskDisplay({
                 value={taskFilters.value.status}
                 id="tasksFilterStatus"
                 name="tasksFilterStatus"
-                class="border-border w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis"
+                class="border-border min-w-0 w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis"
               >
                 <option value={TaskFiltersStatus.ALL} selected>
                   All
@@ -560,7 +572,7 @@ export function TaskDisplay({
                 <option value={TaskFiltersStatus.Overdue}>Overdue</option>
               </select>
             </div>
-            <div class="flex w-1/3 cursor-pointer flex-col items-center justify-center text-[15px] sm:text-base sm:w-30">
+            <div class="flex min-w-0 w-full cursor-pointer flex-col items-center justify-center text-base sm:w-30">
               <label class="text-nowrap text-ellipsis">Time Range</label>
               <select
                 onChange={(e) =>
@@ -572,19 +584,32 @@ export function TaskDisplay({
                 value={taskFilters.value.time}
                 id="tasksFilterTime"
                 name="tasksFilterTime"
-                class="border-border w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis"
+                class="border-border min-w-0 w-full rounded-sm border px-2 py-3 text-center text-nowrap text-ellipsis"
               >
                 <option value={TaskFiltersTime.Today} selected>
                   Today
                 </option>
-                <option value={TaskFiltersTime.ThisWeek}>This Week</option>
-                <option value={TaskFiltersTime.SevenDays}>Next 7 Days</option>
-                <option value={TaskFiltersTime.ThisMonth}>This Month</option>
-                <option value={TaskFiltersTime.ThirtyDays}>Next 30 Days</option>
+                <option value={TaskFiltersTime.ThisWeek}>
+                  This Week
+                </option>
+                <option value={TaskFiltersTime.SevenDays}>
+                  Next 7 Days
+                </option>
+                <option value={TaskFiltersTime.ThisMonth}>
+                  This Month
+                </option>
+                <option value={TaskFiltersTime.ThirtyDays}>
+                  Next 30 Days
+                </option>
                 <option value={TaskFiltersTime.ThisQuarter}>
                   This Quarter
                 </option>
-                <option value={TaskFiltersTime.ALL}>All</option>
+                <option value={TaskFiltersTime.ThisYear}>
+                  This Year
+                </option>
+                <option value={TaskFiltersTime.ALL}>
+                  All
+                </option>
               </select>
             </div>
           </div>
@@ -607,7 +632,7 @@ export function TaskDisplay({
         <div class="overflow-hidden rounded-lg bg-white shadow">
           <div
             ref={scrollContainerRef}
-            class="max-h-[calc(100vh-100px)] divide-y divide-gray-200 overflow-y-auto bg-white"
+            class="max-h-[calc(100vh-100px)] snap-y snap-mandatory divide-y divide-gray-200 overflow-y-auto bg-white"
           >
             {shownTasks.value.length > 0 && shownTasks.value.map((task, i) => (
               <TaskListItem

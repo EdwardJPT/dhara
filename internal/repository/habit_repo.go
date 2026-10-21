@@ -239,6 +239,31 @@ func (r *HabitRepository) GetUserHabitsDoneDate(userId int64) ([]models.HabitWit
 	return result, nil
 }
 
+func (r *HabitRepository) UpdateHabitsGroupTitle(groupId int64, title string, userId int64) (int64, error) {
+	query := `
+		UPDATE habits_group
+		SET habits_group_title = ?
+		WHERE habits_group_id = ? AND user_id = ?
+	`
+	res, err := r.db.Exec(
+		query,
+		title,
+		groupId,
+		userId,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if rowsAffected != 1 || err != nil {
+		return 0, err
+	}
+
+	return rowsAffected, nil
+}
+
 func (r *HabitRepository) UpdateHabitsGroupIsShow(habitsGroupIsShowReq models.UpdateHabitsGroupIsShowRequest, userId int64) (int64, error) {
 	query := `
 		UPDATE habits_group
@@ -255,6 +280,44 @@ func (r *HabitRepository) UpdateHabitsGroupIsShow(habitsGroupIsShowReq models.Up
 	if rowsAffected != 1 || err != nil {
 		return 0, err
 	}
+	return rowsAffected, nil
+}
+
+func (r *HabitRepository) CountHabitsInGroup(groupId int64, userId int64) (int, error) {
+	var count int
+	query := `
+		SELECT COUNT(*)
+		FROM habits
+		WHERE habits_group_id = ? AND user_id = ?
+	`
+	err := r.db.QueryRow(query, groupId, userId).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *HabitRepository) DeleteHabitsGroup(groupId int64, userId int64) (int64, error) {
+	query := `
+		DELETE FROM habits_group
+		WHERE habits_group_id = ? AND user_id = ?
+	`
+	res, err := r.db.Exec(
+		query,
+		groupId,
+		userId,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
 	return rowsAffected, nil
 }
 

@@ -1,21 +1,21 @@
 {{define "create_project"}}
 <div
-  class="fixed top-1/2 left-1/2 z-11 h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white pb-3 shadow-lg md:max-w-2xl">
-  <span class="absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white"
+  class="fixed top-1/2 left-1/2 z-11 flex h-[90dvh] max-h-[90dvh] w-9/10 -translate-1/2 flex-col overflow-hidden rounded-xl border border-background bg-white pb-3 shadow-lg md:max-w-2xl">
+  <span class="absolute top-2 right-2 flex h-11 w-11 items-center justify-center cursor-pointer text-2xl font-extrabold text-white sm:top-5 sm:right-5 sm:h-auto sm:w-auto"
     onclick="document.getElementById('form-container').innerHTML=''">&#x2715;
   </span>
-  <div class="flex h-1/10 items-center rounded-t-xl bg-linear-to-r from-hover to-background p-5">
-    <h1 class="flex items-center gap-2 text-2xl font-bold text-white">
+  <div class="flex shrink-0 items-center rounded-t-xl bg-linear-to-r from-hover to-background p-4 pr-16 sm:p-5 sm:pr-16">
+    <h1 class="flex items-center gap-2 text-xl sm:text-2xl font-bold text-white">
       Add New Project
     </h1>
   </div>
 
   <form hx-post="/home/create-project" hx-target="#form-container" hx-swap="innerHTML" id="taskForm"
-    class="h-9/10 space-y-3 overflow-y-auto bg-white px-6 py-4">
+    class="min-h-0 min-w-0 flex-1 space-y-3 overflow-y-auto bg-white px-4 py-4 sm:px-6">
     <div>
       <label for="title" class="mb-1 block text-base font-medium text-gray-700">Project Title *</label>
       <input type="text" id="title" name="title" required
-        class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2"
+        class="focus:ring-primary min-h-11 min-w-0 w-full rounded-lg border border-gray-300 px-4 py-2 text-base transition outline-none focus:border-transparent focus:ring-2 sm:min-h-0"
         placeholder="Enter project title" />
     </div>
 
@@ -26,8 +26,8 @@
         placeholder="Add project description..." required></textarea>
     </div>
 
-    <div id="priorityParent" class="flex items-center justify-between rounded-md bg-gray-100 p-2">
-      <div>
+    <div id="priorityParent" class="flex flex-col items-start justify-between gap-2 rounded-md bg-gray-100 p-2 sm:flex-row sm:items-center">
+      <div class="min-w-0">
         <label class="block text-base font-medium text-gray-700">
           A priority project?
         </label>
@@ -35,10 +35,10 @@
           Only allowed to have 3 priority projects
         </p>
       </div>
-      <div class="flex items-center">
+      <div class="flex min-h-11 shrink-0 items-center sm:min-h-0">
         <span class="mr-2 text-sm text-gray-500">No</span>
         <button type="button" id="priorityToggle"
-          class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition">
+          class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition before:absolute before:-inset-y-2.5 before:inset-x-0 sm:before:hidden">
           <span
             class="inline-block h-4 w-4 translate-x-1 transform rounded-full bg-white transition ease-in-out"></span>
         </button>
@@ -53,14 +53,14 @@
           Start Date
         </label>
         <input type="date" id="start_date" name="start_date"
-          class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2" />
+          class="focus:ring-primary min-h-11 min-w-0 w-full rounded-lg border border-gray-300 px-4 py-2 text-base transition outline-none focus:border-transparent focus:ring-2 sm:min-h-0" />
       </div>
       <div>
         <label for="due_date" class="mb-1 block text-sm font-medium text-gray-700">
           Due Date *
         </label>
         <input type="date" id="due_date" name="due_date" required
-          class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2" />
+          class="focus:ring-primary min-h-11 min-w-0 w-full rounded-lg border border-gray-300 px-4 py-2 text-base transition outline-none focus:border-transparent focus:ring-2 sm:min-h-0" />
       </div>
     </div>
 
@@ -75,7 +75,7 @@
         <div>
           <label for="task-title" class="mb-1 block text-sm font-medium text-gray-700">Task title *</label>
           <input type="text" id="task-title" name="task-title" required
-            class="focus:ring-primary w-full rounded-lg border border-gray-300 px-3 py-2 text-base outline-none focus:border-transparent focus:ring-1"
+            class="focus:ring-primary min-h-11 min-w-0 w-full rounded-lg border border-gray-300 px-3 py-2 text-base outline-none focus:border-transparent focus:ring-1 sm:min-h-0"
             placeholder="Enter task title">
         </div>
         <div>
@@ -91,19 +91,19 @@
               Task due date *
             </label>
             <input type="date" id="task-due_date" name="task-due_date" required
-              class="focus:ring-primary w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2" />
+              class="focus:ring-primary min-h-11 min-w-0 w-full rounded-lg border border-gray-300 px-4 py-2 text-base transition outline-none focus:border-transparent focus:ring-2 sm:min-h-0" />
           </div>
 
-          <div id="taskPriorityParent" class="flex items-center justify-between rounded-md bg-gray-100 p-2">
-            <div>
+          <div id="taskPriorityParent" class="flex flex-col items-start justify-between gap-2 rounded-md bg-gray-100 p-2 sm:flex-row sm:items-center">
+            <div class="min-w-0">
               <label class="block text-base font-medium text-gray-700">
                 A priority task?
               </label>
             </div>
-            <div class="flex items-center">
+            <div class="flex min-h-11 shrink-0 items-center sm:min-h-0">
               <span class="mr-2 text-sm text-gray-500">No</span>
               <button type="button" id="taskPriorityToggle"
-                class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition">
+                class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition before:absolute before:-inset-y-2.5 before:inset-x-0 sm:before:hidden">
                 <span
                   class="inline-block h-4 w-4 translate-x-1 transform rounded-full bg-white transition ease-in-out"></span>
               </button>
@@ -117,7 +117,7 @@
     </div>
 
     <button type="submit"
-      class="mt-4 flex w-full flex-1 items-center justify-center gap-2 rounded-lg bg-background px-4 py-2.5 font-medium text-white transition hover:bg-hover">
+      class="mt-4 flex min-h-11 w-full flex-1 items-center justify-center gap-2 rounded-lg bg-background px-4 py-2.5 font-medium text-white transition hover:bg-hover sm:min-h-0">
       Submit Project
     </button>
   </form>

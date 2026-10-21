@@ -6,7 +6,7 @@ import { HabitCard } from "./habits.card.js";
 import { Toggle } from "./habits.toggle.js";
 import { NewHabitForm } from "./habits.form.js";
 
-import { monthNames } from "../components/constants.js";
+import { monthNames } from "../constants.js";
 
 import type { HabitsGroupWithHabits, HabitWithDoneDates, HabitWithGroup } from "./types.ts";
 import { HabitDetails } from "./habits.details.js";
@@ -193,6 +193,7 @@ function App({ habitsGroupList, habitsDoneDateList, isDemo = false }: AppProps) 
                 habitsGroupTitle={habitsGroup.habits_group_title}
                 isShow={habitsGroup.is_show}
                 handleToggleHide={handleToggleHide}
+                habitsCount={habitsGroup.habits.length}
                 errorMessage={errorMessage}
                 isDemo={isDemo}
               />
@@ -204,6 +205,7 @@ function App({ habitsGroupList, habitsDoneDateList, isDemo = false }: AppProps) 
               </p>
             }
           </div>
+
           <select
             onChange={e => calendarRange.value = e.currentTarget.value}
             value={calendarRange.value}

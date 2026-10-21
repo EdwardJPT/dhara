@@ -73,6 +73,15 @@ func (h *ReportHandler) ReportPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There's a problem in the server", http.StatusInternalServerError)
 		return
 	}
+	visibleProjects := projects[:0]
+	visibleProjectIDs := make(map[int64]bool, len(projects))
+	for _, project := range projects {
+		if !project.Hide {
+			visibleProjects = append(visibleProjects, project)
+			visibleProjectIDs[project.ID] = true
+		}
+	}
+	projects = visibleProjects
 
 	// Query the tasks that owned by the user
 	tasks, err := h.taskService.GetUserTasks(userId)
@@ -81,6 +90,13 @@ func (h *ReportHandler) ReportPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "There's a problem in the server", http.StatusInternalServerError)
 		return
 	}
+	visibleTasks := tasks[:0]
+	for _, task := range tasks {
+		if visibleProjectIDs[task.ProjectId] {
+			visibleTasks = append(visibleTasks, task)
+		}
+	}
+	tasks = visibleTasks
 
 	// Query the the stats of task completion
 	taskStats, err := h.taskService.GetUserTaskStats(userId, userOffset, inverseOffset)

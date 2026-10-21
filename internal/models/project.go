@@ -19,6 +19,7 @@ type Project struct {
 	IsDone    bool   `json:"is_done"`
 	DoneDate  int    `json:"done_date"`
 	CreatedAt string `json:"created_at"`
+	Hide      bool   `json:"hide"`
 }
 
 // The shape of input when creating project from the /home/create-project
@@ -60,4 +61,5 @@ type EditProjectRequest struct {
 	DueDate   string `json:"due_date"`
 	IsDone    bool   `json:"is_done"`
 	DoneDate  int    `json:"done_date"`
+	Hide      bool   `json:"hide"`
 }

@@ -1,7 +1,8 @@
 import { Signal, useComputed, useSignal } from "@preact/signals";
 
 import TimeToggle from "./reports.timeToggle";
-import { formattingDateTask, ReportsTimeRange } from "../components/constants";
+import { formattingDateTask } from "../utils";
+import { ReportsTimeRange } from "../constants";
 import { useDateRange, TimeRangeType } from "./hooks";
 
 import { AllPeaksMap, GroupWithHabitsStats, HabitBestWorstStats, HabitDoneToday, HabitPerformance, MonthlyConsistency, WeeklyConsistency } from "./types";
@@ -247,6 +248,15 @@ export function HabitsReports({
         // Max possible completions is now correctly calculated based on the data!
         const maxPossibleCompletions = totalDays * numberOfHabits;
 
+        // TODO: totalDays is not considering when the habit is created
+        if (group.habits_group_title == "Report Bug") {
+          console.log(group)
+          console.log({ totalDays })
+          console.log({ numberOfHabits })
+          console.log({ totalHabitCount })
+          console.log({ maxPossibleCompletions })
+        }
+
         // calculate > 100% without breaking.
         // sometimes when a habit frequency is more than 1, it's possible the done_date
         // that being checked in is also including tomorrow or even more, that's why
@@ -262,6 +272,8 @@ export function HabitsReports({
       };
     });
   });
+
+  console.log(groupPerformance.value)
 
   const activePeaks = habitsProductivityPeaks?.[timeRange.value] || {
     peak_hours: "Loading...",

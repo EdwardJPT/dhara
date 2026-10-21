@@ -1,13 +1,13 @@
 import { useComputed, Signal } from "@preact/signals";
+import { ReportsTimeRange } from "../constants";
 import {
     getMonthRange,
     getQuarterRange,
     getSemesterRange,
     getWeekRange,
     getYearRange,
-    ReportsTimeRange,
     todayUserTimeZone,
-} from "../components/constants";
+} from "../utils";
 
 export type TimeRangeType = typeof ReportsTimeRange[keyof typeof ReportsTimeRange];
 

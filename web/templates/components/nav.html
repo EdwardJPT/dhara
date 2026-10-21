@@ -3,7 +3,8 @@
   class="fixed top-0 left-0 z-10 mb-10 flex h-20 w-full max-w-screen items-center justify-center bg-background font-sans text-white md:relative">
   <div class="flex h-full w-7xl flex-row items-center justify-around md:justify-between">
     <div class="flex cursor-pointer flex-row items-center md:ml-6 xl:ml-10">
-      <div onclick="goToHome()" class="flex h-7.5 w-7.5 items-center justify-center bg-white md:h-10 md:w-10">
+      <div onclick="goToHome()"
+        class="flex h-7.5 w-7.5 items-center justify-center rounded-lg border-2 border-background bg-gray-50 shadow-sm md:h-12 md:w-12">
         <img src="/static/images/logo.png" alt="logo picture" width="30" height="37.5"
           class="h-8 w-8 sm:h-10 sm:w-10" />
       </div>
@@ -16,19 +17,19 @@
       <div id="nav_links"
         class="fixed top-20 left-0 hidden w-screen flex-col justify-between  md:relative md:top-0 md:ml-5 md:flex md:w-fit md:flex-row lg:mr-12">
         <a href="{{if .IsDemo}}/demo{{end}}/home"
-          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover md:min-w-0 md:px-3 md:text-base lg:min-w-28 lg:px-5 lg:text-xl">
           Home
         </a>
         <a href="{{if .IsDemo}}/demo{{end}}/habits"
-          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover md:min-w-0 md:px-3 md:text-base lg:min-w-28 lg:px-5 lg:text-xl">
           Habits
         </a>
         <a href="{{if .IsDemo}}/demo{{end}}/calendar"
-          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover md:min-w-0 md:px-3 md:text-base lg:min-w-28 lg:px-5 lg:text-xl">
           Calendar
         </a>
         <a href="{{if .IsDemo}}/demo{{end}}/reports"
-          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover">
+          class="mx-0 flex min-w-28 items-center justify-center bg-background px-5 py-3 text-xl hover:bg-hover md:min-w-0 md:px-3 md:text-base lg:min-w-28 lg:px-5 lg:text-xl">
           Reports
         </a>
       </div>
@@ -38,7 +39,7 @@
       class="fixed top-72 hidden w-screen flex-col-reverse items-center justify-center bg-background pb-1.5 md:relative md:top-0 md:flex md:w-fit md:flex-row md:justify-between md:py-0">
       <label for="search" class="relative flex w-9/12 items-center justify-center py-3 md:mt-0">
         <input type="search" id="search" placeholder="Search"
-          class="w-full rounded bg-white p-1.5 pl-3 text-background sm:text-base" />
+          class="min-h-11 min-w-0 w-full rounded bg-white p-1.5 pl-3 text-background text-base lg:min-h-0" />
       </label>
       <div id="auth_button"
         class="flex w-screen cursor-pointer items-center justify-center rounded bg-background hover:bg-hover md:w-20">
@@ -53,7 +54,8 @@
       </div>
     </div>
 
-    <div id="nav_links_controller" onclick="show_links()" class="cursor-pointer md:hidden">
+    <div id="nav_links_controller" onclick="show_links()"
+      class="flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center md:hidden">
       <div class="mt-1 h-1 w-7 bg-white"></div>
       <div class="mt-1 h-1 w-7 bg-white"></div>
       <div class="mt-1 h-1 w-7 bg-white"></div>

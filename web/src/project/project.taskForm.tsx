@@ -1,7 +1,7 @@
 import { Signal } from "@preact/signals";
 import { useState } from "preact/hooks";
 import { Project } from "./types";
-import { todayUserTimeZone } from "../components/constants";
+import { todayUserTimeZone } from "../utils";
 
 interface TaskFormProps {
   isAddingTasks: Signal<boolean>;
@@ -47,7 +47,13 @@ export function TaskForm({
     }
   };
 
-  const handleInputChange = (index: number, field: any, value: any) => {
+  type TaskInput = (typeof tasks)[number];
+
+  const handleInputChange = <K extends keyof TaskInput>(
+    index: number,
+    field: K,
+    value: TaskInput[K],
+  ) => {
     const newTasks = [...tasks];
     newTasks[index][field] = value;
     setTasks(newTasks);
@@ -173,8 +179,8 @@ export function TaskForm({
                 type="text"
                 placeholder={`Task ${index + 1} Title *`}
                 value={task.task_title}
-                onChange={(e: any) =>
-                  handleInputChange(index, "task_title", e.target.value)
+                onChange={(e) =>
+                  handleInputChange(index, "task_title", e.currentTarget.value)
                 }
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base outline-none focus:border-transparent focus:ring-1 focus:ring-blue-500"
               />
@@ -184,8 +190,8 @@ export function TaskForm({
               <textarea
                 placeholder="Description"
                 value={task.task_desc}
-                onChange={(e: any) =>
-                  handleInputChange(index, "task_desc", e.target.value)
+                onChange={(e) =>
+                  handleInputChange(index, "task_desc", e.currentTarget.value)
                 }
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base outline-none focus:border-transparent focus:ring-1 focus:ring-blue-500"
                 rows={2}
@@ -201,8 +207,8 @@ export function TaskForm({
                   required
                   type="date"
                   value={task.due_date}
-                  onChange={(e: any) =>
-                    handleInputChange(index, "due_date", e.target.value)
+                  onChange={(e) =>
+                    handleInputChange(index, "due_date", e.currentTarget.value)
                   }
                   min={today}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base transition outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500"
@@ -247,7 +253,7 @@ export function TaskForm({
 
         <button
           type="submit"
-          className="w-full sm:w-auto text-center rounded-md bg-blue-600 px-6 py-2 text-sm sm:text-base text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+          className="w-full sm:w-auto text-center rounded-md bg-blue-600 px-6 py-2 text-sm sm:text-base text-white transition-colors hover:bg-blue-700 hover:cursor-pointer focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
         >
           Submit Tasks
         </button>

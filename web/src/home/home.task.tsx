@@ -2,7 +2,7 @@ import { Signal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 
 import { TasksWithProject } from "./types";
-import { formattingDateObj } from "../components/constants";
+import { formattingDateObj } from "../utils";
 
 interface TaskDetailsProps {
   taskSignal: Signal<TasksWithProject | null>;
@@ -147,23 +147,25 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
   return (
     <form
       onSubmit={submitEditTask}
-      class="fixed top-1/2 left-1/2 z-13 h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white shadow-lg md:h-fit md:max-w-2xl"
+      class="fixed top-1/2 left-1/2 z-13 flex h-[90dvh] max-h-[90dvh] w-9/10 -translate-1/2 flex-col overflow-hidden rounded-xl border border-background bg-white shadow-lg md:h-auto md:max-w-2xl"
     >
-      <div class="flex h-1/10 items-center justify-start rounded-t-xl bg-linear-to-r from-hover to-background p-5">
-        <h2 class="text-2xl font-bold text-white">Task Details</h2>
+      <div class="flex shrink-0 items-center justify-start bg-linear-to-r from-hover to-background p-4 pr-16 sm:p-5 sm:pr-16">
+        <h2 class="text-xl sm:text-2xl font-bold text-white">Task Details</h2>
       </div>
+
       <span
-        class="absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white"
+        class="absolute top-2 right-2 flex h-11 w-11 items-center justify-center cursor-pointer text-2xl font-extrabold text-white sm:top-5 sm:right-5 sm:h-auto sm:w-auto"
         onClick={() => (taskSignal.value = null)}
       >
         &#x2715;
       </span>
-      <div class="p-6">
+
+      <div class="min-h-0 min-w-0 flex-1 overflow-y-auto p-4 sm:p-6">
         {/* Project Info (Read-only) */}
         <div class="mb-6 rounded-lg bg-gray-100 p-4">
           <h3 class="mb-1 text-lg font-semibold text-gray-800">Project</h3>
-          <div className="flex flex-row items-center">
-            <h2 class=" text-xl font-bold text-background">
+          <div className="flex flex-row flex-wrap items-center gap-y-1">
+            <h2 class="min-w-0 text-xl font-bold text-background wrap-anywhere">
               {task.project_title}
             </h2>
             {task.project_priority && (
@@ -190,7 +192,7 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
               value={formData.task_title}
               onChange={handleChange}
               required
-              class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              class="min-h-11 min-w-0 w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:outline-none sm:min-h-0"
             />
           </div>
 
@@ -228,7 +230,7 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
                 }
                 type="button"
                 class={`
-                  relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer
+                  relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer before:absolute before:-inset-y-2.5 before:inset-x-0 sm:before:hidden
                   ${formData.task_priority ? "bg-background" : "bg-gray-400"}
                 `}
               >
@@ -255,20 +257,20 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
               name="task_due_date"
               value={formData.task_due_date}
               onChange={handleChange}
-              class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              class="min-h-11 min-w-0 w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:outline-none sm:min-h-0"
             />
           </div>
 
           {/* Completion */}
           <div class="mb-4">
-            <label class="flex items-center">
+            <label class="flex min-h-11 items-center sm:min-h-0">
               <input
                 id="task-complete-button"
                 type="checkbox"
                 name="task_is_done"
                 checked={formData.task_is_done}
                 onChange={handleChange}
-                class="h-4 w-4 rounded text-blue-600 focus:ring-blue-500"
+                class="h-6 w-6 shrink-0 rounded text-blue-600 focus:ring-blue-500 sm:h-4 sm:w-4"
               />
               {formData.task_is_done
                 ? <label for="task-complete-button" class="ml-2 text-gray-800 cursor-pointer">The task is complete.</label>
@@ -289,7 +291,7 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
                   name="task_done_date"
                   value={formattingDateObj(new Date(formData.task_done_date * 1000))}
                   onChange={handleChange}
-                  class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  class="min-h-11 min-w-0 w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:outline-none sm:min-h-0"
                 />
               </div>
             )}
@@ -297,10 +299,10 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
         </div>
 
         {/* Action Buttons */}
-        <div class="mt-6 flex justify-end space-x-3">
+        <div class="mt-6 flex shrink-0 justify-end space-x-3 pb-2">
           <button
             type="submit"
-            class="rounded-md bg-blue-600 px-4 py-2 text-white cursor-pointer hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+            class="min-h-11 w-full rounded-md bg-blue-600 px-4 py-2 text-white cursor-pointer hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none sm:min-h-0 sm:w-auto"
           >
             Save Changes
           </button>

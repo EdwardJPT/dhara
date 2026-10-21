@@ -1,6 +1,6 @@
 import { Signal, useComputed, useSignal } from "@preact/signals";
 
-import { todayUserTimeZone } from "../components/constants"
+import { todayUserTimeZone } from "../utils"
 import { Project, Task, UnsortedTask } from "./types";
 import { convertToTask } from "./utils";
 
@@ -38,10 +38,10 @@ const UnsortedTaskCard = ({
 }: UnsortedTaskCardProps) => {
   return (
     <div
-      class={`${index % 2 === 0 ? 'bg-[#cbfdfa]' : 'bg-white'} flex flex-col items-start p-4 rounded-lg shadow-sm mb-4 border border-teal-100`}
+      class={`${index % 2 === 0 ? 'bg-[#cbfdfa]' : 'bg-white'} flex min-w-0 flex-col items-start p-3 sm:p-4 rounded-lg shadow-sm mb-4 border border-teal-100`}
     >
       <div class="flex flex-row w-full">
-        <div class="flex flex-col h-full justify-center mr-2 mt-1">
+        <div class="flex shrink-0 flex-col h-full justify-center mr-2 mt-1">
           <input
             type="checkbox"
             checked={unsorted.is_done}
@@ -49,7 +49,7 @@ const UnsortedTaskCard = ({
               const target = e.target as HTMLInputElement;
               toggleUnsortedDoneStatus(target.checked, unsorted.unsorted_id);
             }}
-            class="w-5 h-5 text-teal-600 mb-2 rounded focus:ring-teal-500 border-teal-300"
+            class="w-6 h-6 sm:w-5 sm:h-5 text-teal-600 mb-2 rounded focus:ring-teal-500 border-teal-300"
           />
           {unsorted.priority &&
             <p class="group relative font-bold text-xl flex justify-center">
@@ -57,16 +57,16 @@ const UnsortedTaskCard = ({
             </p>
           }
         </div>
-        <div class="flex flex-col sm:flex-row justify-between w-full">
+        <div class="flex min-w-0 flex-1 flex-col sm:flex-row justify-between gap-2">
           <div class="flex-1 min-w-0">
-            <h4 class="text-lg font-bold text-slate-800 mb-1">
+            <h4 class="text-lg font-bold text-slate-800 mb-1 wrap-anywhere">
               {unsorted.unsorted_title}
             </h4>
-            <p class="text-slate-900 text-base mb-2 md:mb-0">
+            <p class="text-slate-900 text-base mb-2 md:mb-0 wrap-anywhere">
               {unsorted.unsorted_desc}
             </p>
           </div>
-          <div class="flex flex-col justify-center text-right text-gray-500 font-semibold text-sm min-w-30">
+          <div class="flex shrink-0 flex-col justify-center text-left sm:text-right text-gray-500 font-semibold text-sm sm:min-w-30">
             <span class="mt-1">
               {unsorted.due_date ? (
                 <span>
@@ -83,9 +83,9 @@ const UnsortedTaskCard = ({
       <form
         id={`assignUnsortedToProject-${unsorted.unsorted_id}`}
         onSubmit={handleAssignProject}
-        class="flex flex-row w-full mt-2 sm:mt-0"
+        class="flex min-w-0 flex-row w-full mt-2 sm:mt-0"
       >
-        <div class="w-5 mr-2 relative flex justify-center items-center">
+        <div class="w-11 shrink-0 mr-2 relative flex justify-center items-center sm:w-5">
           <img
             onClick={() => {
               const id = unsorted.unsorted_id;
@@ -96,13 +96,13 @@ const UnsortedTaskCard = ({
             }}
             src="/static/images/bin.svg"
             alt="delete button"
-            class="h-4 w-4 cursor-pointer"
+            class="h-11 w-11 p-3 cursor-pointer sm:h-4 sm:w-4 sm:p-0"
           />
           {showDeleteButton[unsorted.unsorted_id] && (
-            <span class="absolute cursor-text top-8 left-0.5 w-fit whitespace-nowrap bg-background text-white p-2 flex items-center">
+            <span class="absolute z-10 cursor-text bottom-full left-0.5 w-48 whitespace-normal bg-background text-white p-2 flex items-center sm:top-8 sm:bottom-auto sm:w-max sm:whitespace-nowrap">
               Delete this unsorted tasks?
               <span
-                class="ml-2 text-xl cursor-pointer hover:bg-hover px-1"
+                class="ml-2 flex min-h-11 min-w-11 shrink-0 items-center justify-center text-xl cursor-pointer hover:bg-hover px-1 sm:min-h-0 sm:min-w-0"
                 onClick={() => handleDelete(unsorted.unsorted_id)}
               >
                 &#x2713;
@@ -112,13 +112,13 @@ const UnsortedTaskCard = ({
         </div>
         <select
           name="selected_project_for_unsorted"
-          class="w-full cursor-pointer hover:bg-gray-50"
+          class="min-h-11 min-w-0 w-full flex-1 cursor-pointer text-base hover:bg-gray-50 sm:min-h-0"
           required
         >
           <option value="">Select Project</option>
           <ProjectOptions projects={projects} />
         </select>
-        <button class="text-2xl cursor-pointer hover:bg-background hover:text-white">
+        <button class="min-h-11 min-w-11 shrink-0 text-2xl cursor-pointer hover:bg-background hover:text-white sm:min-h-0 sm:min-w-0">
           &#x2713;
         </button>
       </form>
@@ -348,13 +348,13 @@ export function UnsortedDisplay({
   };
 
   return (
-    <div class="fixed top-1/2 left-1/2 z-11 pb-5 md:pb-0 max-h-9/10 w-9/10 -translate-1/2 rounded-xl border border-background bg-white shadow-lg h-fit md:max-w-2xl">
-      <div class="flex h-1/10 items-center justify-start rounded-t-xl bg-linear-to-r from-hover to-background p-5">
-        <h2 class="text-2xl font-bold text-white">Unsorted Tasks</h2>
+    <div class="fixed top-1/2 left-1/2 z-11 pb-5 md:pb-0 max-h-[90dvh] w-9/10 -translate-1/2 overflow-y-auto rounded-xl border border-background bg-white shadow-lg h-fit md:max-w-2xl">
+      <div class="flex items-center justify-start rounded-t-xl bg-linear-to-r from-hover to-background p-4 pr-16 sm:p-5 sm:pr-16">
+        <h2 class="text-xl sm:text-2xl font-bold text-white">Unsorted Tasks</h2>
       </div>
       <span
         onClick={() => showUnsorted.value = false}
-        class="absolute top-5 right-5 cursor-pointer text-2xl font-extrabold text-white"
+        class="absolute top-2 right-2 flex h-11 w-11 items-center justify-center cursor-pointer text-2xl font-extrabold text-white sm:top-5 sm:right-5 sm:h-auto sm:w-auto"
       >
         &#x2715;
       </span>
@@ -362,7 +362,7 @@ export function UnsortedDisplay({
       <form
         id="newUnsorted"
         onSubmit={handleSubmit}
-        class="p-7.5 flex flex-col gap-3"
+        class="p-4 sm:p-7.5 flex min-w-0 flex-col gap-3"
       >
         <div class="flex gap-3">
           <input
@@ -371,6 +371,7 @@ export function UnsortedDisplay({
             placeholder="Task Title"
             required
             name="unsorted_title"
+            class="min-h-11 min-w-0 w-full text-base sm:min-h-0"
             style="flex: 2; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
           />
         </div>
@@ -379,17 +380,18 @@ export function UnsortedDisplay({
           id="taskDesc"
           placeholder="Description"
           name="unsorted_desc"
+          class="min-w-0 w-full text-base"
           style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; min-height: 60px;"
           required
         ></textarea>
 
-        <div class="flex gap-4 items-center">
-          <label class="flex items-center gap-1.5">
+        <div class="flex flex-col gap-3 items-stretch sm:flex-row sm:gap-4 sm:items-center">
+          <label class="flex min-h-11 shrink-0 items-center gap-1.5 sm:min-h-0">
             <input
               type="checkbox"
               id="priority"
               name="priority"
-              class="w-4 h-4"
+              class="w-6 h-6 sm:w-4 sm:h-4"
             />
             <span>Priority?</span>
           </label>
@@ -397,11 +399,12 @@ export function UnsortedDisplay({
             type="date"
             id="dueDate"
             name="unsorted_due_date"
+            class="min-h-11 min-w-0 w-full text-base sm:min-h-0 sm:w-auto"
             style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; flex: 1;"
             min={today}
             required
           />
-          <button type="submit"
+          <button type="submit" class="min-h-11 shrink-0 sm:min-h-0"
             style="background: #007bff; color: white; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer;">
             Add Task
           </button>
@@ -410,7 +413,7 @@ export function UnsortedDisplay({
 
       <div class="w-9/10 mx-auto border-t border-gray-900"></div>
 
-      <div class="max-h-100 p-7.5 overflow-y-auto">
+      <div class="max-h-100 p-4 sm:p-7.5 overflow-y-auto">
         {unsorteds.value && unsorteds.value.map((unsorted, i) => (
           <UnsortedTaskCard
             key={unsorted.unsorted_id}

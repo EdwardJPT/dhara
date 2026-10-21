@@ -12,6 +12,7 @@ export type Project = {
     is_done: boolean;
     done_date: number;
     created_at: string;
+    hide: boolean;
 }
 export type Task = {
     task_id: number;

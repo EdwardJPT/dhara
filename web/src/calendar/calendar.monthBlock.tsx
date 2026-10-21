@@ -1,7 +1,7 @@
 import { Signal } from "@preact/signals";
 
 import { DayCell, formatingDateStr } from "./calendar.dayCell";
-import { daysInitial, monthsName } from "../components/constants";
+import { daysInitial, monthNames } from "../constants";
 
 import { TasksWithProject, UnsortedTask } from "./types";
 
@@ -40,7 +40,7 @@ export function MonthBlock({
       <h3
         className={`font-bold text-slate-800 mb-2 ${isCompact ? "text-sm text-center" : "hidden"}`}
       >
-        {monthsName[month]}{" "}
+        {monthNames[month]}{" "}
         <span className="text-slate-400 font-normal">{year}</span>
       </h3>
 

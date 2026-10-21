@@ -93,6 +93,44 @@ func (h *HabitHandler) AddHabit(w http.ResponseWriter, r *http.Request) {
 	utils.SuccessResponse(w, http.StatusCreated, nil, "")
 }
 
+func (h *HabitHandler) PatchHabitsGroupTitle(w http.ResponseWriter, r *http.Request) {
+	groupIDStr := chi.URLParam(r, "group_id")
+	groupId, err := strconv.ParseInt(groupIDStr, 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, err, "Bad request error:")
+		return
+	}
+
+	_, claims, _ := jwtauth.FromContext(r.Context())
+	userId, err := strconv.ParseInt(claims["user_id"].(string), 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusUnauthorized, err, "Parse user_id error:")
+		return
+	}
+
+	// Parse the post body
+	var req models.UpdateHabitsGroupTitleRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, err, "Invalid request body")
+		return
+	}
+
+	// Check if the title is empty
+	if req.HabitsGroupTitle == "" {
+		utils.ErrorResponse(w, http.StatusBadRequest, nil, "Habits group title cannot be empty")
+		return
+	}
+
+	// Update the title of the group habit
+	habitsGroupAffected, err := h.habitService.UpdateHabitsGroupTitle(groupId, req.HabitsGroupTitle, userId)
+	if habitsGroupAffected != 1 || err != nil {
+		utils.ErrorResponse(w, http.StatusInternalServerError, err, "Update habits group title error")
+		return
+	}
+
+	utils.SuccessResponse(w, http.StatusOK, nil, "")
+}
+
 func (h *HabitHandler) PatchHabitsGroupIsShow(w http.ResponseWriter, r *http.Request) {
 	groupIDStr := chi.URLParam(r, "group_id")
 	groupId, err := strconv.ParseInt(groupIDStr, 10, 64)
@@ -123,6 +161,37 @@ func (h *HabitHandler) PatchHabitsGroupIsShow(w http.ResponseWriter, r *http.Req
 	habitsGroupAffected, err := h.habitService.UpdateHabitsGroupIsShow(req, userId)
 	if habitsGroupAffected != 1 || err != nil {
 		utils.ErrorResponse(w, http.StatusInternalServerError, err, "Update habits group is show error")
+		return
+	}
+
+	utils.SuccessResponse(w, http.StatusOK, nil, "")
+}
+
+func (h *HabitHandler) DeleteHabitsGroup(w http.ResponseWriter, r *http.Request) {
+	groupIDStr := chi.URLParam(r, "group_id")
+	groupId, err := strconv.ParseInt(groupIDStr, 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, err, "Bad request error:")
+		return
+	}
+
+	_, claims, _ := jwtauth.FromContext(r.Context())
+	userId, err := strconv.ParseInt(claims["user_id"].(string), 10, 64)
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusUnauthorized, err, "Parse user_id error:")
+		return
+	}
+
+	// Delete the group habit
+	err = h.habitService.DeleteHabitsGroup(groupId, userId)
+	if err != nil {
+		// Catch our custom "has children" error from the service
+		if err.Error() == "group is not empty" {
+			utils.ErrorResponse(w, http.StatusBadRequest, err, "Cannot delete this group because it still contains habits. Please delete them first.")
+			return
+		}
+
+		utils.ErrorResponse(w, http.StatusInternalServerError, err, "Delete habits group error")
 		return
 	}
 

@@ -8,11 +8,11 @@ import { ErrorMessage } from "../components/error_messages";
 
 import {
   ALL,
-  defaultTaskFilters,
   TaskFiltersPriority,
   TaskFiltersStatus,
   TaskFiltersTime,
-} from "../components/constants";
+  defaultTaskFilters,
+} from "../constants";
 
 import { Project, Task, UnsortedTask } from "./types";
 
@@ -185,16 +185,16 @@ function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) 
 
   return (
     // Projects Section
-    <div class="mx-auto max-w-6xl">
+    <div class="mx-auto w-full min-w-0 max-w-6xl">
       {isDemo && (
-        <div class="mb-6 flex items-center justify-between rounded-md bg-blue-50 p-4 text-blue-900 shadow-sm border border-blue-200">
-          <div>
+        <div class="mb-6 flex flex-col items-start justify-between gap-3 rounded-md bg-blue-50 p-4 text-blue-900 shadow-sm border border-blue-200 sm:flex-row sm:items-center">
+          <div class="min-w-0">
             <p class="font-semibold">You are viewing the Demo Mode</p>
             <p class="text-sm">Changes are saved locally to your browser.</p>
           </div>
           <button
             onClick={handleResetDemo}
-            class="rounded bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm hover:bg-blue-100 border border-blue-300 transition-colors"
+            class="min-h-11 w-full shrink-0 rounded bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm hover:bg-blue-100 border border-blue-300 transition-colors sm:min-h-0 sm:w-auto"
           >
             Reset Demo
           </button>

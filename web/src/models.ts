@@ -13,6 +13,7 @@ export interface Project {
     is_done: boolean;
     done_date: number;
     created_at: string;
+    hide: boolean;
 }
 export interface Task {
     task_id: number;

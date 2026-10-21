@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -30,8 +31,36 @@ func (s *HabitService) GetUserHabitsDoneDate(userId int64) ([]models.HabitWithDo
 	return s.repoHabit.GetUserHabitsDoneDate(userId)
 }
 
+func (s *HabitService) UpdateHabitsGroupTitle(groupId int64, title string, userId int64) (int64, error) {
+	return s.repoHabit.UpdateHabitsGroupTitle(groupId, title, userId)
+}
+
 func (s *HabitService) UpdateHabitsGroupIsShow(req models.UpdateHabitsGroupIsShowRequest, userId int64) (int64, error) {
 	return s.repoHabit.UpdateHabitsGroupIsShow(req, userId)
+}
+
+// Make sure to import "errors" in your service file if you haven't already
+func (s *HabitService) DeleteHabitsGroup(groupId int64, userId int64) error {
+	// Check if there are any habits tied to this group
+	count, err := s.repoHabit.CountHabitsInGroup(groupId, userId)
+	if err != nil {
+		return err
+	}
+
+	// Reject the request if habits exist
+	if count > 0 {
+		return errors.New("group is not empty")
+	}
+
+	rowsAffected, err := s.repoHabit.DeleteHabitsGroup(groupId, userId)
+	if err != nil {
+		return err
+	}
+	if rowsAffected != 1 {
+		return errors.New("no rows affected, group might not exist")
+	}
+
+	return nil
 }
 
 func (s *HabitService) CreateHabit(userId int64, req models.CreateNewHabitRequest) error {

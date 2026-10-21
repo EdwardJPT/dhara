@@ -1,14 +1,17 @@
-import { ReadonlySignal, Signal, useSignal } from "@preact/signals";
+import { ReadonlySignal, Signal, useSignal, useSignalEffect } from "@preact/signals";
+import { useRef } from "preact/hooks";
 
-import { todayUserTimeZone, formattingDateTask } from "../components/constants";
+import { todayUserTimeZone, formattingDateTask } from "../utils";
 
 import { Project, Task, TasksWithProject } from "./types";
 import { TaskDetails } from "./project.task";
+import { SortValue } from "./project";
 
 interface TaskDisplayProps {
   tasks: Signal<Task[]>;
   shownTasks: ReadonlySignal<Task[]>;
   project: Signal<Project>;
+  sortCategory: Signal<SortValue>;
   setErrorMessage: (message: string) => string;
   isDemo: boolean;
 }
@@ -20,6 +23,7 @@ export function TasksDisplay({
   tasks,
   shownTasks,
   project,
+  sortCategory,
   setErrorMessage,
   isDemo,
 }: TaskDisplayProps) {
@@ -240,25 +244,69 @@ export function TasksDisplay({
     }
   };
 
+  // Effect so that when we have a lot of tasks, when change the value of shownTasks
+  // it would automatically scroll to the first unfinished/finished task
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  useSignalEffect(() => {
+    let taskTarget;
+
+    // if the user sort the task based on done_date of the task,
+    // scroll to the first finished task
+    if (sortCategory.value === "doneDateAsc" || sortCategory.value === "doneDateDesc") {
+      taskTarget = shownTasks.value.find(task => task.is_done);
+    }
+    // if the user sort the task based on due_date of the task or priorit,
+    // scroll to the first unfinished task
+    else {
+      taskTarget = shownTasks.value.find(task => !task.is_done);
+    }
+
+    if (taskTarget) {
+      const targetId = `task-item-${taskTarget.task_id}`;
+
+      // setTimeout ensures the DOM has painted before we try to scroll
+      setTimeout(() => {
+        const container = scrollContainerRef.current;
+        const targetElement = document.getElementById(targetId);
+
+        if (container && targetElement) {
+          // Calculate the exact top position of the target relative to the container
+          const containerRect = container.getBoundingClientRect();
+          const targetRect = targetElement.getBoundingClientRect();
+
+          // Current scroll position + distance from the top of the container to the target
+          const scrollPos = container.scrollTop + (targetRect.top - containerRect.top);
+
+          // Scroll to the specific div
+          container.scrollTo({ top: scrollPos, behavior: 'smooth' });
+        }
+      }, 10);
+    }
+  });
+
   const shownTask: Signal<TasksWithProject | null> = useSignal(null);
 
   return (
     <div class="mx-auto max-w-3xl w-full overflow-hidden rounded-lg bg-white shadow">
-      <div class="max-h-[calc(100vh-100px)] w-full divide-y divide-gray-200 overflow-y-auto bg-white">
+      <div
+        ref={scrollContainerRef}
+        class="max-h-[calc(100vh-100px)] w-full snap-y snap-mandatory divide-y divide-gray-200 overflow-y-auto bg-white"
+      >
         {shownTasks.value &&
           shownTasks.value.map((task, i) => (
             <div
-              id={`container-task-${task.task_id}`}
+              id={`task-item-${task.task_id}`}
               key={`task-${task.task_id}`}
               class={`
               ${i % 2 == 0 ? "bg-[#e0fffd]" : ""}
               ${task.is_done && idToDelete.value != task.task_id ? "bg-pink-200 opacity-60" : ""}
               hover:${i % 2 == 0 ? "bg-[#e0fffd]" : "bg-white"} hover:opacity-100
-              flex flex-col w-full group
+              flex flex-col w-full group snap-start
             `}
             >
+              {/* Main Task Row - Styled exactly like the Reference */}
               <div
-                class="group flex flex-row items-start cursor-pointer px-3 py-3 sm:px-6 sm:py-4 w-full sm:min-h-25 md:min-w-2xl hover:bg-white hover:opacity-100"
+                class="group flex flex-wrap sm:flex-nowrap items-start cursor-pointer px-3 py-3 sm:px-4 md:px-6 sm:py-4 w-full min-h-25 md:min-w-2xl hover:bg-white hover:opacity-100"
                 onClick={() => {
                   shownTask.value = {
                     task_id: task.task_id,
@@ -291,8 +339,9 @@ export function TasksDisplay({
                   }}
                 />
 
-                <div class="ml-2 sm:ml-3 flex-1 min-w-0 text-gray-900 group">
-                  <p class="text-base sm:text-lg font-medium wrap-break-words">
+                {/* Middle Column: Title, Desc, Due Date (Moved from right column) */}
+                <div class="ml-2 sm:ml-3 flex-1 min-w-0 sm:w-7/10 text-gray-900 group">
+                  <p class="text-base sm:text-lg font-medium text-[#27354a] wrap-break-words">
                     {task.task_title}&nbsp;
                     {task.priority && (
                       <span class="inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 sm:p-1 text-[10px] sm:text-xs font-medium text-red-500 whitespace-nowrap">
@@ -300,11 +349,49 @@ export function TasksDisplay({
                       </span>
                     )}
                   </p>
+
                   <p class="my-1 max-h-48 overflow-y-auto text-sm sm:text-base text-gray-500 wrap-break-words">
                     {task.task_desc}
                   </p>
+
+                  {/* Due Date & Reschedule Form (Now formatted in a row exactly like Reference) */}
+                  <div class="text-xs sm:text-base font-semibold text-[#828a99] flex flex-wrap sm:flex-row items-center gap-x-2 gap-y-1 group-hover:text-gray-500">
+                    Due: {formattingDateTask(task.due_date)}
+
+                    {!task.is_done && new Date(task.due_date) < dateToday && (
+                      <form
+                        id="overdue-reschedule"
+                        class="w-full sm:w-auto"
+                        onSubmit={handleChangeDueDate}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div class="group relative flex flex-row items-center">
+                          <input
+                            type="date"
+                            id={`unsorted_due_date-${task.task_id}`}
+                            name={`unsorted_due_date-${task.task_id}`}
+                            class="p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 w-28 sm:w-auto text-xs sm:text-base"
+                            required
+                            min={today}
+                            aria-label="Reschedule due date"
+                          />
+                          <button
+                            type="submit"
+                            class="cursor-pointer ml-1 sm:ml-2 text-lg sm:text-2xl font-extrabold text-background hover:text-white hover:bg-hover shrink-0"
+                            aria-label="Submit new due date"
+                          >
+                            &#x2713;
+                          </button>
+                          <span class="hidden p-1 sm:p-2 z-10 bg-hover text-white w-max sm:w-fit group-hover:flex text-[10px] sm:text-sm rounded absolute bottom-full mb-1 sm:relative sm:bottom-auto sm:mb-0">
+                            Reschedule due date?
+                          </span>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+
                   {task.done_date > 0 && (
-                    <p class="text-sm sm:text-base font-bold text-gray-500 wrap-break-words">
+                    <p class="mt-1 sm:mt-0 text-sm sm:text-base font-bold text-gray-500 wrap-break-words">
                       DONE :{" "}
                       {formattingDateTask(
                         new Date(task.done_date * 1000).toLocaleDateString(
@@ -315,41 +402,13 @@ export function TasksDisplay({
                   )}
                 </div>
 
-                <div class="ml-2 sm:ml-4 flex flex-col shrink-0 w-fit sm:w-3/10 items-end justify-start sm:justify-center text-right text-xs sm:text-base font-semibold text-gray-600">
-                  Due: {formattingDateTask(task.due_date)}
-                  {!task.is_done && new Date(task.due_date) < dateToday && (
-                    <form
-                      id="overdue-reschedule"
-                      class="mt-1 sm:mt-0 w-full sm:w-auto"
-                      onSubmit={handleChangeDueDate}
-                    >
-                      <div class="group relative flex flex-col-reverse">
-                        <div class="flex flex-row items-center">
-                          <input
-                            type="date"
-                            id={`unsorted_due_date-${task.task_id}`}
-                            name={`unsorted_due_date-${task.task_id}`}
-                            class="p-1 sm:p-2 border border-solid border-gray-300 rounded flex-1 text-[10px] sm:text-sm w-24 sm:w-full max-w-32.5"
-                            required
-                            min={today}
-                          />
-                          <button
-                            type="submit"
-                            class="cursor-pointer ml-1 sm:ml-2 text-lg sm:text-2xl font-extrabold text-background hover:text-white hover:bg-hover"
-                          >
-                            &#x2713;
-                          </button>
-                        </div>
-                        <span class="hidden p-1 sm:p-2 z-10 bg-hover text-white w-full group-hover:flex text-[10px] sm:text-sm text-center rounded absolute sm:relative bottom-full mb-1 sm:mb-0">
-                          Reschedule due date?
-                        </span>
-                      </div>
-                    </form>
-                  )}
+                {/* Right Column: Project Title (Added back to match Reference structure) */}
+                <div class="mt-2 sm:mt-0 pl-6 sm:pl-0 sm:ml-4 flex w-full sm:w-3/10 items-center justify-start sm:justify-end text-left sm:text-right text-sm sm:text-lg font-semibold text-gray-600 shrink-0 wrap-break-words">
+                  {project.value?.project_title}
                 </div>
               </div>
 
-              {/* Delete button */}
+              {/* Delete button (Left untouched from your Target) */}
               <div
                 class={`
                 group-hover:flex flex-row items-center px-3 sm:px-6 py-2 sm:py-1 text-xs sm:text-base

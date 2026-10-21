@@ -7,7 +7,8 @@ import { TaskDetails } from "./calendar.task";
 import { UnsortedDetails } from "./calendar.unsorted";
 import { ErrorMessage } from "../components/error_messages";
 
-import { monthsName, todayUserTimeZone } from "../components/constants";
+import { monthNames } from "../constants";
+import { todayUserTimeZone } from "../utils";
 import { TasksWithProject, UnsortedTask, HabitDoneInfo } from "./types";
 import { Project } from "../home/types";
 
@@ -299,13 +300,13 @@ function App({
 
               <div className="text-center min-w-35">
                 <span className="text-base font-bold text-slate-800 block">
-                  {monthsName[monthsToRender[0].month]} {monthsToRender[0].year}
+                  {monthNames[monthsToRender[0].month]} {monthsToRender[0].year}
                 </span>
                 {monthMode.value > 1 && (
                   <span className="text-sm text-slate-400 font-bold uppercase">
                     -{" "}
                     {
-                      monthsName[
+                      monthNames[
                       monthsToRender[monthsToRender.length - 1].month
                       ]
                     }{" "}
@@ -453,7 +454,7 @@ function App({
                           </p>
                         </div>
                         <div
-                          className={`w-1 h-full min-h-10 rounded-full mr-3 ${unsorted.priority ? "bg-background" : "bg-[#2eaadb]"}`}
+                          className={`w-1 shrink-0 h-full min-h-10 rounded-full mr-3 ${unsorted.priority ? "bg-background" : "bg-[#2eaadb]"}`}
                         ></div>
                       </div>
                     )

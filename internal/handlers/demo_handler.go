@@ -25,6 +25,7 @@ type DemoHandler struct {
 	habitRepo      *repository.HabitRepository
 	homeTmpl       *template.Template
 	projectTmpl    *template.Template
+	projectsTmpl   *template.Template
 	calendarTmpl   *template.Template
 	reportsTmpl    *template.Template
 	habitsTmpl     *template.Template
@@ -46,6 +47,10 @@ func NewDemoHandler(
 	projectTmpl = template.Must(projectTmpl.ParseGlob("web/templates/project/*.html"))
 	projectTmpl = template.Must(projectTmpl.ParseGlob("web/templates/components/*.html"))
 
+	projectsTmpl := template.New("")
+	projectsTmpl = template.Must(projectsTmpl.ParseGlob("web/templates/projects/*.html"))
+	projectsTmpl = template.Must(projectsTmpl.ParseGlob("web/templates/components/*.html"))
+
 	calendarTmpl := template.New("")
 	calendarTmpl = template.Must(calendarTmpl.ParseGlob("web/templates/calendar/*.html"))
 	calendarTmpl = template.Must(calendarTmpl.ParseGlob("web/templates/components/*.html"))
@@ -64,6 +69,7 @@ func NewDemoHandler(
 		habitService:   habitService,
 		homeTmpl:       homeTmpl,
 		projectTmpl:    projectTmpl,
+		projectsTmpl:   projectsTmpl,
 		calendarTmpl:   calendarTmpl,
 		reportsTmpl:    reportsTmpl,
 		habitsTmpl:     habitsTmpl,
@@ -459,6 +465,23 @@ func (h *DemoHandler) DemoHomePage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("ExecuteTemplate home error:", err)
 		http.Error(w, "Failed rendering home page", http.StatusInternalServerError)
+	}
+}
+
+func (h *DemoHandler) DemoProjectsPage(w http.ResponseWriter, r *http.Request) {
+	projects, _, _ := h.generateMockData()
+
+	data := struct {
+		IsDemo       bool
+		ProjectsJSON template.JS
+	}{
+		IsDemo:       true,
+		ProjectsJSON: template.JS(toJSONString(projects)),
+	}
+
+	if err := h.projectsTmpl.ExecuteTemplate(w, "projects", data); err != nil {
+		log.Println("ExecuteTemplate projects error:", err)
+		http.Error(w, "Failed rendering projects page", http.StatusInternalServerError)
 	}
 }
 

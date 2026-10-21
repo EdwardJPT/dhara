@@ -4,14 +4,13 @@ import { useMemo } from "preact/hooks";
 
 import type { Project } from "./types.ts";
 
+import { ProjectFilters, ProjectSorter } from "../constants"
 import {
-  ProjectFilters,
-  ProjectSorter,
   formattingDateProject,
   todayUserTimeZone,
   nDaysAgo,
   nDaysLeft,
-} from "../components/constants"
+} from "../utils"
 
 interface ProjectsProps {
   projects: Signal<Project[]>;
@@ -30,38 +29,50 @@ interface ProjectCardProps {
   isDemo: boolean;
 }
 
-const ProjectCard = ({ project, setSelectedProject, isDemo }: ProjectCardProps) => {
+export const ProjectCard = ({ project, setSelectedProject, isDemo }: ProjectCardProps) => {
   return (
     <div
       onClick={() => setSelectedProject(project.project_id)}
-      class={`${project.is_done ? 'bg-pink-300 opacity-50' : 'bg-white'} group flex h-64 cursor-pointer snap-start flex-col rounded-lg border-l-4 border-background p-6 shadow hover:bg-pink-50`}
+      class={`${project.is_done ? 'bg-pink-300 opacity-50' : 'bg-white'} group flex h-64 min-w-0 cursor-pointer snap-start flex-col rounded-lg border-l-4 border-background p-4 shadow hover:bg-pink-50 sm:p-6`}
     >
-      <div class="flex flex-col justify-start">
-        <div class="mb-2 flex justify-between">
+      <div class="flex min-w-0 flex-col justify-start">
+        <div class="mb-2 flex justify-between gap-2">
           <a
             // Check if isDemo is true to determine the link
             href={isDemo ? `/demo/project/${project.public_id}` : `/project/${project.public_id}`}
             target="_blank"
-            class="block h-fit max-h-10 items-center overflow-y-auto text-lg font-semibold text-slate-600 hover:underline"
+            class="block h-fit min-w-0 max-h-10 items-center overflow-y-auto text-lg font-semibold text-slate-600 wrap-anywhere hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             {project.project_title}
           </a>
-          {project.priority &&
-            <span class="p-2 my-auto inline-flex max-h-6 w-fit items-center rounded-full bg-red-100 text-xs font-medium text-red-800">
-              Priority
-            </span>
-          }
+          {(project.priority || project.hide) && (
+            <div class="my-auto flex shrink-0 flex-col items-end gap-1 sm:flex-row sm:items-center">
+              {project.priority && (
+                <span class="p-2 inline-flex max-h-6 w-fit shrink-0 items-center rounded-full bg-red-100 text-xs font-medium text-red-800">
+                  Priority
+                </span>
+              )}
+              {project.hide && (
+                <span
+                  title="Hidden from Home and Reports"
+                  class="p-2 inline-flex max-h-6 w-fit shrink-0 items-center rounded-full bg-slate-100 text-xs font-medium text-slate-600"
+                >
+                  Hidden
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
-        <div class="overflow-y-auto">
-          <p class="h-25 min-h-20 text-base text-ellipsis text-gray-700">
+        <div class="max-h-25 overflow-y-auto">
+          <p class="h-25 min-h-20 text-base text-ellipsis text-gray-700 wrap-anywhere">
             {project.project_desc}
           </p>
         </div>
       </div>
 
-      <div class="hidden flex-row items-center justify-between pt-1 group-hover:flex">
+      <div class="hidden flex-row flex-wrap items-center justify-between gap-x-2 pt-1 group-hover:flex">
         <p class="text-sm text-gray-500 font-medium">
           Start: {formattingDateProject(project.start_date)}
         </p>
@@ -71,13 +82,13 @@ const ProjectCard = ({ project, setSelectedProject, isDemo }: ProjectCardProps) 
         </p>
       </div>
       {project.done_date ?
-        <div class="flex items-center justify-between py-2 group-hover:py-0">
+        <div class="flex flex-wrap items-center justify-between gap-x-2 py-2 group-hover:py-0">
           <p class="bg-white text-sm font-extrabold text-gray-800 no-underline opacity-100">
             DONE : {formattingDateProject(new Date(project.done_date * 1000).toLocaleDateString("en-CA"))}
           </p>
         </div>
         :
-        <div class="flex items-center justify-between py-2 group-hover:py-0">
+        <div class="flex flex-wrap items-center justify-between gap-x-2 py-2 group-hover:py-0">
           <p class="text-sm text-gray-500 font-medium">
             Due : {formattingDateProject(project.due_date)}
           </p>
@@ -92,7 +103,7 @@ const ProjectCard = ({ project, setSelectedProject, isDemo }: ProjectCardProps) 
           <div class="h-full bg-linear-to-r from-blue-400 to-blue-700" style={{ width: `calc(100% * ${project.to_dos_done} / ${project.to_dos_all})` }}>
           </div>
         </div>
-        <span class="text-sm font-medium text-gray-500">
+        <span class="shrink-0 text-sm font-medium text-gray-500">
           {project.to_dos_done}/{project.to_dos_all}
         </span>
       </div>
@@ -149,36 +160,36 @@ export function ProjectsDisplay({
   });
   const sortFunctions = useMemo(() => ({
     [ProjectSorter.DueDateAsc]: (a: Project, b: Project) => {
-      return (new Date(a.due_date)).getTime() - (new Date(b.due_date)).getTime();
+      return ((new Date(a.due_date)).getTime() || 0) - ((new Date(b.due_date)).getTime() || 0);
     },
     [ProjectSorter.DueDateDesc]: (a: Project, b: Project) => {
-      return (new Date(b.due_date)).getTime() - (new Date(a.due_date)).getTime()
+      return ((new Date(b.due_date)).getTime() || 0) - ((new Date(a.due_date)).getTime() || 0);
     },
     [ProjectSorter.DoneDateAsc]: (a: Project, b: Project) => {
-      return (new Date(a.done_date)).getTime() - (new Date(b.done_date)).getTime();
+      return a.done_date - b.done_date;
     },
     [ProjectSorter.DoneDateDesc]: (a: Project, b: Project) => {
-      return (new Date(b.done_date)).getTime() - (new Date(a.done_date)).getTime()
+      return b.done_date - a.done_date;
     },
     [ProjectSorter.StartDateAsc]: (a: Project, b: Project) => {
-      return (new Date(a.start_date)).getTime() - (new Date(b.start_date)).getTime();
+      return ((new Date(a.start_date)).getTime() || 0) - ((new Date(b.start_date)).getTime() || 0);
     },
     [ProjectSorter.StartDateDesc]: (a: Project, b: Project) => {
-      return (new Date(b.start_date)).getTime() - (new Date(a.start_date)).getTime()
+      return ((new Date(b.start_date)).getTime() || 0) - ((new Date(a.start_date)).getTime() || 0);
     },
     [ProjectSorter.CompletionAsc]: (a: Project, b: Project) => {
-      return (a.to_dos_done / a.to_dos_all) - (b.to_dos_done / b.to_dos_all);
+      return (a.to_dos_done / (a.to_dos_all || 1)) - (b.to_dos_done / (b.to_dos_all || 1));
     },
     [ProjectSorter.CompletionDesc]: (a: Project, b: Project) => {
-      return (b.to_dos_done / b.to_dos_all) - (a.to_dos_done / a.to_dos_all);
+      return (b.to_dos_done / (b.to_dos_all || 1)) - (a.to_dos_done / (a.to_dos_all || 1));
     },
     [ProjectSorter.Priority]: (a: Project, b: Project) => {
-      return Number(b.priority) - Number(a.priority)
+      return Number(b.priority) - Number(a.priority);
     },
   }), []);
 
   const shownProjects = useComputed(() => {
-    let result = projects.value;
+    let result = projects.value.filter(project => !project.hide);
     const today = todayUserTimeZone();
     // filter based on finish status
     if (projectFilter.value !== ProjectFilters.ALL) {
@@ -303,38 +314,38 @@ export function ProjectsDisplay({
         {(shownProjects.value.length > 0) && (
           <div
             onClick={() => showFilter.value = !showFilter.value}
-            class={`${showFilter.value ? '' : 'mb-6'} mt-2.5 mb-4 flex cursor-pointer flex-row items-center sm:hidden`}
+            class={`${showFilter.value ? '' : 'mb-6'} mt-2.5 mb-4 flex min-h-11 cursor-pointer flex-row items-center px-3 sm:hidden`}
           >
             {showFilter.value ? 'Collapse ⌃' : 'Expand ⌄'}
           </div>
         )}
 
         <div
-          class={`${showFilter.value || !shownProjects.value.length ? '' : 'hidden'} mb-5 flex w-full flex-row justify-evenly sm:flex md:mb-0 md:justify-start`}
+          class={`${showFilter.value || !shownProjects.value.length ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-col gap-2 min-[375px]:flex-row sm:flex md:mb-0 md:justify-start md:gap-0`}
         >
           <button
             hx-get={`${isDemo ? "/demo" : ""}/home/create-project-form`} hx-target="#form-container" hx-swap="innerHTML"
-            class="flex min-w-35 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover md:mr-5 md:px-2.5 md:py-1 md:text-lg"
+            class="flex min-h-11 min-w-0 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover min-[375px]:flex-1 md:mr-5 md:min-h-0 md:min-w-35 md:flex-none md:px-2.5 md:py-1 md:text-lg"
           >
             + New Project
           </button>
           <button
             onClick={() => showUnsorted.value = true}
-            class="flex cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover md:px-2.5 md:py-1 md:text-lg"
+            class="flex min-h-11 min-w-0 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover min-[375px]:flex-1 md:min-h-0 md:flex-none md:px-2.5 md:py-1 md:text-lg"
           >
             <img src="/static/images/list.svg" alt="list of unsorted tasks" class="h-3.5 w-3.5" />&nbsp;Unsorted ({unfinishedUnsorted.value})
           </button>
         </div>
         <div
-          class={`${showFilter.value ? '' : 'hidden'} mb-5 flex w-full flex-row justify-evenly sm:flex md:mb-0 md:justify-end`}
+          class={`${showFilter.value ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-row justify-evenly gap-2 sm:flex md:mb-0 md:justify-end md:gap-0`}
         >
-          <div class="flex w-35 cursor-pointer flex-row items-center justify-center text-center text-base md:mr-5 hover:text-background md:w-30">
+          <div class="flex min-w-0 flex-1 cursor-pointer flex-row items-center justify-center text-center text-base md:mr-5 hover:text-background md:w-30 md:flex-none">
             <img src="/static/images/filter2.png" alt="" class="h-4 w-4" />&nbsp;
             <select
               onChange={e => projectFilter.value = e.currentTarget.value as FilterValue}
               id="tasksFilterStatus"
               name="tasksFilterStatus"
-              class="w-full px-2 py-3 text-center text-nowrap text-ellipsis"
+              class="min-w-0 w-full px-2 py-3 text-center text-nowrap text-ellipsis"
             >
               <option selected disabled>Filter</option>
               <option value={ProjectFilters.ALL}>All</option>
@@ -343,13 +354,13 @@ export function ProjectsDisplay({
               <option value={ProjectFilters.Overdue}>Overdue</option>
             </select>
           </div>
-          <div class="flex w-35 cursor-pointer flex-row items-center justify-center text-center text-base hover:text-background md:w-fit">
+          <div class="flex min-w-0 flex-1 cursor-pointer flex-row items-center justify-center text-center text-base hover:text-background md:w-fit md:flex-none">
             <img src="/static/images/sort.png" alt="" class="h-5 w-3" />
             <select
               onChange={e => projectSorter.value = e.currentTarget.value as SortValue}
               id="projectsFilterPriority"
               name="projectsFilterPriority"
-              class="w-full px-2 py-3 text-center text-nowrap text-ellipsis md:w-35"
+              class="min-w-0 w-full px-2 py-3 text-center text-nowrap text-ellipsis md:w-35"
             >
               <option value={ProjectSorter.Skip} disabled selected>
                 Sort by
@@ -401,7 +412,7 @@ export function ProjectsDisplay({
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
                 onDrop={handleDrop}
-                class={`cursor-grab active:cursor-grabbing transition-opacity duration-200
+                class={`min-w-0 cursor-grab active:cursor-grabbing transition-opacity duration-200
                   ${draggedItemIndex.value === index
                     ? 'opacity-30 border-2 border-dashed border-gray-400 rounded-xl scale-95'
                     : 'opacity-100 border-2 border-transparent'
@@ -420,16 +431,18 @@ export function ProjectsDisplay({
           {shownProjects.value.length > 3 && (
             <div class="flex flex-row items-center justify-end">
               {isViewMore.value ?
-                <button
-                  onClick={() => isViewMore.value = false}
-                  class="mt-5 mr-5 w-full cursor-pointer text-base font-medium hover:underline"
-                >
-                  Hide
-                </button>
+                <div class="flex flex-col w-full justify-center items-center">
+                  <button
+                    onClick={() => isViewMore.value = false}
+                    class="mt-5 min-h-11 w-full cursor-pointer text-base font-medium hover:underline sm:min-h-0"
+                  >
+                    Hide
+                  </button>
+                </div>
                 :
                 <button
                   onClick={() => isViewMore.value = true}
-                  class="mt-5 w-full cursor-pointer text-base font-medium text-nowrap hover:underline"
+                  class="mt-5 min-h-11 w-full cursor-pointer text-base font-medium text-nowrap hover:underline sm:min-h-0"
                 >
                   View more
                 </button>
@@ -440,10 +453,19 @@ export function ProjectsDisplay({
         :
         <>
           <h3 class="mb-5 bg-background p-3 text-lg font-extrabold text-white md:my-10 md:text-2xl">
-            You don't have any project yet.
+            {projects.value.length > 0 ? "No projects to show." : "You don't have any project yet."}
           </h3>
         </>
       }
+      {projects.value.length > 0 && (
+        <a
+          href={isDemo ? "/demo/projects/all" : "/projects/all"}
+          target="_blank"
+          class="mt-5 flex min-h-11 w-full items-center justify-center text-base font-medium hover:underline sm:min-h-0"
+        >
+          All Projects
+        </a>
+      )}
     </>
   );
 }

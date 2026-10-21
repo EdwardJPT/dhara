@@ -9,6 +9,9 @@ lerna-debug.log*
 sqlite_files/tasks.db*
 tmp
 
+web/static/js/*
+!web/static/js/.gitkeep
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

@@ -18,7 +18,7 @@ func AuthenticatedRedirector(jwt *jwtauth.JWTAuth) func(http.Handler) http.Handl
 				return
 			}
 			// Verify token
-			_, err = jwt.Decode(cookie.Value)
+			_, err = jwtauth.VerifyToken(jwt, cookie.Value)
 			// Valid token -> redirect to /home
 			if err == nil {
 				http.Redirect(w, r, "/home", http.StatusSeeOther)
@@ -41,7 +41,7 @@ func Auth(jwt *jwtauth.JWTAuth) func(http.Handler) http.Handler {
 				return
 			}
 			// Verify token
-			claims, err := jwt.Decode(cookie.Value)
+			claims, err := jwtauth.VerifyToken(jwt, cookie.Value)
 			if err != nil {
 				// Invalid token → clear cookie and redirect
 				utils.ClearTokenCookie(w)

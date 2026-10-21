@@ -4,15 +4,17 @@ import {
     TaskFiltersPriority,
     TaskFiltersStatus,
     TaskFiltersTime,
+    monthNames,
+} from "../constants";
+import {
     getWeekRange,
     getMonthRange,
     getQuarterRange,
-    monthNames,
-} from "../components/constants";
+} from "../utils";
 import { TaskFilters } from "./home";
 
 function isContainMonthsName(str: string) {
-    return monthNames.includes(str.split(" ")[0]);
+    return (monthNames as readonly string[]).includes(str.split(" ")[0]);
 }
 
 export function filterTasks(tasks: Task[], filters: TaskFilters, todayStr: string): Task[] {
@@ -74,9 +76,16 @@ export function filterTasks(tasks: Task[], filters: TaskFilters, todayStr: strin
                 const { startOfQuarter, endOfQuarter } = getQuarterRange(todayDate);
                 return taskDueDate >= startOfQuarter && taskDueDate <= endOfQuarter;
             }
+            if (filters.time == TaskFiltersTime.ThisYear) {
+                const taskYear = new Date(t.due_date).getFullYear();
+                const currentYear = new Date(todayStr).getFullYear();
+                return taskYear === currentYear;
+            }
             if (isContainMonthsName(filters.time)) {
                 const monthStr = filters.time.split(" ")[0];
-                const month = monthNames.indexOf(monthStr);
+                const month = (
+                    monthNames as readonly string[]
+                ).indexOf(monthStr);
                 const year = Number(filters.time.split(" ")[1]);
                 return taskDueDate >= new Date(year, month) && taskDueDate <= new Date(year, month + 1);
             }

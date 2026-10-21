@@ -63,6 +63,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(userService)
 	homeHandler := handlers.NewHomeHandler(projectService, taskService)
 	projectHandler := handlers.NewProjectHandler(projectService, taskService)
+	projectsHandler := handlers.NewProjectsHandler(projectService)
 	taskHandler := handlers.NewTaskHandler(taskService)
 	habitHandler := handlers.NewHabitHandler(habitService)
 	calendarHandler := handlers.NewCalendarHandler(db)
@@ -129,13 +130,20 @@ func main() {
 		r.Delete("/{id}", taskHandler.DeleteUnsortedTask)
 		r.Post("/{id}/assign", taskHandler.AssignUnsortedTask)
 	})
+	// All projects routers - Protected
+	r.Route("/projects", func(r chi.Router) {
+		r.Use(middleware.Auth(jwt))
+		r.Get("/all", projectsHandler.ProjectsPage)
+	})
 	// Habits routers - Protected
 	r.Route("/habits", func(r chi.Router) {
 		r.Use(middleware.Auth(jwt))
 		r.Get("/", habitHandler.HabitPage)
 		r.Post("/", habitHandler.AddHabit)
-		r.Post("/check-in/{group_id}/{habit_id}", habitHandler.HabitCheckIn)
+		r.Patch("/group/{group_id}/title", habitHandler.PatchHabitsGroupTitle)
 		r.Patch("/group/{group_id}/is-show", habitHandler.PatchHabitsGroupIsShow)
+		r.Delete("/group/{group_id}", habitHandler.DeleteHabitsGroup)
+		r.Post("/check-in/{group_id}/{habit_id}", habitHandler.HabitCheckIn)
 		r.Patch("/{habit_id}", habitHandler.EditHabit)
 		r.Delete("/{habit_id}", habitHandler.DeleteHabit)
 	})
@@ -153,6 +161,7 @@ func main() {
 	r.Route("/demo", func(r chi.Router) {
 		r.Get("/", demoHandler.DemoRedirect)
 		r.Get("/home", demoHandler.DemoHomePage)
+		r.Get("/projects/all", demoHandler.DemoProjectsPage)
 		r.Get("/home/create-project-form", demoHandler.DemoCreateProjectForm)
 		r.Get("/project/{projectNanoID}", demoHandler.DemoProjectPage)
 		r.Get("/calendar", demoHandler.DemoCalendarPage)

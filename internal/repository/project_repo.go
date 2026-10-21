@@ -32,9 +32,6 @@ func (r *ProjectRepository) GetUserProjects(userId int64) ([]models.Project, err
 	projects := []models.Project{}
 	// Iterate over rows and scan into the struct
 	for rows.Next() {
-		// TODO: It's much cheaper if we initiate it with *models.Project because
-		// when we append it to projects it would be just appending pointer, if it's
-		// like currently is, we would copying a full struct
 		var project models.Project
 		if err := rows.Scan(
 			&project.ID,
@@ -50,6 +47,7 @@ func (r *ProjectRepository) GetUserProjects(userId int64) ([]models.Project, err
 			&project.IsDone,
 			&project.DoneDate,
 			&project.CreatedAt,
+			&project.Hide,
 		); err != nil {
 			return []models.Project{}, err
 		}
@@ -161,6 +159,7 @@ func (r *ProjectRepository) GetProjectByNanoID(userId int64, nanoid string) (mod
 		&project.IsDone,
 		&project.DoneDate,
 		&project.CreatedAt,
+		&project.Hide,
 	); err != nil {
 		return models.Project{}, err
 	}
@@ -177,7 +176,8 @@ func (r *ProjectRepository) Update(userId, projectId int64, req models.EditProje
 			start_date = ?,
 			due_date = ?,
 			is_done = ?,
-			done_date = ?
+			done_date = ?,
+			hide = ?
 		WHERE project_id = ? AND user_id = ?
 	`
 	res, err := r.db.Exec(
@@ -189,6 +189,7 @@ func (r *ProjectRepository) Update(userId, projectId int64, req models.EditProje
 		req.DueDate,
 		req.IsDone,
 		req.DoneDate,
+		req.Hide,
 		projectId,
 		userId,
 	)

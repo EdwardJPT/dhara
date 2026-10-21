@@ -61,6 +61,10 @@ type HabitCheckInRequest struct {
 	HabitsGroupID int64 `json:"habits_group_id"`
 }
 
+type UpdateHabitsGroupTitleRequest struct {
+	HabitsGroupTitle string `json:"habitsGroupTitle"`
+}
+
 type UpdateHabitsGroupIsShowRequest struct {
 	HabitsGroupID int64 `json:"habits_group_id"`
 	IsShow        bool  `json:"checked"`

@@ -3,7 +3,7 @@ import { Signal } from "@preact/signals";
 
 import { Project } from "./types";
 
-import { todayUserTimeZone } from "../components/constants";
+import { todayUserTimeZone } from "../utils";
 
 const today = todayUserTimeZone();
 
@@ -27,6 +27,7 @@ export function EditProjectForm({
     project_title: project.project_title,
     project_desc: project.project_desc,
     priority: project.priority,
+    hide: project.hide || false,
     start_date: project.start_date,
     due_date: project.due_date,
     is_done: project.is_done,
@@ -60,10 +61,13 @@ export function EditProjectForm({
         start_date:
           formData.start_date || new Date().toISOString().split("T")[0],
         due_date: formData.due_date || "",
-        done_date: formData.is_done && formData.done_date ? unixDoneDate : 0,
+        done_date: formData.is_done && formData.done_date
+          ? (typeof formData.done_date === "number" ? formData.done_date : unixDoneDate)
+          : 0,
         // Ensure boolean fields are properly typed
         priority: !!formData.priority,
         is_done: !!formData.is_done,
+        hide: !!formData.hide,
       };
 
       // Handle demo mode early and exit
@@ -201,6 +205,44 @@ export function EditProjectForm({
             </div>
           </div>
 
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 rounded-md bg-gray-100 p-3 sm:p-4">
+            <div>
+              <label for="hideToggle" class="block text-sm sm:text-base font-medium text-gray-700">
+                Hide this project?
+              </label>
+              <p class="mt-1 text-xs sm:text-sm text-gray-500">
+                Exclude it from Home and Reports.
+              </p>
+              <p class="mb-1 text-xs sm:text-sm text-gray-500">
+                It will remain available in All Projects.
+              </p>
+            </div>
+
+            <div class="flex items-center">
+              <span class="mr-2 text-xs sm:text-sm text-gray-500">No</span>
+              <button
+                onClick={() =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    hide: !prevData.hide,
+                  }))
+                }
+                type="button"
+                id="hideToggle"
+                role="switch"
+                aria-checked={formData.hide}
+                class={`relative inline-flex h-6 w-11 items-center rounded-full transition
+                    ${formData.hide ? "bg-background" : "bg-gray-200"}`}
+              >
+                <span
+                  class={`inline-block h-4 w-4 transform rounded-full bg-white transition ease-in-out
+                    ${formData.hide ? "translate-x-6" : "translate-x-1"}`}
+                ></span>
+              </button>
+              <span class="ml-2 text-xs sm:text-sm text-gray-500">Yes</span>
+            </div>
+          </div>
+
           <div class="mt-2 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             <div class="mb-2 sm:mb-4">
               <label
@@ -281,7 +323,7 @@ export function EditProjectForm({
         <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-end gap-3 sm:gap-0 sm:space-x-3">
           <button
             type="submit"
-            class="w-full sm:w-auto rounded-md bg-blue-600 px-4 py-3 sm:py-2 text-sm sm:text-base text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none font-semibold"
+            class="w-full sm:w-auto rounded-md bg-blue-600 px-4 py-3 sm:py-2 text-sm sm:text-base text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none font-semibold cursor-pointer"
           >
             Save Changes
           </button>
