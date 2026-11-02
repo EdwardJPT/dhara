@@ -21,6 +21,12 @@ func (r *TaskRepository) GetUserTasks(userId int64) ([]models.Task, error) {
 	query := `
 		SELECT * FROM tasks
 		WHERE user_id = ?
+			AND EXISTS (
+				SELECT 1 FROM projects
+				WHERE projects.project_id = tasks.project_id
+					AND projects.user_id = tasks.user_id
+					AND projects.hide = 0
+			)
 		ORDER BY project_id ASC, due_date ASC, priority DESC
 	`
 	rows, err := r.db.Query(query, userId)
