@@ -52,20 +52,23 @@ func main() {
 	taskRepo := repository.NewTaskRepository(db)
 	unsortedRepo := repository.NewUnsortedRepository(db)
 	habitRepo := repository.NewHabitRepository(db)
+	goalRepo := repository.NewGoalRepository(db)
 
 	// Init Services
 	userService := service.NewUserService(userRepo, jwt)
 	projectService := service.NewProjectService(db, projectRepo, taskRepo)
 	taskService := service.NewTaskService(db, taskRepo, unsortedRepo)
 	habitService := service.NewHabitService(db, habitRepo)
+	goalService := service.NewGoalService(db, goalRepo)
 
 	// Init the handlers by passing the db and jwt
 	userHandler := handlers.NewUserHandler(userService)
-	homeHandler := handlers.NewHomeHandler(projectService, taskService)
+	homeHandler := handlers.NewHomeHandler(projectService, taskService, goalService)
 	projectHandler := handlers.NewProjectHandler(projectService, taskService)
-	projectsHandler := handlers.NewProjectsHandler(projectService)
+	projectsHandler := handlers.NewProjectsHandler(projectService, goalService)
 	taskHandler := handlers.NewTaskHandler(taskService)
 	habitHandler := handlers.NewHabitHandler(habitService)
+	goalHandler := handlers.NewGoalHandler(goalService)
 	calendarHandler := handlers.NewCalendarHandler(db)
 	reportHandler := handlers.NewReportHandler(projectService, taskService, habitService)
 	demoHandler := handlers.NewDemoHandler(
@@ -134,6 +137,13 @@ func main() {
 	r.Route("/projects", func(r chi.Router) {
 		r.Use(middleware.Auth(jwt))
 		r.Get("/all", projectsHandler.ProjectsPage)
+	})
+	// Goals routers - Protected
+	r.Route("/goals", func(r chi.Router) {
+		r.Use(middleware.Auth(jwt))
+		r.Post("/", goalHandler.AddGoal)
+		r.Patch("/{goal_id}", goalHandler.EditGoal)
+		r.Delete("/{goal_id}", goalHandler.DeleteGoal)
 	})
 	// Habits routers - Protected
 	r.Route("/habits", func(r chi.Router) {

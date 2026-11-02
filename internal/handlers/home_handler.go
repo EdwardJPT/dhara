@@ -16,16 +16,18 @@ import (
 type HomeHandler struct {
 	projectService *service.ProjectService
 	taskService    *service.TaskService
+	goalService    *service.GoalService
 	templates      *template.Template
 }
 
-func NewHomeHandler(projectService *service.ProjectService, taskService *service.TaskService) *HomeHandler {
+func NewHomeHandler(projectService *service.ProjectService, taskService *service.TaskService, goalService *service.GoalService) *HomeHandler {
 	tmpl := template.New("")
 	tmpl = template.Must(tmpl.ParseGlob("web/templates/home/*.html"))
 	tmpl = template.Must(tmpl.ParseGlob("web/templates/components/*.html"))
 	return &HomeHandler{
 		projectService: projectService,
 		taskService:    taskService,
+		goalService:    goalService,
 		templates:      tmpl,
 	}
 }
@@ -75,17 +77,26 @@ func (h *HomeHandler) HomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	goals, err := h.goalService.GetUserGoals(userId)
+	if err != nil {
+		log.Println("Query goals error:", err)
+		http.Error(w, "There's a problem in the server", http.StatusInternalServerError)
+		return
+	}
+
 	// Pass data to template
 	data := struct {
 		IsDemo        bool
 		ProjectsJSON  template.JS
 		TasksJSON     template.JS
 		UnsortedsJSON template.JS
+		GoalsJSON     template.JS
 	}{
 		IsDemo:        false,
 		ProjectsJSON:  template.JS(toJSON(projects)),
 		TasksJSON:     template.JS(toJSON(tasks)),
 		UnsortedsJSON: template.JS(toJSON(unsorteds)),
+		GoalsJSON:     template.JS(toJSON(goals)),
 	}
 
 	h.render(w, "home", data, http.StatusOK)

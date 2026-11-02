@@ -2,13 +2,15 @@ import { Signal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 
 import { TasksWithProject } from "./types";
-import { formattingDateObj } from "../utils";
+import { formattingDateObj, todayUserTimeZone } from "../utils";
 
 interface TaskDetailsProps {
   taskSignal: Signal<TasksWithProject | null>;
   setErrorMessage: (message: string) => void;
   isDemo: boolean;
 }
+
+const today = todayUserTimeZone();
 
 export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetailsProps) {
   // If this component is called, the value of taskSignal won't ever be null
@@ -258,6 +260,7 @@ export function TaskDetails({ taskSignal, setErrorMessage, isDemo }: TaskDetails
               value={formData.task_due_date}
               onChange={handleChange}
               class="min-h-11 min-w-0 w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:outline-none sm:min-h-0"
+              min={today}
             />
           </div>
 

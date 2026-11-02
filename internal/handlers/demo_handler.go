@@ -446,19 +446,42 @@ func (h *DemoHandler) DemoRedirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/demo/home", http.StatusSeeOther)
 }
 
+func (h *DemoHandler) generateMockGoals() []models.Goal {
+	createdAt := time.Now().Format(time.RFC3339)
+	return []models.Goal{
+		{
+			ID:         1,
+			UserId:     1,
+			Title:      "Deliver a Successful Product Launch",
+			ProjectIds: toJSONString([]int64{1, 2}),
+			CreatedAt:  createdAt,
+		},
+		{
+			ID:         2,
+			UserId:     1,
+			Title:      "Improve Team Productivity",
+			ProjectIds: toJSONString([]int64{3, 4}),
+			CreatedAt:  createdAt,
+		},
+	}
+}
+
 func (h *DemoHandler) DemoHomePage(w http.ResponseWriter, r *http.Request) {
 	projects, tasks, unsorteds := h.generateMockData()
+	goals := h.generateMockGoals()
 
 	data := struct {
 		IsDemo        bool
 		ProjectsJSON  template.JS
 		TasksJSON     template.JS
 		UnsortedsJSON template.JS
+		GoalsJSON     template.JS
 	}{
 		IsDemo:        true,
 		ProjectsJSON:  template.JS(toJSONString(projects)),
 		TasksJSON:     template.JS(toJSONString(tasks)),
 		UnsortedsJSON: template.JS(toJSONString(unsorteds)),
+		GoalsJSON:     template.JS(toJSONString(goals)),
 	}
 
 	err := h.homeTmpl.ExecuteTemplate(w, "home", data)
@@ -474,9 +497,11 @@ func (h *DemoHandler) DemoProjectsPage(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		IsDemo       bool
 		ProjectsJSON template.JS
+		GoalsJSON    template.JS
 	}{
 		IsDemo:       true,
 		ProjectsJSON: template.JS(toJSONString(projects)),
+		GoalsJSON:    template.JS(toJSONString(h.generateMockGoals())),
 	}
 
 	if err := h.projectsTmpl.ExecuteTemplate(w, "projects", data); err != nil {

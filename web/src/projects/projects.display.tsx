@@ -5,17 +5,20 @@ import { ProjectCard } from "../home/home.projects";
 import { ProjectFilters, ProjectSorter } from "../constants";
 import { todayUserTimeZone } from "../utils";
 import type { Project } from "../models";
+import type { Goal } from "../home/types";
 
 interface ProjectsProps {
   projects: Signal<Project[]>;
+  goals: Signal<Goal[]>;
   isDemo: boolean;
 }
 
 type FilterValue = typeof ProjectFilters[keyof typeof ProjectFilters] | "hidden";
 type SortValue = typeof ProjectSorter[keyof typeof ProjectSorter];
 
-export function ProjectsDisplay({ projects, isDemo }: ProjectsProps) {
+export function ProjectsDisplay({ projects, goals, isDemo }: ProjectsProps) {
   const projectFilter = useSignal<FilterValue>(ProjectFilters.ALL);
+  const selectedGoal = useSignal("all");
   const projectSorter = useSignal<SortValue>(ProjectSorter.Skip);
   const search = useSignal("");
   const sortFunctions = useMemo(() => ({
@@ -51,8 +54,22 @@ export function ProjectsDisplay({ projects, isDemo }: ProjectsProps) {
   const shownProjects = useComputed(() => {
     const query = search.value.trim().toLowerCase();
     const today = todayUserTimeZone();
+    let goalProjectIds: number[] | null = null;
+    if (selectedGoal.value !== "all") {
+      const goal = goals.value.find(goal => String(goal.goal_id) === selectedGoal.value);
+      if (goal) {
+        try {
+          const ids = JSON.parse(goal.project_ids);
+          goalProjectIds = Array.isArray(ids) ? ids : [];
+        } catch (e) {
+          console.error("Error parsing goal project IDs", e);
+          goalProjectIds = [];
+        }
+      }
+    }
 
     const result = projects.value.filter(project => {
+      if (goalProjectIds && !goalProjectIds.includes(project.project_id)) return false;
       if (projectFilter.value === "hidden" && !project.hide) return false;
       if (projectFilter.value === ProjectFilters.Unfinished && project.is_done) return false;
       if (projectFilter.value === ProjectFilters.Finished && !project.is_done) return false;
@@ -77,7 +94,7 @@ export function ProjectsDisplay({ projects, isDemo }: ProjectsProps) {
 
   return (
     <>
-      <div class="mb-6 flex flex-col gap-4 rounded-md border border-slate-200 bg-white p-3 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+      <div class="mb-6 flex flex-col gap-4 rounded-md border border-slate-200 bg-white p-3 shadow-sm lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
         <div class="flex flex-wrap gap-1" role="group" aria-label="Filter projects by status">
           {Object.entries(ProjectFilters).map(([label, value]) => (
             <button
@@ -103,14 +120,33 @@ export function ProjectsDisplay({ projects, isDemo }: ProjectsProps) {
             Hidden
           </button>
         </div>
-        <div class="flex min-w-0 flex-col gap-3 sm:flex-row">
+        <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
+          {goals.value.length > 0 && (
+            <label
+              for="all-projects-goal"
+              class="flex min-h-11 w-full min-w-0 items-center gap-2 rounded-lg border border-slate-200 px-3 text-sm font-semibold text-slate-500 sm:w-48"
+            >
+              Goals
+              <select
+                id="all-projects-goal"
+                value={selectedGoal.value}
+                onChange={e => selectedGoal.value = e.currentTarget.value}
+                class="min-h-11 min-w-0 flex-1 cursor-pointer bg-transparent text-sm font-semibold text-slate-600 outline-none focus:ring-1 focus:ring-background"
+              >
+                <option value="all">All Goals</option>
+                {goals.value.map(goal => (
+                  <option key={goal.goal_id} value={goal.goal_id}>{goal.goal_title}</option>
+                ))}
+              </select>
+            </label>
+          )}
           <div class="flex min-h-11 min-w-0 items-center text-sm text-slate-500 hover:text-background">
             <img src="/static/images/sort.png" alt="" class="h-5 w-3" />
             <select
               aria-label="Sort projects"
               value={projectSorter.value}
               onChange={e => projectSorter.value = e.currentTarget.value as SortValue}
-              class="font-semibold min-h-11 w-full min-w-0 cursor-pointer px-2 py-2 sm:w-40"
+              class="font-semibold min-h-11 w-full min-w-0 cursor-pointer px-2 py-2"
             >
               <option value={ProjectSorter.Skip}>Sort by</option>
               <option value={ProjectSorter.DueDateAsc}>Due Date &#8599;</option>
@@ -158,7 +194,7 @@ export function ProjectsDisplay({ projects, isDemo }: ProjectsProps) {
           <p class="mt-3 text-sm text-slate-500">
             {projects.value.length === 0
               ? "Head back to Home to create your first project."
-              : "Try another status or search term."}
+              : "Try adjusting your filters or search term."}
           </p>
         </div>
       )}

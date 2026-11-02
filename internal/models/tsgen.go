@@ -28,6 +28,7 @@ func allTypesConvert() {
 	converter := typescriptify.New()
 
 	converter.Add(models.Project{})
+	converter.Add(models.Goal{})
 	converter.Add(models.Task{})
 	converter.Add(models.UnsortedTask{})
 	converter.Add(models.HabitsGroupWithHabits{})
@@ -56,6 +57,7 @@ func homeTypesConvert() {
 
 	// Types for /home feature
 	home.Add(models.Project{})
+	home.Add(models.Goal{})
 	home.Add(models.Task{})
 	home.Add(models.UnsortedTask{})
 	home.Add(models.TasksWithProject{})
@@ -71,6 +73,13 @@ func homeTypesConvert() {
 	}
 
 	homeTypes = convertInterfacesToTypes(homeTypes)
+	// Include frontend-only settings, which have no Go database model.
+	homeTypes = `export type GoalSettings = {
+    selectedGoal: string;
+    showGoals: boolean;
+}
+
+` + homeTypes
 
 	// Write it the file
 	pathTarget := "../../web/src/home/types.ts"

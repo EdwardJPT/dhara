@@ -210,8 +210,8 @@ export function TaskForm({
                   onChange={(e) =>
                     handleInputChange(index, "due_date", e.currentTarget.value)
                   }
-                  min={today}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base transition outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                  min={today}
                 />
               </div>
 

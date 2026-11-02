@@ -1,11 +1,13 @@
 import { Signal } from "@preact/signals";
 
 import { UnsortedTask } from "./types";
-import { formattingDateObj } from "../utils";
+import { formattingDateObj, todayUserTimeZone } from "../utils";
 
 interface UnsortedDetailsProps {
   unsortedSignal: Signal<UnsortedTask | null>;
 }
+
+const today = todayUserTimeZone();
 
 export function UnsortedDetails({ unsortedSignal }: UnsortedDetailsProps) {
   // If this component is called, the value of unsortedSignal won't ever be null
@@ -100,6 +102,7 @@ export function UnsortedDetails({ unsortedSignal }: UnsortedDetailsProps) {
               name="unsorted_due_date"
               value={unsorted.due_date}
               class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              min={today}
               disabled
             />
           </div>

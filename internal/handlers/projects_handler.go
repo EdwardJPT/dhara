@@ -13,15 +13,17 @@ import (
 
 type ProjectsHandler struct {
 	projectService *service.ProjectService
+	goalService    *service.GoalService
 	templates      *template.Template
 }
 
-func NewProjectsHandler(projectService *service.ProjectService) *ProjectsHandler {
+func NewProjectsHandler(projectService *service.ProjectService, goalService *service.GoalService) *ProjectsHandler {
 	tmpl := template.New("")
 	tmpl = template.Must(tmpl.ParseGlob("web/templates/projects/*.html"))
 	tmpl = template.Must(tmpl.ParseGlob("web/templates/components/*.html"))
 	return &ProjectsHandler{
 		projectService: projectService,
+		goalService:    goalService,
 		templates:      tmpl,
 	}
 }
@@ -44,13 +46,22 @@ func (h *ProjectsHandler) ProjectsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	goals, err := h.goalService.GetUserGoals(userId)
+	if err != nil {
+		log.Println("Query goals error:", err)
+		http.Error(w, "There's a problem in the server", http.StatusInternalServerError)
+		return
+	}
+
 	// Pass data to template
 	data := struct {
 		IsDemo       bool
 		ProjectsJSON template.JS
+		GoalsJSON    template.JS
 	}{
 		IsDemo:       false,
 		ProjectsJSON: template.JS(toJSON(projects)),
+		GoalsJSON:    template.JS(toJSON(goals)),
 	}
 
 	if err := h.templates.ExecuteTemplate(w, "projects", data); err != nil {

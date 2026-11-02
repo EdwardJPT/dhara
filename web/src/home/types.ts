@@ -1,3 +1,16 @@
+export type GoalSettings = {
+    selectedGoal: string;
+    showGoals: boolean;
+}
+
+export type Goal = {
+    goal_id: number;
+    user_id: number;
+    goal_title: string;
+    project_ids: string;
+    created_at: string;
+}
+
 export type Project = {
     project_id: number;
     public_id: string;

@@ -2,7 +2,7 @@ import { Fragment } from "preact";
 import { useSignal, useComputed, Signal, useSignalEffect } from "@preact/signals";
 import { useMemo } from "preact/hooks";
 
-import type { Project } from "./types.ts";
+import type { Goal, GoalSettings, Project } from "./types.ts";
 
 import { ProjectFilters, ProjectSorter } from "../constants"
 import {
@@ -14,6 +14,9 @@ import {
 
 interface ProjectsProps {
   projects: Signal<Project[]>;
+  displayState: ReturnType<typeof useProjectDisplay>;
+  goals: Signal<Goal[]>;
+  goalSettings: Signal<GoalSettings>;
   setSelectedProject: (projectId: number) => void;
   showUnsorted: Signal<boolean>;
   unfinishedUnsorted: Signal<number>;
@@ -115,18 +118,28 @@ export const ProjectCard = ({
   );
 };
 
-export function ProjectsDisplay({
-  projects,
-  setSelectedProject,
-  showUnsorted,
-  unfinishedUnsorted,
-  isDemo,
-}: ProjectsProps) {
-  // to show + New Project, Unsorted, Filters, and Sort By buttons on small screen
-  const showFilter = useSignal(false);
-  // to control how big is the div that showing the projects, either only show
-  // 1 row, or 2 rows
-  const isViewMore = useSignal(false);
+export function useProjectDisplay(
+  projects: Signal<Project[]>,
+  goals: Signal<Goal[]>,
+  goalSettings: Signal<GoalSettings>,
+) {
+  // Arrays of projects ids after we manually sorted it with drag and drop
+  const getProjectsOrder = (): number[] => {
+    const storedFilter = localStorage.getItem("projectsOrder");
+    if (storedFilter) {
+      try {
+        return JSON.parse(storedFilter);
+      } catch (e) {
+        console.error("No stored projectsOrder from LocalStorage", e);
+      }
+    }
+    return [];
+  };
+  const projectsIdsOrder = useSignal<number[]>(getProjectsOrder())
+  // Sync back to Local Storage whenever projectsIdsOrder.value changes
+  useSignalEffect(() => {
+    localStorage.setItem("projectsOrder", JSON.stringify(projectsIdsOrder.value));
+  });
 
   // Helper function to load the initial projects filter
   const getInitialProjectFilter = (): FilterValue => {
@@ -194,7 +207,23 @@ export function ProjectsDisplay({
 
   const shownProjects = useComputed(() => {
     let result = projects.value.filter(project => !project.hide);
-    const today = todayUserTimeZone();
+
+    // filter by the selected goal while Goals is enabled.
+    if (goalSettings.value.showGoals && goalSettings.value.selectedGoal !== "all") {
+      const goal = goals.value.find(goal => String(goal.goal_id) === goalSettings.value.selectedGoal);
+      if (goal) {
+        try {
+          const projectIds = JSON.parse(goal.project_ids);
+          result = Array.isArray(projectIds)
+            ? result.filter(project => projectIds.includes(project.project_id))
+            : [];
+        } catch (e) {
+          console.error("Error parsing goal project IDs", e);
+          result = [];
+        }
+      }
+    }
+
     // filter based on finish status
     if (projectFilter.value !== ProjectFilters.ALL) {
       if (projectFilter.value === ProjectFilters.Unfinished) {
@@ -204,11 +233,12 @@ export function ProjectsDisplay({
         result = result.filter(p => p.is_done)
       }
       if (projectFilter.value === ProjectFilters.Overdue) {
+        const today = todayUserTimeZone();
         result = result.filter(p => !p.is_done && new Date(today) > new Date(p.due_date))
       }
     }
 
-    // When the projects is after sorted manually with drag and drop
+    // when the projects is after sorted manually with drag and drop
     if (projectSorter.value === ProjectSorter.Skip) {
       const projectMap = new Map(result.map(p => [p.project_id, p]));
 
@@ -224,27 +254,31 @@ export function ProjectsDisplay({
     return [...result].sort(sortFunctions[projectSorter.value]);
   });
 
+  return { shownProjects, projectFilter, projectSorter, projectsIdsOrder };
+}
+
+export function ProjectsDisplay({
+  projects,
+  displayState,
+  goals,
+  goalSettings,
+  setSelectedProject,
+  showUnsorted,
+  unfinishedUnsorted,
+  isDemo,
+}: ProjectsProps) {
+  // to show + New Project, Unsorted, Filters, and Sort By buttons on small screen
+  const showFilter = useSignal(false);
+  // to control how big is the div that showing the projects, either only show
+  // 1 row, or 2 rows
+  const isViewMore = useSignal(false);
+
+  const { shownProjects, projectFilter, projectSorter, projectsIdsOrder } = displayState;
+
   // Drag and drop state
   const draggedItemIndex = useSignal<number | null>(null);
   const dragOriginalList = useSignal<Project[] | null>(null);
   const isDroppedSuccessfully = useSignal(false);
-  // Arrays of projects ids after we manually sorted it with drag and drop
-  const getProjectsOrder = (): number[] => {
-    const storedFilter = localStorage.getItem("projectsOrder");
-    if (storedFilter) {
-      try {
-        return JSON.parse(storedFilter);
-      } catch (e) {
-        console.error("No stored projectsOrder from LocalStorage", e);
-      }
-    }
-    return [];
-  };
-  const projectsIdsOrder = useSignal<number[]>(getProjectsOrder())
-  // Sync back to Local Storage whenever projectsIdsOrder.value changes
-  useSignalEffect(() => {
-    localStorage.setItem("projectsOrder", JSON.stringify(projectsIdsOrder.value));
-  });
 
   const handleDragStart = (e: DragEvent, index: number) => {
     draggedItemIndex.value = index;
@@ -314,7 +348,7 @@ export function ProjectsDisplay({
 
   return (
     <>
-      <div class="mb-0 flex flex-col items-center justify-around md:mb-6 md:flex-row md:justify-between">
+      <div class="mb-0 flex flex-col items-center justify-around gap-x-5 md:mb-6 md:flex-row md:flex-wrap md:justify-between">
         {(shownProjects.value.length > 0) && (
           <div
             onClick={() => showFilter.value = !showFilter.value}
@@ -325,23 +359,86 @@ export function ProjectsDisplay({
         )}
 
         <div
-          class={`${showFilter.value || !shownProjects.value.length ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-col gap-2 min-[375px]:flex-row sm:flex md:mb-0 md:justify-start md:gap-0`}
+          class={`${showFilter.value || !shownProjects.value.length ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-col flex-wrap gap-2 min-[375px]:flex-row min-[375px]:items-center sm:flex md:mb-0 md:w-auto md:flex-1 md:justify-start`}
         >
           <button
             hx-get={`${isDemo ? "/demo" : ""}/home/create-project-form`} hx-target="#form-container" hx-swap="innerHTML"
-            class="flex min-h-11 min-w-0 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover min-[375px]:flex-1 md:mr-5 md:min-h-0 md:min-w-35 md:flex-none md:px-2.5 md:py-1 md:text-lg"
+            class="flex h-11 min-w-0 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold whitespace-nowrap text-white hover:bg-hover min-[375px]:flex-auto md:mr-0 md:min-w-35 md:flex-none md:px-2.5 md:py-1.5"
           >
             + New Project
           </button>
           <button
             onClick={() => showUnsorted.value = true}
-            class="flex min-h-11 min-w-0 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold text-white hover:bg-hover min-[375px]:flex-1 md:min-h-0 md:flex-none md:px-2.5 md:py-1 md:text-lg"
+            class="flex h-11 min-w-0 cursor-pointer items-center justify-center rounded-xl bg-background p-1.25 text-center text-base font-semibold whitespace-nowrap text-white hover:bg-hover min-[375px]:flex-auto md:flex-none md:px-2.5 md:py-1.5"
           >
             <img src="/static/images/list.svg" alt="list of unsorted tasks" class="h-3.5 w-3.5" />&nbsp;Unsorted ({unfinishedUnsorted.value})
           </button>
+          {goals.value.length > 0 && (
+            <>
+              <label
+                for="show-goals"
+                class="group goals-toggle order-0 inline-flex h-11 shrink-0 cursor-pointer items-center gap-0.5 rounded-xl border border-gray-200 bg-white px-2 text-base font-normal text-gray-600 transition-colors hover:bg-background hover:text-white hover:font-semibold focus-within:ring-background sm:order-1"
+              >
+                <input
+                  id="show-goals"
+                  type="checkbox"
+                  role="switch"
+                  class="sr-only"
+                  checked={goalSettings.value.showGoals}
+                  aria-controls="goal-options"
+                  onChange={e => goalSettings.value = {
+                    ...goalSettings.value,
+                    showGoals: e.currentTarget.checked,
+                  }}
+                />
+                Goals
+                <span
+                  aria-hidden="true"
+                  class={`toggle-track flex h-5 w-7 items-center rounded-full p-0.5 transition-colors ${goalSettings.value.showGoals ? 'bg-background' : 'bg-gray-300'} group-hover:bg-hover`}
+                >
+                  <span
+                    class={`toggle-thumb h-3 w-3 rounded-full bg-white shadow-sm transition-transform motion-reduce:transition-none ${goalSettings.value.showGoals ? 'translate-x-2.75' : 'translate-x-0'}`}
+                  />
+                </span>
+              </label>
+              {goalSettings.value.showGoals && (
+                <div
+                  id="goal-options"
+                  class="goal-picker order-3 flex h-11 w-full min-w-0 items-center gap-2 rounded-xl border border-background bg-white px-3 sm:w-80"
+                >
+                  <select
+                    id="goal"
+                    aria-label="Goal"
+                    class="h-full min-w-0 flex-1 bg-transparent text-base font-semibold text-background"
+                    value={goalSettings.value.selectedGoal}
+                    onChange={e => goalSettings.value = {
+                      ...goalSettings.value,
+                      selectedGoal: e.currentTarget.value,
+                    }}
+                  >
+                    <option value="all">All Projects</option>
+                    {goals.value.map(goal => (
+                      <option key={goal.goal_id} value={goal.goal_id}>{goal.goal_title}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    class="h-full shrink-0 cursor-pointer text-base font-normal text-background hover:underline"
+                    onClick={() => goalSettings.value = {
+                      ...goalSettings.value,
+                      selectedGoal: "all",
+                    }}
+                  >
+                    Reset
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
+
         <div
-          class={`${showFilter.value ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-row justify-evenly gap-2 sm:flex md:mb-0 md:justify-end md:gap-0`}
+          class={`${showFilter.value ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-row justify-evenly gap-2 sm:flex md:mb-0 md:w-auto md:justify-end md:gap-0`}
         >
           <div class="flex min-w-0 flex-1 md:mr-5 md:w-30 md:flex-none">
             <label
@@ -486,7 +583,15 @@ export function ProjectsDisplay({
         :
         <>
           <h3 class="mb-5 bg-background p-3 text-lg font-extrabold text-white md:my-10 md:text-2xl">
-            {projects.value.length > 0 ? "All of your projects are hidden." : "You don't have any project yet."}
+            {/* If the shownProject === 0, while the projects > 0, then all the projects
+                are simply hidden. If both are === 0, then the user simply don't have any
+                project yet. Or lastly, nothing match the selected filters.
+            */}
+            {projects.value.length === 0
+              ? "You don't have any project yet."
+              : projects.value.every(project => project.hide)
+                ? "All of your projects are hidden."
+                : "No projects match the selected filters."}
           </h3>
         </>
       }

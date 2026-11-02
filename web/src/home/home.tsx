@@ -1,7 +1,7 @@
 import { render } from "preact";
 import { useSignal, useComputed, Signal, useSignalEffect } from "@preact/signals";
 
-import { ProjectsDisplay } from "./home.projects";
+import { ProjectsDisplay, useProjectDisplay } from "./home.projects";
 import { TaskDisplay } from "./home.tasks";
 import { UnsortedDisplay } from "./home.unsorted";
 import { ErrorMessage } from "../components/error_messages";
@@ -14,12 +14,13 @@ import {
   defaultTaskFilters,
 } from "../constants";
 
-import { Project, Task, UnsortedTask } from "./types";
+import { Goal, GoalSettings, Project, Task, UnsortedTask } from "./types";
 
 interface BackEndData {
   projectList: Project[];
   taskList: Task[];
   unsortedList: UnsortedTask[];
+  goalList: Goal[];
   isDemo: boolean;
 }
 
@@ -39,6 +40,11 @@ export type TaskFilters = {
   time: TaskTimeValue;
 };
 
+const defaultGoalSettings: GoalSettings = {
+  selectedGoal: "all",
+  showGoals: false,
+};
+
 // Helper function to initialize data from LocalStorage if in demo mode
 function loadDemoData<T>(key: string, backendData: T, isDemo: boolean): T {
   if (!isDemo) return backendData;
@@ -54,7 +60,47 @@ function loadDemoData<T>(key: string, backendData: T, isDemo: boolean): T {
   return backendData;
 }
 
-function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) {
+function App({
+  projectList,
+  taskList,
+  unsortedList,
+  goalList,
+  isDemo = false,
+}: AppProps) {
+  // Goals Section
+  const goals = useSignal(loadDemoData("demo_goals", goalList, isDemo));
+  useSignalEffect(() => {
+    const currentGoals = goals.value;
+    if (isDemo) {
+      localStorage.setItem("demo_goals", JSON.stringify(currentGoals));
+    }
+  });
+
+  // Helper function to load goal settings
+  const getInitialGoalSettings = (): GoalSettings => {
+    const storedSettings = localStorage.getItem("homeGoalSettings");
+    if (storedSettings) {
+      try {
+        const settings: GoalSettings = JSON.parse(storedSettings);
+        return {
+          selectedGoal: typeof settings?.selectedGoal === "string" &&
+            goals.value.some(goal => String(goal.goal_id) === settings.selectedGoal)
+            ? settings.selectedGoal
+            : "all",
+          showGoals: settings?.showGoals === true,
+        };
+      } catch (e) {
+        console.error("No stored goal settings from LocalStorage", e);
+      }
+    }
+    return defaultGoalSettings;
+  };
+  const goalSettings: Signal<GoalSettings> = useSignal(getInitialGoalSettings());
+  // Sync back to Local Storage whenever goalSettings.value changes
+  useSignalEffect(() => {
+    localStorage.setItem("homeGoalSettings", JSON.stringify(goalSettings.value));
+  });
+
   // Projects Sections
   const projects = useSignal(loadDemoData("demo_projects", projectList, isDemo));
   useSignalEffect(() => {
@@ -64,6 +110,8 @@ function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) 
       localStorage.setItem("demo_projects", JSON.stringify(currentProjects));
     }
   });
+
+  const projectDisplay = useProjectDisplay(projects, goals, goalSettings);
 
   // projectObj is an object of { project_id: project_title } so we can access
   // project.project_title from task.project_id
@@ -108,6 +156,22 @@ function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) 
   // Sync back to Local Storage whenever taskFilters.value changes
   useSignalEffect(() => {
     localStorage.setItem("taskFilters", JSON.stringify(taskFilters.value));
+  });
+
+  useSignalEffect(() => {
+    const selectedProject = taskFilters.value.selectedProject;
+    if (selectedProject === ALL) return;
+
+    const isShown = projectDisplay.shownProjects.value.some(
+      project => project.project_id === Number(selectedProject)
+    );
+
+    if (!isShown) {
+      taskFilters.value = {
+        ...taskFilters.value,
+        selectedProject: ALL,
+      };
+    }
   });
 
   // setter for the selected project
@@ -174,6 +238,7 @@ function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) 
 
     // Clear the specific demo data keys
     localStorage.removeItem("demo_projects");
+    localStorage.removeItem("demo_goals");
     localStorage.removeItem("demo_tasks");
     localStorage.removeItem("demo_unsorteds");
     localStorage.removeItem("demo_habits_groups");
@@ -203,6 +268,9 @@ function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) 
 
       <ProjectsDisplay
         projects={projects}
+        displayState={projectDisplay}
+        goals={goals}
+        goalSettings={goalSettings}
         setSelectedProject={setSelectedProject}
         showUnsorted={showUnsorted}
         unfinishedUnsorted={unfinishedUnsorted}
@@ -213,6 +281,7 @@ function App({ projectList, taskList, unsortedList, isDemo = false }: AppProps) 
 
       <TaskDisplay
         tasks={tasks}
+        shownProjects={projectDisplay.shownProjects}
         taskFilters={taskFilters}
         projectObj={projectObj}
         setProjects={setProjects}
@@ -253,6 +322,7 @@ render(
     projectList={dataWindow.projectList}
     taskList={dataWindow.taskList}
     unsortedList={dataWindow.unsortedList}
+    goalList={dataWindow.goalList}
     isDemo={dataWindow.isDemo || false}
   />,
   document.getElementById("home")!

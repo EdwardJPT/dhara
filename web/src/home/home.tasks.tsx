@@ -1,4 +1,4 @@
-import { useSignal, useComputed, Signal, useSignalEffect } from "@preact/signals";
+import { useSignal, useComputed, Signal, ReadonlySignal, useSignalEffect } from "@preact/signals";
 import { useMemo, useRef } from "preact/hooks";
 
 import { Calendar } from "./home.calendar.jsx";
@@ -18,7 +18,7 @@ import {
   todayUserTimeZone,
 } from "../utils";
 
-import type { Task } from "./types.ts";
+import type { Project, Task } from "./types.ts";
 import {
   TaskFilters,
   TaskPriorityValue,
@@ -32,6 +32,7 @@ const dateToday = new Date(today);
 
 interface TasksProps {
   tasks: Signal<Task[]>;
+  shownProjects: ReadonlySignal<Project[]>;
   taskFilters: Signal<TaskFilters>;
   projectObj: Signal<{ [key: number]: string }>;
   setProjects: (projectId: number, checked: boolean) => void;
@@ -190,6 +191,7 @@ function loadPrevData(key: string): string {
 
 export function TaskDisplay({
   tasks,
+  shownProjects,
   taskFilters,
   projectObj,
   setProjects,
@@ -259,7 +261,9 @@ export function TaskDisplay({
   const shownTasks = useComputed(() => {
     if (!tasks.value) return [];
 
-    let result = filterTasks(tasks.value, taskFilters.value, todayUserTimeZone());
+    const shownProjectIds = new Set(shownProjects.value.map(project => project.project_id));
+    let result = filterTasks(tasks.value, taskFilters.value, todayUserTimeZone())
+      .filter(task => shownProjectIds.has(task.project_id));
 
     if (!sortCategory.value) return result;
     return [...result].sort(sortFunctions[sortCategory.value]);
