@@ -12,6 +12,8 @@ interface MonthBlockProps {
   isCompact: boolean;
   dueDatesTasksList: { [key: string]: TasksWithProject[] };
   dueDatesUnsortedsList: { [key: string]: UnsortedTask[] };
+  completedTasksList: { [key: string]: TasksWithProject[] };
+  completedUnsortedsList: { [key: string]: UnsortedTask[] };
 }
 
 const generateCalendarGrid = (year: number, month: number) => {
@@ -30,6 +32,8 @@ export function MonthBlock({
   isCompact,
   dueDatesTasksList,
   dueDatesUnsortedsList,
+  completedTasksList,
+  completedUnsortedsList,
 }: MonthBlockProps) {
   const daysGrid = generateCalendarGrid(year, month);
 
@@ -67,10 +71,14 @@ export function MonthBlock({
             selectedDate={selectedDate}
             isCompact={isCompact}
             taskCount={
-              dueDatesTasksList[formatingDateStr(year, month, day)]?.length
+              dueDatesTasksList[formatingDateStr(year, month, day)]?.length ?? 0
             }
             unsortedCount={
-              dueDatesUnsortedsList[formatingDateStr(year, month, day)]?.length
+              dueDatesUnsortedsList[formatingDateStr(year, month, day)]?.length ?? 0
+            }
+            completedCount={
+              (completedTasksList[formatingDateStr(year, month, day)]?.length ?? 0) +
+              (completedUnsortedsList[formatingDateStr(year, month, day)]?.length ?? 0)
             }
           />
         ))}

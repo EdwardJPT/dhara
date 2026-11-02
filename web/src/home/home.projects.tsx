@@ -29,7 +29,11 @@ interface ProjectCardProps {
   isDemo: boolean;
 }
 
-export const ProjectCard = ({ project, setSelectedProject, isDemo }: ProjectCardProps) => {
+export const ProjectCard = ({
+  project,
+  setSelectedProject,
+  isDemo,
+}: ProjectCardProps) => {
   return (
     <div
       onClick={() => setSelectedProject(project.project_id)}
@@ -339,60 +343,89 @@ export function ProjectsDisplay({
         <div
           class={`${showFilter.value ? '' : 'hidden'} mb-5 flex w-full min-w-0 flex-row justify-evenly gap-2 sm:flex md:mb-0 md:justify-end md:gap-0`}
         >
-          <div class="flex min-w-0 flex-1 cursor-pointer flex-row items-center justify-center text-center text-base md:mr-5 hover:text-background md:w-30 md:flex-none">
-            <img src="/static/images/filter2.png" alt="" class="h-4 w-4" />&nbsp;
-            <select
-              onChange={e => projectFilter.value = e.currentTarget.value as FilterValue}
-              id="tasksFilterStatus"
-              name="tasksFilterStatus"
-              class="min-w-0 w-full px-2 py-3 text-center text-nowrap text-ellipsis"
+          <div class="flex min-w-0 flex-1 md:mr-5 md:w-30 md:flex-none">
+            <label
+              for="tasksFilterStatus"
+              class="flex w-full flex-row items-center justify-center rounded px-2 py-3 text-center text-base hover:text-background"
             >
-              <option selected disabled>Filter</option>
-              <option value={ProjectFilters.ALL}>All</option>
-              <option value={ProjectFilters.Unfinished}>Unfinished</option>
-              <option value={ProjectFilters.Finished}>Finished</option>
-              <option value={ProjectFilters.Overdue}>Overdue</option>
-            </select>
+              <img
+                src="/static/images/filter2.png"
+                alt=""
+                class="mr-2 h-4 w-4 cursor-pointer"
+                onClick={() => {
+                  // Cast the element to include the optional showPicker method
+                  const selectBox = document.getElementById("tasksFilterStatus") as HTMLSelectElement & { showPicker?: () => void };
+                  if (selectBox && typeof selectBox.showPicker === "function")
+                    selectBox.showPicker();
+                }}
+              />
+              <select
+                onChange={e => projectFilter.value = e.currentTarget.value as FilterValue}
+                id="tasksFilterStatus"
+                name="tasksFilterStatus"
+                class="min-w-0 flex-1 cursor-pointer bg-transparent text-center text-nowrap text-ellipsis outline-none"
+              >
+                <option selected disabled>Filter</option>
+                <option value={ProjectFilters.ALL}>All</option>
+                <option value={ProjectFilters.Unfinished}>Unfinished</option>
+                <option value={ProjectFilters.Finished}>Finished</option>
+                <option value={ProjectFilters.Overdue}>Overdue</option>
+              </select>
+            </label>
           </div>
-          <div class="flex min-w-0 flex-1 cursor-pointer flex-row items-center justify-center text-center text-base hover:text-background md:w-fit md:flex-none">
-            <img src="/static/images/sort.png" alt="" class="h-5 w-3" />
-            <select
-              onChange={e => projectSorter.value = e.currentTarget.value as SortValue}
-              id="projectsFilterPriority"
-              name="projectsFilterPriority"
-              class="min-w-0 w-full px-2 py-3 text-center text-nowrap text-ellipsis md:w-35"
+          <div class="flex min-w-0 flex-1 md:w-fit md:flex-none">
+            <label
+              for="projectsFilterPriority"
+              class="flex w-full cursor-pointer flex-row items-center justify-center text-center text-base hover:text-background"
             >
-              <option value={ProjectSorter.Skip} disabled selected>
-                Sort by
-              </option>
-              <option value={ProjectSorter.DueDateAsc}>
-                Due Date<span class="flex items-start text-3xl">&#8599;</span>
-              </option>
-              <option value={ProjectSorter.DueDateDesc}>
-                Due Date<span class="flex items-start text-3xl">&#8600;</span>
-              </option>
-              <option value={ProjectSorter.DoneDateAsc}>
-                Done Date<span class="flex items-start text-3xl">&#8599;</span>
-              </option>
-              <option value={ProjectSorter.DoneDateDesc}>
-                Done Date<span class="flex items-start text-3xl">&#8600;</span>
-              </option>
-              <option value={ProjectSorter.StartDateAsc}>
-                Start Date<span class="flex items-start text-3xl">&#8599;</span>
-              </option>
-              <option value={ProjectSorter.StartDateDesc}>
-                Start Date<span class="flex items-start text-3xl">&#8600;</span>
-              </option>
-              <option value={ProjectSorter.CompletionAsc}>
-                Completion<span class="flex items-start text-3xl">&#8599;</span>
-              </option>
-              <option value={ProjectSorter.CompletionDesc}>
-                Completion<span class="flex items-start text-3xl">&#8600;</span>
-              </option>
-              <option value={ProjectSorter.Priority}>
-                Priority
-              </option>
-            </select>
+              <img
+                src="/static/images/sort.png"
+                alt=""
+                class="mr-2 h-5 w-3 cursor-pointer"
+                onClick={() => {
+                  const selectBox = document.getElementById("projectsFilterPriority") as HTMLSelectElement & { showPicker?: () => void };
+                  if (selectBox && typeof selectBox.showPicker === "function")
+                    selectBox.showPicker();
+                }}
+              />
+              <select
+                onChange={e => projectSorter.value = e.currentTarget.value as SortValue}
+                id="projectsFilterPriority"
+                name="projectsFilterPriority"
+                class="min-w-0 flex-1 cursor-pointer bg-transparent px-2 py-3 text-center text-nowrap text-ellipsis outline-none md:w-35"
+              >
+                <option value={ProjectSorter.Skip} disabled selected>
+                  Sort by
+                </option>
+                <option value={ProjectSorter.DueDateAsc}>
+                  Due Date<span class="flex items-start text-3xl">&#8599;</span>
+                </option>
+                <option value={ProjectSorter.DueDateDesc}>
+                  Due Date<span class="flex items-start text-3xl">&#8600;</span>
+                </option>
+                <option value={ProjectSorter.DoneDateAsc}>
+                  Done Date<span class="flex items-start text-3xl">&#8599;</span>
+                </option>
+                <option value={ProjectSorter.DoneDateDesc}>
+                  Done Date<span class="flex items-start text-3xl">&#8600;</span>
+                </option>
+                <option value={ProjectSorter.StartDateAsc}>
+                  Start Date<span class="flex items-start text-3xl">&#8599;</span>
+                </option>
+                <option value={ProjectSorter.StartDateDesc}>
+                  Start Date<span class="flex items-start text-3xl">&#8600;</span>
+                </option>
+                <option value={ProjectSorter.CompletionAsc}>
+                  Completion<span class="flex items-start text-3xl">&#8599;</span>
+                </option>
+                <option value={ProjectSorter.CompletionDesc}>
+                  Completion<span class="flex items-start text-3xl">&#8600;</span>
+                </option>
+                <option value={ProjectSorter.Priority}>
+                  Priority
+                </option>
+              </select>
+            </label>
           </div>
         </div>
       </div>
@@ -453,19 +486,21 @@ export function ProjectsDisplay({
         :
         <>
           <h3 class="mb-5 bg-background p-3 text-lg font-extrabold text-white md:my-10 md:text-2xl">
-            {projects.value.length > 0 ? "No projects to show." : "You don't have any project yet."}
+            {projects.value.length > 0 ? "All of your projects are hidden." : "You don't have any project yet."}
           </h3>
         </>
       }
-      {projects.value.length > 0 && (
-        <a
-          href={isDemo ? "/demo/projects/all" : "/projects/all"}
-          target="_blank"
-          class="mt-5 flex min-h-11 w-full items-center justify-center text-base font-medium hover:underline sm:min-h-0"
-        >
-          All Projects
-        </a>
-      )}
+
+      {(shownProjects.value.length > 3 ? isViewMore.value : projects.value.length > 0)
+        && (
+          <a
+            href={isDemo ? "/demo/projects/all" : "/projects/all"}
+            target="_blank"
+            class="mt-5 flex min-h-11 w-full items-center justify-center text-base font-medium hover:underline sm:min-h-0"
+          >
+            All Projects
+          </a>
+        )}
     </>
   );
 }

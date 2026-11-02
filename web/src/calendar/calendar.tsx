@@ -5,6 +5,7 @@ import { useMemo } from "preact/hooks";
 import { MonthBlock } from "./calendar.monthBlock";
 import { TaskDetails } from "./calendar.task";
 import { UnsortedDetails } from "./calendar.unsorted";
+import { getCalendarAgenda, groupCalendarEvents, ShowMode } from "./calendar.events";
 import { ErrorMessage } from "../components/error_messages";
 
 import { monthNames } from "../constants";
@@ -25,6 +26,7 @@ const today = todayUserTimeZone();
 // Options of showMode to filter what would be shown to the user
 const unfinished = "unfinished";
 const all = "all";
+const completed = "completed";
 
 // Helper function to initialize data from LocalStorage if in demo mode
 function loadDemoData<T>(key: string, backendData: T, isDemo: boolean): T {
@@ -149,50 +151,19 @@ function App({
     }
   });
 
-  // Filter of what we would show to the user, either just unfinished task and
-  // unfinished unsorted, or all of them
-  const showMode = useSignal(all);
-  const dueDatesTasks = useComputed(() => {
-    if (showMode.value === all) return tasksListSignal.value;
-
-    const dueDates = Object.keys(tasksListSignal.value);
-    const dueDatesLen = dueDates.length;
-    const filteredDueDates = {} as { [key: string]: TasksWithProject[] };
-    for (let i = 0; i < dueDatesLen; i++) {
-      const filteredTasks = [];
-      const tasks = tasksListSignal.value[dueDates[i]];
-      const tasksLen = tasks.length;
-      for (let j = 0; j < tasksLen; j++) {
-        if (!tasks[j].task_is_done) filteredTasks.push(tasks[j]);
-      }
-
-      if (filteredTasks.length > 0) {
-        filteredDueDates[dueDates[i]] = filteredTasks;
-      }
-    }
-    return filteredDueDates;
-  });
-
-  const dueDatesUnsorteds = useComputed(() => {
-    if (showMode.value === all) return unsortedsListSignal.value;
-
-    const dueDates = Object.keys(unsortedsListSignal.value);
-    const dueDatesLen = dueDates.length;
-    const filteredDueDates = {} as { [key: string]: UnsortedTask[] };
-    for (let i = 0; i < dueDatesLen; i++) {
-      const filteredUnsorteds = [];
-      const unsorteds = unsortedsListSignal.value[dueDates[i]];
-      const unsortedsLen = unsorteds.length;
-      for (let j = 0; j < unsortedsLen; j++) {
-        if (!unsorteds[j].is_done) filteredUnsorteds.push(unsorteds[j]);
-      }
-
-      if (filteredUnsorteds.length > 0) {
-        filteredDueDates[dueDates[i]] = filteredUnsorteds;
-      }
-    }
-    return filteredDueDates;
-  });
+  const showMode = useSignal<ShowMode>(all);
+  const taskEvents = useComputed(() => groupCalendarEvents(
+    tasksListSignal.value,
+    showMode.value,
+    (task) => task.task_is_done,
+    (task) => task.task_done_date,
+  ));
+  const unsortedEvents = useComputed(() => groupCalendarEvents(
+    unsortedsListSignal.value,
+    showMode.value,
+    (unsorted) => unsorted.is_done,
+    (unsorted) => unsorted.done_date,
+  ));
 
   // How many months that would be shown to the user
   // possible value: 1, 4, 6, 12
@@ -238,12 +209,25 @@ function App({
   const gridLayoutClass = getGridLayoutClass();
 
   const selectedEvents = useComputed(() => {
-    const tasks = dueDatesTasks.value[selectedDate.value];
-    const unsorteds = dueDatesUnsorteds.value[selectedDate.value];
-    const tasksLength = tasks ? tasks.length : 0;
-    const unsortedsLength = unsorteds ? unsorteds.length : 0;
+    const tasks = getCalendarAgenda(taskEvents.value, selectedDate.value, (task) => task.task_id);
+    const unsorteds = getCalendarAgenda(unsortedEvents.value, selectedDate.value, (unsorted) => unsorted.unsorted_id);
 
-    return { tasks, unsorteds, tasksLength, unsortedsLength };
+    return [
+      {
+        kind: "due",
+        title: "Due on this day",
+        description: "Tasks and unsorted tasks due on the selected date.",
+        tasks: tasks.due,
+        unsorteds: unsorteds.due,
+      },
+      {
+        kind: "completed",
+        title: "Completed on this day",
+        description: "Tasks and unsorted tasks completed on the selected date.",
+        tasks: tasks.completed,
+        unsorteds: unsorteds.completed,
+      },
+    ].filter((section) => section.tasks.length > 0 || section.unsorteds.length > 0);
   });
 
   const shownTask: Signal<TasksWithProject | null> = useSignal(null);
@@ -347,8 +331,10 @@ function App({
                 month={data.month}
                 selectedDate={selectedDate}
                 isCompact={monthMode.value > 1} // Use compact cells for multi-month views
-                dueDatesTasksList={dueDatesTasks.value}
-                dueDatesUnsortedsList={dueDatesUnsorteds.value}
+                dueDatesTasksList={taskEvents.value.dueDates}
+                dueDatesUnsortedsList={unsortedEvents.value.dueDates}
+                completedTasksList={taskEvents.value.completedDates}
+                completedUnsortedsList={unsortedEvents.value.completedDates}
               />
             ))}
           </div>
@@ -359,38 +345,36 @@ function App({
           {" "}
           {/* To make the sticky work */}
           <div className="xl:w-80 flex flex-col sticky top-10">
-            <div className="flex flex-row justify-between bg-white mt-1.5 mb-5.5 text-md">
-              <h4 className="flex flex-1 items-center justify-center font-bold w-full bg-background text-white py-2 px-6">
-                Filters
-              </h4>
-              <div className="flex flex-3 items-center justify-evenly">
-                <span
-                  class={`mr-1 text-md
-                ${showMode.value === all ? "text-background font-semibold" : "text-gray-500"}`}
-                >
-                  All
+            {/* Filters */}
+            <div className="mt-1.5 mb-5.5 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+              <div className="mb-3 flex items-center justify-between">
+                <h4 className="text-sm font-bold text-slate-800">
+                  Filter
+                </h4>
+                <span className="text-xs text-slate-400">
+                  Task status
                 </span>
-                <button
-                  onClick={() =>
-                  (showMode.value =
-                    showMode.value === unfinished ? all : unfinished)
-                  }
-                  type="button"
-                  id="priorityToggle"
-                  class={`relative inline-flex h-5 w-9 items-center rounded-full transition
-                    ${showMode.value === all ? "bg-background" : "bg-[#2eaadb]"}`}
-                >
-                  <span
-                    class={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition ease-in-out
-                    ${showMode.value === all ? "translate-x-1" : "translate-x-5"}`}
-                  ></span>
-                </button>
-                <span
-                  class={`ml-1 text-md
-                ${showMode.value === unfinished ? "text-background font-semibold" : "text-gray-500"}`}
-                >
-                  Unfinished
-                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-1 rounded-md bg-slate-100 p-1">
+                {([
+                  { value: all, label: "All" },
+                  { value: unfinished, label: "Unfinished" },
+                  { value: completed, label: "Completed" },
+                ] as const).map(({ value, label }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => (showMode.value = value)}
+                    aria-pressed={showMode.value === value}
+                    className={`cursor-pointer rounded-md px-1 py-2 text-xs font-bold transition-all ${showMode.value === value
+                      ? "bg-background text-white shadow-sm"
+                      : "text-slate-500 hover:bg-white hover:text-slate-700"
+                      }`}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -413,62 +397,80 @@ function App({
               </div>
 
               <div className="flex-1 space-y-3 min-h-75 max-h-full overflow-y-auto">
-                {/* ?TODO: Finish the habits one */}
-                {selectedEvents.value.tasksLength > 0 &&
-                  selectedEvents.value.tasks.map((task: TasksWithProject) => (
-                    <div
-                      key={task.task_id}
-                      onClick={() => shownTask.value = task}
-                      title={`A Task${task.task_priority ? " - Priority" : ""}${task.task_is_done ? " - DONE" : ""}`}
-                      className="group cursor-pointer flex items-start p-3 bg-slate-100 border border-transparent rounded-xl transition-all shadow-sm hover:bg-slate-50 hover:border-slate-100 hover:shadow-md"
-                    >
-                      <div
-                        className={`w-1 shrink-0 h-full min-h-10 rounded-full mr-3 ${task.task_priority ? "bg-background" : "bg-[#2eaadb]"}`}
-                      ></div>
-                      <div>
-                        <h4 className="text-md font-bold text-slate-800">
-                          {task.task_title}
-                        </h4>
-                        <p className="text-sm text-slate-500 mt-1">
-                          {task.project_title}
-                        </p>
-                      </div>
+                {selectedEvents.value.map((section) => (
+                  <section key={section.kind} className="space-y-3 pt-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-800">
+                        {section.title}
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {section.description}
+                      </p>
                     </div>
-                  ))}
-
-                {selectedEvents.value.unsortedsLength > 0 &&
-                  selectedEvents.value.unsorteds.map(
-                    (unsorted: UnsortedTask) => (
+                    {section.tasks.map((task: TasksWithProject) => (
                       <div
-                        key={unsorted.unsorted_id}
-                        onClick={() => shownUnsorted.value = unsorted}
-                        title={`${unsorted.priority ? "An Unsorted Task - Priority" : "An Unsorted Task"}`}
-                        className="group cursor-pointer flex items-start justify-between p-3 border border-transparent rounded-xl transition-all shadow-sm hover:bg-slate-50 hover:border-slate-100 hover:shadow-md"
+                        key={task.task_id}
+                        onClick={() => shownTask.value = task}
+                        title={`A Task${task.task_priority ? " - Priority" : ""}${task.task_is_done ? " - DONE" : ""}`}
+                        className="group cursor-pointer flex items-start p-3 bg-slate-100 border border-transparent rounded-xl transition-all shadow-sm hover:bg-slate-50 hover:border-slate-100 hover:shadow-md"
                       >
+                        <div
+                          className={`w-1 shrink-0 h-full min-h-10 rounded-full mr-3 ${task.task_priority ? "bg-background" : "bg-[#2eaadb]"}`}
+                        ></div>
                         <div>
                           <h4 className="text-md font-bold text-slate-800">
-                            {unsorted.unsorted_title}
+                            {task.task_title}
                           </h4>
                           <p className="text-sm text-slate-500 mt-1">
-                            {unsorted.unsorted_desc}
+                            {task.project_title}
                           </p>
+                          {section.kind === "completed" && task.task_due_date === selectedDate.value && (
+                            <p className="mt-1 text-xs font-semibold text-background">
+                              Also due on this day
+                            </p>
+                          )}
                         </div>
-                        <div
-                          className={`w-1 shrink-0 h-full min-h-10 rounded-full mr-3 ${unsorted.priority ? "bg-background" : "bg-[#2eaadb]"}`}
-                        ></div>
                       </div>
-                    )
-                  )}
+                    ))}
 
-                {selectedEvents.value.tasksLength == 0 &&
-                  selectedEvents.value.unsortedsLength == 0 && (
-                    <div className="flex flex-col items-center justify-center h-48 text-slate-400">
-                      <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
-                        ✨
-                      </div>
-                      <p className="text-xs font-bold">No events scheduled</p>
+                    {section.unsorteds.map(
+                      (unsorted: UnsortedTask) => (
+                        <div
+                          key={unsorted.unsorted_id}
+                          onClick={() => shownUnsorted.value = unsorted}
+                          title={`${unsorted.priority ? "An Unsorted Task - Priority" : "An Unsorted Task"}`}
+                          className="group cursor-pointer flex items-start justify-between p-3 border border-transparent rounded-xl transition-all shadow-sm hover:bg-slate-50 hover:border-slate-100 hover:shadow-md"
+                        >
+                          <div>
+                            <h4 className="text-md font-bold text-slate-800">
+                              {unsorted.unsorted_title}
+                            </h4>
+                            <p className="text-sm text-slate-500 mt-1">
+                              {unsorted.unsorted_desc}
+                            </p>
+                            {section.kind === "completed" && unsorted.due_date === selectedDate.value && (
+                              <p className="mt-1 text-xs font-semibold text-background">
+                                Also due on this day
+                              </p>
+                            )}
+                          </div>
+                          <div
+                            className={`w-1 shrink-0 h-full min-h-10 rounded-full mr-3 ${unsorted.priority ? "bg-background" : "bg-[#2eaadb]"}`}
+                          ></div>
+                        </div>
+                      )
+                    )}
+                  </section>
+                ))}
+
+                {selectedEvents.value.length === 0 && (
+                  <div className="flex flex-col items-center justify-center h-48 text-slate-400">
+                    <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                      ✨
                     </div>
-                  )}
+                    <p className="text-xs font-bold">No events scheduled</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

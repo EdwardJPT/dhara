@@ -1,4 +1,4 @@
-import { ReadonlySignal, Signal, useComputed, useSignal } from "@preact/signals";
+import { ReadonlySignal, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
 
 import TimeToggle from "./reports.timeToggle";
 import { useDateRange, TimeRangeType } from "./hooks";
@@ -25,12 +25,29 @@ export function ProjectsReports({
   taskStats,
   isDemo,
 }: ProjectsReportsProps) {
+  const getInitialShowProjectPortfolio = () => {
+    try {
+      return localStorage.getItem("showProjectPortfolio") !== "false";
+    } catch {
+      return true;
+    }
+  };
+
+  const showProjectPortfolio = useSignal(getInitialShowProjectPortfolio());
+
+  useSignalEffect(() => {
+    const visible = showProjectPortfolio.value;
+    try {
+      localStorage.setItem("showProjectPortfolio", JSON.stringify(visible));
+    } catch {
+      // Keep the toggle usable when browser storage is unavailable.
+    }
+  });
+
   const timeRange: Signal<TimeRangeType> = useSignal(ReportsTimeRange.ThisWeek);
   const setTimeRage = (range: TimeRangeType) => (timeRange.value = range);
 
   const rangeDate = useDateRange(timeRange);
-
-  console.log({ projects })
 
   const projectsStats = useComputed(() => {
     // Projects section
@@ -117,9 +134,34 @@ export function ProjectsReports({
     <div className="bg-white py-6 sm:py-6 px-4 sm:px-8 w-full max-w-7xl mx-auto text-slate-800">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 sm:mb-5 gap-4 sm:gap-6">
         <div className="flex flex-col">
-          <h1 className="text-[25px] text-background font-semibold">
-            Project Progress
-          </h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h1 className="text-[25px] text-background font-semibold">
+              Project Progress
+            </h1>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-slate-500 rounded-md hover:bg-slate-50 hover:text-background transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background cursor-pointer"
+              aria-label={showProjectPortfolio.value ? "Hide project portfolio" : "Show project portfolio"}
+              title={showProjectPortfolio.value ? "Hide project portfolio" : "Show project portfolio"}
+              aria-expanded={showProjectPortfolio.value}
+              aria-controls="project-portfolio"
+              onClick={() => { showProjectPortfolio.value = !showProjectPortfolio.value; }}
+            >
+              Portfolio
+              <svg
+                className={`w-3.5 h-3.5 transition-transform ${showProjectPortfolio.value ? "rotate-180" : ""}`}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+          </div>
           <div className="flex items-center space-x-2 text-sm text-hover flex-wrap">
             <span className="font-semibold">
               {formattingDateTask(rangeDate.value.start.toLocaleDateString("en-CA"))}
@@ -176,13 +218,17 @@ export function ProjectsReports({
       </section>
 
       {/* Table of Projects */}
-      <ProjectPortfolio
-        projects={projects}
-        tasks={tasks}
-        timeRange={timeRange}
-        rangeDate={rangeDate}
-        isDemo={isDemo}
-      />
+      <div id="project-portfolio">
+        {showProjectPortfolio.value && (
+          <ProjectPortfolio
+            projects={projects}
+            tasks={tasks}
+            timeRange={timeRange}
+            rangeDate={rangeDate}
+            isDemo={isDemo}
+          />
+        )}
+      </div>
 
       {/* Tasks section */}
       <section className="flex flex-col my-6 sm:mb-5 sm:mt-0">

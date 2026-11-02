@@ -8,6 +8,7 @@ interface DayCellProps {
   isCompact: boolean;
   taskCount: number;
   unsortedCount: number;
+  completedCount: number;
 }
 
 // Return YYYY-MM-DD
@@ -23,6 +24,7 @@ export function DayCell({
   isCompact,
   taskCount,
   unsortedCount,
+  completedCount,
 }: DayCellProps) {
   if (!dayNum) return <div />;
 
@@ -44,8 +46,8 @@ export function DayCell({
           }
           ${isToday && !isSelected ? "text-indigo-600 font-bold bg-indigo-50" : ""}
           ${!isToday && !isSelected ? "bg-slate-50 font-semibold" : ""}
-          ${taskCount > 0 ? "border-y-3 border-y-gray-400" : ""}
-          ${unsortedCount > 0 ? "border-x-3 border-gray-400" : ""}
+          ${taskCount + unsortedCount > 0 ? "border-y-3 border-y-gray-400" : ""}
+          ${completedCount > 0 ? "border-x-3 border-x-gray-400" : ""}
         `}
       >
         <div className="relative">
@@ -92,6 +94,29 @@ export function DayCell({
               className="w-3 h-3 bg-[#2eaadb]"
               title="An Unsorted Task"
             />
+          ))}
+        </div>
+        <div className="grid grid-cols-6 gap-0.5">
+          {Array.from({ length: completedCount }, (_, idx) => (
+            <span
+              key={idx}
+              className={`
+                inline-flex h-3 w-3 items-center justify-center rounded-full
+                ${isSelected
+                  ? "bg-white text-[#1a6582]"
+                  : "bg-[#1a6582] text-white"
+                }
+              `}
+              title="Task Completed"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                className="h-2.25 w-2.25"
+                fill="currentColor"
+              >
+                <path d="M6 12.5 1.5 8 3.5 6 6 8.5 12.5 2 14.5 4Z" />
+              </svg>
+            </span>
           ))}
         </div>
       </div>
